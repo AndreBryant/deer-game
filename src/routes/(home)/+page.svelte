@@ -1,10 +1,11 @@
 <script>
-	import { Swords, SquarePlus, Fingerprint } from 'lucide-svelte';
+	import { Swords, SquarePlus, Fingerprint, Tag } from 'lucide-svelte';
 	import Button from '$lib/components/Button.svelte';
 	import InputText from '$lib/components/InputText.svelte';
 	import HomeBackgorund from '$lib/components/home/HomeBackgorund.svelte';
 </script>
 
+<!-- Clean this page -->
 <main class="relative flex h-screen w-screen flex-col items-center justify-center">
 	<div class="absolute left-0 top-0">
 		<HomeBackgorund />
@@ -20,14 +21,15 @@
 				<div class="mx-4 h-4">
 					<Button text="Create Game" iconLeft={Swords} />
 				</div>
-				<div class="mx-4 flex items-center justify-center gap-4">
-					<hr class="mb-4 mt-8 h-0.5 flex-grow border-0 bg-slate-950" />
-					<div class="font-semibold">OR</div>
+				<div class="relative mx-4 flex items-center justify-center gap-4">
+					<hr class="mb-4 mr-4 mt-8 h-0.5 flex-grow border-0 bg-slate-950" />
+					<div class="absolute top-5 font-semibold">OR</div>
 					<hr class="mb-4 mt-8 h-0.5 flex-grow border-0 bg-slate-950" />
 				</div>
 				<div class="mx-4 flex flex-col justify-between gap-4">
-					<Button text="Join Game" iconLeft={SquarePlus} />
 					<InputText placeholder="Game ID here." iconLeft={Fingerprint} />
+					<InputText placeholder="Enter your name." iconLeft={Tag} />
+					<Button text="Join Game" iconLeft={SquarePlus} />
 				</div>
 			</div>
 		</section>
