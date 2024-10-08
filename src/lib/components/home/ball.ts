@@ -5,17 +5,22 @@ export class Ball {
 		public x: number,
 		public y: number,
 		public radius: number,
-		public color: string
+		public color: string,
+		p5: any
 	) {
-		this.x = x;
-		this.y = y;
 		this.radius = radius;
+		this.x = p5.constrain(x, radius, p5.width);
+		this.y = p5.constrain(y, radius, p5.height);
 		this.dx = 2;
 		this.dy = 2;
 		this.color = color;
 	}
 
 	public update(p5: any) {
+		// Handle edge cases better
+		// idk if this works
+		// its late in the evening
+		p5.ellipseMode(p5.CENTER);
 		if (this.x + this.radius > p5.width || this.x - this.radius < 0) {
 			this.dx *= -1;
 		}

@@ -17,7 +17,8 @@
 					p5.random(0, p5.windowWidth),
 					p5.random(0, p5.windowHeight),
 					radius,
-					p5.random(Object.values(palette.primary))
+					p5.random(Object.values(palette.primary)),
+					p5
 				)
 			);
 		}
@@ -26,9 +27,11 @@
 	function draw(p5: any) {
 		p5.background(255);
 		p5.stroke(0);
-		p5.fill(palette.primary.brown);
+
+		p5.fill(palette.primary.yellow);
+
 		p5.ellipse(p5.windowWidth / 2, p5.windowHeight / 2, 300, 300);
-		console.log(Balls.length);
+
 		for (let i = 0; i < qt; i++) {
 			Balls[i].update(p5);
 			Balls[i].show(p5);
