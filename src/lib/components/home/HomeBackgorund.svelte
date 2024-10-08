@@ -10,7 +10,7 @@
 		p5.createCanvas(p5.windowWidth, p5.windowHeight);
 
 		for (let i = 0; i < qt; i++) {
-			const radius = p5.random(10, 50);
+			const radius = p5.random(10, 80);
 
 			Balls.push(
 				new Ball(

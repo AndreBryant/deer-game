@@ -9,7 +9,7 @@
 	<div class="absolute left-0 top-0">
 		<HomeBackgorund />
 	</div>
-	<section class="rounded-xl border bg-slate-50 bg-opacity-60 px-16 py-24 backdrop-blur-lg">
+	<section class="rounded-xl border bg-slate-50 bg-opacity-75 px-16 py-24 backdrop-blur-lg">
 		<section class="flex flex-col gap-8">
 			<div>
 				<h1 class="text-9xl">deer</h1>
