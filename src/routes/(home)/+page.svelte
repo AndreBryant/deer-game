@@ -9,14 +9,21 @@
 	<div class="absolute left-0 top-0">
 		<HomeBackgorund />
 	</div>
-	<section class="rounded-xl border bg-slate-50 bg-opacity-75 px-16 py-24 backdrop-blur-lg">
+	<section
+		class="rounded-xl border bg-slate-50 bg-opacity-85 px-16 py-24 shadow-md backdrop-blur-lg"
+	>
 		<section class="flex flex-col gap-8">
 			<div>
 				<h1 class="text-9xl">deer</h1>
 			</div>
-			<div class="flex flex-col gap-4">
-				<div class="mx-4">
+			<div class="flex flex-col gap-2">
+				<div class="mx-4 h-4">
 					<Button text="Create Game" iconLeft={Swords} />
+				</div>
+				<div class="mx-4 flex items-center justify-center gap-4">
+					<hr class="mb-4 mt-8 h-0.5 flex-grow border-0 bg-slate-950" />
+					<div class="font-semibold">OR</div>
+					<hr class="mb-4 mt-8 h-0.5 flex-grow border-0 bg-slate-950" />
 				</div>
 				<div class="mx-4 flex flex-col justify-between gap-4">
 					<Button text="Join Game" iconLeft={SquarePlus} />
