@@ -11,8 +11,14 @@
 		<HomeBackgorund />
 	</div>
 	<section
-		class="rounded-xl border bg-slate-50 bg-opacity-85 px-16 py-24 shadow-md backdrop-blur-lg"
+		class="relative rounded-xl border bg-slate-50 bg-opacity-85 px-16 py-24 shadow-md backdrop-blur-lg"
 	>
+		<div
+			class="group absolute -left-8 top-2 -rotate-[20deg] rounded-md bg-red-900 px-4 py-2 hover:bg-red-800"
+			title="our excuse if we fail the game physics"
+		>
+			<h2 class="text-xs text-white group-hover:text-slate-50">Physics engine not included!</h2>
+		</div>
 		<section class="flex flex-col gap-8">
 			<div>
 				<h1 class="text-9xl">deer</h1>
