@@ -1,7 +1,7 @@
 <script lang="ts">
 	import P5 from '$lib/components/home/P5.svelte';
 	import { palette } from './palette';
-	import { Ball } from './ball';
+	import { Ball } from '$lib/classes/ball';
 
 	let qt = 100;
 	let Balls: any[] = [];
@@ -41,10 +41,12 @@
 	function windowResized(p5: any) {
 		p5.resizeCanvas(p5.windowWidth, p5.windowHeight);
 
-		for (let i = 0; i < qt; i++) {
-			Balls[i].dx = 2;
-			Balls[i].dy = 2;
-		}
+		// check if they will be off screen
+		// if ball will be offscreen, lerp to the current screen their x,y position
+		// for (let i = 0; i < qt; i++) {
+		// 	Balls[i].dx = 2;
+		// 	Balls[i].dy = 2;
+		// }
 	}
 </script>
 
