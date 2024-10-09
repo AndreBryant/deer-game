@@ -1,12 +1,22 @@
 <script>
+	import { goto } from '$app/navigation';
 	import { Swords, SquarePlus, Fingerprint, Tag } from 'lucide-svelte';
 	import Button from '$lib/components/Button.svelte';
 	import InputText from '$lib/components/InputText.svelte';
 	import HomeBackgorund from '$lib/components/home/HomeBackgorund.svelte';
+
+	let gameID = '';
+	let username = '';
+
+	function joinGame() {
+		// if (gameID && username) {
+		goto('/game');
+		// }
+	}
 </script>
 
 <!-- Clean this page -->
-<main class="relative flex h-screen w-screen flex-col items-center justify-center">
+<main class="relative flex h-screen w-screen select-none flex-col items-center justify-center">
 	<div class="absolute left-0 top-0">
 		<HomeBackgorund />
 	</div>
@@ -25,7 +35,7 @@
 			</div>
 			<div class="flex flex-col gap-2">
 				<div class="mx-4 h-4">
-					<Button text="Create Game" iconLeft={Swords} />
+					<Button text="Create Game" iconLeft={Swords} href="./game" />
 				</div>
 				<div class="relative mx-4 flex items-center justify-center gap-4">
 					<hr class="mb-4 mr-4 mt-8 h-0.5 flex-grow border-0 bg-slate-950" />
@@ -33,9 +43,9 @@
 					<hr class="mb-4 mt-8 h-0.5 flex-grow border-0 bg-slate-950" />
 				</div>
 				<div class="mx-4 flex flex-col justify-between gap-4">
-					<InputText placeholder="Game ID here." iconLeft={Fingerprint} />
-					<InputText placeholder="Enter your name." iconLeft={Tag} />
-					<Button text="Join Game" iconLeft={SquarePlus} />
+					<InputText placeholder="Game ID here." iconLeft={Fingerprint} bind:value={gameID} />
+					<InputText placeholder="Enter your name." iconLeft={Tag} bind:value={username} />
+					<Button text="Join Game" iconLeft={SquarePlus} onclick={joinGame} />
 				</div>
 			</div>
 		</section>

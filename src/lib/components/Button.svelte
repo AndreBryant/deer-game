@@ -1,9 +1,11 @@
 <script lang="ts">
 	export let text: string;
 	export let iconLeft: any = null;
+	export let href: string = '';
+	export let onclick = () => {};
 </script>
 
-<a class="group hover:font-semibold" href="#">
+<a class="group hover:font-semibold" {href} on:click={onclick}>
 	{#if iconLeft}
 		<svelte:component this={iconLeft} class="mr-1 inline-block" />
 	{/if}

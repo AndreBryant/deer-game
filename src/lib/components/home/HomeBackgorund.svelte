@@ -3,8 +3,8 @@
 	import { palette } from './palette';
 	import { Ball } from '$lib/classes/ball';
 
-	let qt = 100;
-	let Balls: any[] = [];
+	let balls: any[] = [];
+	let qt = 75;
 
 	function setup(p5: any) {
 		p5.createCanvas(p5.windowWidth, p5.windowHeight);
@@ -12,10 +12,10 @@
 		for (let i = 0; i < qt; i++) {
 			const radius = p5.random(10, 80);
 
-			Balls.push(
+			balls.push(
 				new Ball(
-					p5.random(0, p5.windowWidth),
-					p5.random(0, p5.windowHeight),
+					p5.random(radius, p5.windowWidth - radius),
+					p5.random(radius, p5.windowHeight - radius),
 					radius,
 					p5.random(Object.values(palette.primary)),
 					p5
@@ -32,9 +32,9 @@
 
 		p5.ellipse(p5.windowWidth / 2, p5.windowHeight / 2, 300, 300);
 
-		for (let i = 0; i < qt; i++) {
-			Balls[i].update(p5);
-			Balls[i].show(p5);
+		for (const ball of balls) {
+			ball.update(p5);
+			ball.show(p5);
 		}
 	}
 
