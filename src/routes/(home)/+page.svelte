@@ -1,5 +1,4 @@
-<script>
-	import { goto } from '$app/navigation';
+<script lang="ts">
 	import { Swords, SquarePlus, Fingerprint, Tag } from 'lucide-svelte';
 	import Button from '$lib/components/Button.svelte';
 	import InputText from '$lib/components/InputText.svelte';
@@ -7,11 +6,11 @@
 
 	let gameID = '';
 	let username = '';
+	let valid = false;
+	$: valid = checkValidity(gameID, username);
 
-	function joinGame() {
-		// if (gameID && username) {
-		goto('/game');
-		// }
+	function checkValidity(gameID: string, username: string) {
+		return gameID.length > 0 && username.length > 0;
 	}
 </script>
 
@@ -21,7 +20,7 @@
 		<HomeBackgorund />
 	</div>
 	<section
-		class="relative rounded-xl border bg-slate-50 bg-opacity-75 px-16 py-24 shadow-md backdrop-blur-lg"
+		class="relative rounded-xl border bg-slate-50 bg-opacity-65 px-16 py-24 shadow-md backdrop-blur-lg"
 	>
 		<div
 			class="group absolute -left-8 top-2 -rotate-[20deg] rounded-md bg-red-900 px-4 py-2 hover:bg-red-800"
@@ -35,7 +34,7 @@
 			</div>
 			<div class="flex flex-col gap-2">
 				<div class="mx-4 h-4">
-					<Button text="Create Game" iconLeft={Swords} href="./game" />
+					<Button text="Create Game" iconLeft={Swords} href="./game?host=true" />
 				</div>
 				<div class="relative mx-4 flex items-center justify-center gap-4">
 					<hr class="mb-4 mr-4 mt-8 h-0.5 flex-grow border-0 bg-slate-950" />
@@ -45,7 +44,12 @@
 				<div class="mx-4 flex flex-col justify-between gap-4">
 					<InputText placeholder="Game ID here." iconLeft={Fingerprint} bind:value={gameID} />
 					<InputText placeholder="Enter your name." iconLeft={Tag} bind:value={username} />
-					<Button text="Join Game" iconLeft={SquarePlus} onclick={joinGame} />
+					<Button
+						text="Join Game"
+						variant={valid ? 'primary' : 'disabled'}
+						iconLeft={SquarePlus}
+						href={`./game?host=false&gameID=${gameID}&username=${username}`}
+					/>
 				</div>
 			</div>
 		</section>
