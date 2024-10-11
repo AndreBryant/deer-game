@@ -2,7 +2,7 @@
 	import { Swords, SquarePlus, Fingerprint, Tag } from 'lucide-svelte';
 	import Button from '$lib/components/Button.svelte';
 	import InputText from '$lib/components/InputText.svelte';
-	import HomeBackgorund from '$lib/components/home/HomeBackgorund.svelte';
+	import HomeBackgorund from '$lib/components/home/HomeBackground.svelte';
 
 	let gameID = '';
 	let username = '';

@@ -1,6 +1,7 @@
 import { type ViteDevServer } from 'vite';
 import { Server } from 'socket.io';
 import { Player } from './player';
+import { getRandomColor } from './palette';
 
 export const webSocketServer = {
 	name: 'websocket',
@@ -12,8 +13,12 @@ export const webSocketServer = {
 
 		io.on('connection', (socket) => {
 			console.log(socket.id + ' connected.');
-			players[socket.id] = { id: socket.id };
-			console.log(players);
+			const x = Math.floor(Math.random() * (600 - 20 + 1)) + 20;
+			const y = Math.floor(Math.random() * (600 - 20 + 1)) + 20;
+
+			players[socket.id] = new Player(socket.id, socket.id, x, y, getRandomColor());
+
+			io.emit('player_connected', players);
 
 			socket.on('disconnect', () => {
 				console.log(socket.id + ' disconnected.');
@@ -26,5 +31,14 @@ export const webSocketServer = {
 				socket.to(data.room).emit('player_joined', players[socket.id]);
 			});
 		});
+
+		const updateInterval = 1000 / 60;
+		setInterval(() => {
+			for (const id in players) {
+				players[id].update(600, 600);
+			}
+			// Add Timestamp then get the time difference
+			io.emit('player_updated', players);
+		}, updateInterval);
 	}
 };

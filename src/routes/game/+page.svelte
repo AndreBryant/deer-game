@@ -1,18 +1,22 @@
 <script lang="ts">
+	import GameCanvas from '$lib/components/game/GameCanvas.svelte';
 	import { io } from 'socket.io-client';
 	const ws = io();
 
-	ws.on('eventFromServer', (message) => {
-		console.log(message);
+	let serverData = {};
+	ws.on('player_connected', (data) => {
+		serverData = data;
 	});
 
-	let currentMessage: string = '';
-	$: currentMessage, ws.emit('eventFromClient', currentMessage);
+	ws.on('player_updated', (data) => {
+		serverData = data;
+	});
+
+	$: serverData;
 </script>
 
 <main class="h-screen w-screen select-none">
 	<section>
-		<h1 class="text-9xl">Game Page</h1>
+		<GameCanvas {serverData} />
 	</section>
-	<input bind:value={currentMessage} class="border" />
 </main>

@@ -15,7 +15,7 @@
 				p5js.setup = () => setup(p5js);
 				p5js.draw = () => draw(p5js);
 				p5js.windowResized = () => windowResized(p5js);
-			}, canvas); // Attach p5 sketch to the canvas element
+			}, canvas);
 		}
 	});
 

@@ -1,6 +1,6 @@
 <script lang="ts">
-	import P5 from '$lib/components/home/P5.svelte';
-	import { palette } from './palette';
+	import P5 from '$lib/components/P5.svelte';
+	import { palette } from '$lib/components/home/palette';
 	import { Ball } from '$lib/classes/ball';
 
 	let balls: any[] = [];

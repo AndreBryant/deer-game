@@ -11,8 +11,6 @@ export class Ball {
 		this.radius = radius;
 		this.x = p5.constrain(x, radius, p5.width);
 		this.y = p5.constrain(y, radius, p5.height);
-		// this.dx = p5.random(1, 5) * p5.random([-1, 1]);
-		// this.dy = p5.random(1, 5) * p5.random([-1, 1]);
 		this.dx = 2;
 		this.dy = 2;
 		this.color = color;
