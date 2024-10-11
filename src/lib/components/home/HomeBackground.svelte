@@ -4,7 +4,7 @@
 	import { Ball } from '$lib/classes/ball';
 
 	let balls: any[] = [];
-	let qt = 60;
+	let qt = 100;
 
 	function setup(p5: any) {
 		p5.createCanvas(p5.windowWidth, p5.windowHeight);
