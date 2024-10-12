@@ -16,5 +16,5 @@ export function load({ url }) {
 
 function generateRandomGameId() {
 	// thanks to codeium
-	return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+	return Math.random().toString(36).substring(2, 6) + Math.random().toString(36).substring(2, 6);
 }

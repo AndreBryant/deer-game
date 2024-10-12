@@ -15,6 +15,7 @@ export const webSocketServer = {
 		io.on('connection', (socket) => {
 			console.log(socket.id + ' connected.');
 
+			// Inform everyone who connected which rooms are available, so they can see if they will join or create
 			io.emit('rooms_updated', rooms);
 
 			// Host creates a room
@@ -28,11 +29,14 @@ export const webSocketServer = {
 				// io.emit('player_connected', players);
 			});
 
-			// // Some other player joins a room
-			// socket.on('join_room', (data) => {
-			// 	players[socket.id] = createPlayer(socket.id, data.gameID);
-			// 	// io.emit('player_connected', players);
-			// });
+			// Some other player joins a room
+			socket.on('join_room', (data) => {
+				players[socket.id] = createPlayer(socket.id, data.gameID, false);
+				rooms[data.gameID]++;
+				socket.join(data.gameID);
+				io.emit('rooms_updated', rooms);
+				// io.emit('player_connected', players);
+			});
 
 			socket.on('disconnect', () => {
 				console.log(`${socket.id} disconnected.`);
@@ -40,8 +44,6 @@ export const webSocketServer = {
 				const player = players[socket.id];
 
 				if (player) {
-					const room = rooms[player.room];
-
 					if (player.isHost) {
 						const playersInRoom = Object.values(players).filter((p) => p.room === player.room);
 
@@ -50,10 +52,13 @@ export const webSocketServer = {
 							delete rooms[player.room];
 							io.emit('rooms_updated', rooms);
 						} else {
+							// TODO kick everyone in the room and notify everyone that the host has disconnected
 							console.log(`Host disconnected, but other players are still in the room.`);
 							delete rooms[player.room];
 							io.emit('rooms_updated', rooms);
 						}
+					} else {
+						rooms[player.room]--;
 					}
 
 					delete players[socket.id];
@@ -77,9 +82,9 @@ export const webSocketServer = {
 	}
 };
 
-function createPlayer(socketID: string, gameID: string, isHost = false) {
+function createPlayer(socketID: string, gameID: string, isHost = false, username = 'Host') {
 	const x = Math.floor(Math.random() * (600 - 20 + 1)) + 20;
 	const y = Math.floor(Math.random() * (600 - 20 + 1)) + 20;
 
-	return new Player(socketID, gameID, isHost, socketID, x, y, getRandomColor());
+	return new Player(socketID, gameID, isHost, username, x, y, getRandomColor());
 }

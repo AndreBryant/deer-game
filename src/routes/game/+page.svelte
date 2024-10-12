@@ -10,6 +10,11 @@
 		ws.emit('create_room', {
 			gameID: data.gameID
 		});
+	} else {
+		ws.emit('join_room', {
+			gameID: data.gameID,
+			username: data.username
+		});
 	}
 
 	ws.on('player_connected', (data) => {

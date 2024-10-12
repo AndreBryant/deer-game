@@ -32,7 +32,7 @@
 	$: rooms;
 </script>
 
-{JSON.stringify(rooms, null, 2)}
+<!-- {JSON.stringify(rooms, null, 2)} -->
 <!-- Clean this page -->
 <main class="relative flex h-screen w-screen select-none flex-col items-center justify-center">
 	<div class="absolute left-0 top-0">
