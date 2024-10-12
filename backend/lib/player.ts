@@ -1,5 +1,7 @@
 export class Player {
 	id: string;
+	room: string;
+	isHost: boolean;
 	dy: number;
 	y: number;
 	dx: number;
@@ -7,8 +9,18 @@ export class Player {
 	name: string;
 	x: number;
 	color: string;
-	constructor(id: string, name: string, x: number, y: number, color: string) {
+	constructor(
+		id: string,
+		room: string,
+		isHost: boolean,
+		name: string,
+		x: number,
+		y: number,
+		color: string
+	) {
 		this.id = id;
+		this.room = room;
+		this.isHost = isHost;
 		this.name = name;
 		this.x = x;
 		this.y = y;

@@ -1,23 +1,42 @@
 <script lang="ts">
 	import { Swords, SquarePlus, Fingerprint, Tag } from 'lucide-svelte';
-	import Button from '$lib/components/Button.svelte';
-	import InputText from '$lib/components/InputText.svelte';
-	import HomeBackgorund from '$lib/components/home/HomeBackground.svelte';
+	import Button from '$lib/components/ui/Button.svelte';
+	import InputText from '$lib/components/ui/InputText.svelte';
+	import HomeBackground from '$lib/components/home/HomeBackground.svelte';
+
+	import { io } from 'socket.io-client';
+	const ws = io();
+
+	let rooms: { [key: string]: number } = {};
+	ws.on('rooms_updated', (data) => {
+		rooms = data;
+	});
+
+	ws.on('connection', (data) => {
+		rooms = data;
+	});
 
 	let gameID = '';
 	let username = '';
 	let valid = false;
-	$: valid = checkValidity(gameID, username);
+	$: valid = checkRoom(gameID) && checkUsername(username);
 
-	function checkValidity(gameID: string, username: string) {
-		return gameID.length > 0 && username.length > 0;
+	function checkUsername(username: string) {
+		return username.length > 0;
 	}
+
+	function checkRoom(gameID: string) {
+		return Boolean(rooms[gameID]);
+	}
+
+	$: rooms;
 </script>
 
+{JSON.stringify(rooms, null, 2)}
 <!-- Clean this page -->
 <main class="relative flex h-screen w-screen select-none flex-col items-center justify-center">
 	<div class="absolute left-0 top-0">
-		<HomeBackgorund />
+		<HomeBackground />
 	</div>
 	<section
 		class="relative rounded-xl border bg-slate-50 bg-opacity-65 px-16 py-24 shadow-md backdrop-blur-lg"
@@ -30,9 +49,9 @@
 		</div>
 		<section class="flex flex-col gap-8">
 			<div>
-				<h1 class="text-9xl">cat/deer</h1>
+				<h1 class="text-9xl">deer</h1>
 			</div>
-			<div class="mx-32 flex flex-col gap-2">
+			<div class="mx-full flex flex-col gap-2">
 				<div class="mx-4 h-4">
 					<Button text="Create Game" iconLeft={Swords} href="./game?host=true" />
 				</div>
@@ -42,7 +61,11 @@
 					<hr class="mb-4 mt-8 h-0.5 flex-grow border-0 bg-slate-950" />
 				</div>
 				<div class="mx-4 flex flex-col justify-between gap-4">
-					<InputText placeholder="Game ID here." iconLeft={Fingerprint} bind:value={gameID} />
+					<div>
+						<InputText placeholder="Game ID here." iconLeft={Fingerprint} bind:value={gameID} />
+						<span>Not Available</span>
+						<span>Room is Available</span>
+					</div>
 					<InputText placeholder="Enter your name." iconLeft={Tag} bind:value={username} />
 					<Button
 						text="Join Game"

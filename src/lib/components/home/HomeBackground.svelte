@@ -1,7 +1,7 @@
 <script lang="ts">
 	import P5 from '$lib/components/P5.svelte';
-	import { palette } from '$lib/components/home/palette';
-	import { Ball } from '$lib/classes/ball';
+	import { palette } from '$lib/utils/palette';
+	import { Ball } from '$lib/utils/ball';
 
 	let balls: any[] = [];
 	let qt = 100;

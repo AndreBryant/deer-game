@@ -1,7 +1,7 @@
 <script lang="ts">
 	export let serverData: any;
 	import P5 from '../P5.svelte';
-	import { drawPlayer } from '$lib/classes/render';
+	import { drawPlayer } from '$lib/utils/render';
 
 	$: serverData;
 	function setup(p5: any) {

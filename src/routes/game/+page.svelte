@@ -1,9 +1,17 @@
 <script lang="ts">
+	export let data: any;
 	import GameCanvas from '$lib/components/game/GameCanvas.svelte';
 	import { io } from 'socket.io-client';
 	const ws = io();
 
 	let serverData = {};
+
+	if (data.host) {
+		ws.emit('create_room', {
+			gameID: data.gameID
+		});
+	}
+
 	ws.on('player_connected', (data) => {
 		serverData = data;
 	});
@@ -14,6 +22,10 @@
 
 	$: serverData;
 </script>
+
+{data.host}
+{data.gameID}
+{data.username}
 
 <main class="h-screen w-screen select-none">
 	<section>

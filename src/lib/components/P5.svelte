@@ -6,6 +6,7 @@
 	export let setup = (p5js: any) => {};
 	export let draw = (p5js: any) => {};
 	export let windowResized = (p5js: any) => {};
+	export let mouseMoved = (p5js: any) => {};
 
 	onMount(async () => {
 		if (typeof window !== 'undefined') {
@@ -15,6 +16,7 @@
 				p5js.setup = () => setup(p5js);
 				p5js.draw = () => draw(p5js);
 				p5js.windowResized = () => windowResized(p5js);
+				p5js.mouseMoved = () => mouseMoved(p5js);
 			}, canvas);
 		}
 	});
