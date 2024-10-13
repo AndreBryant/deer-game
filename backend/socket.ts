@@ -15,7 +15,6 @@ export const webSocketServer = {
 		io.on('connection', (socket) => {
 			console.log(socket.id + ' connected.');
 
-			// Inform everyone who connected which rooms are available, so they can see if they will join or create
 			io.emit('rooms_updated', rooms);
 
 			// Host creates a room
@@ -50,7 +49,6 @@ export const webSocketServer = {
 						if (playersInRoom.length === 1) {
 							console.log(`Host disconnected, deleting room: ${player.room}`);
 							delete rooms[player.room];
-							io.emit('rooms_updated', rooms);
 						} else {
 							// TODO kick everyone in the room and notify everyone that the host has disconnected
 							console.log(`Host disconnected, but other players are still in the room.`);
@@ -60,6 +58,7 @@ export const webSocketServer = {
 					} else {
 						rooms[player.room]--;
 					}
+					io.emit('rooms_updated', rooms);
 
 					delete players[socket.id];
 				}

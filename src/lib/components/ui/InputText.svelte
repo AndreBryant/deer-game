@@ -14,7 +14,7 @@
 	{/if}
 	<div>
 		<input
-			class="border-b border-slate-950 border-opacity-35 bg-transparent px-2 placeholder:text-slate-950 placeholder:opacity-60 focus:outline-none focus:placeholder:text-opacity-80"
+			class="border-b border-slate-950 border-opacity-35 bg-transparent px-1 placeholder:text-slate-950 placeholder:opacity-60 focus:outline-none focus:placeholder:text-opacity-80"
 			type="text"
 			{placeholder}
 			bind:value

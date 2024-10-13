@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { Swords, SquarePlus, Fingerprint, Tag } from 'lucide-svelte';
+	import { Swords, SquarePlus, Fingerprint, Tag, Check, X } from 'lucide-svelte';
 	import Button from '$lib/components/ui/Button.svelte';
 	import InputText from '$lib/components/ui/InputText.svelte';
 	import HomeBackground from '$lib/components/home/HomeBackground.svelte';
+	import HomeBackground2 from '$lib/components/home/HomeBackground2.svelte';
 
 	import { io } from 'socket.io-client';
 	const ws = io();
@@ -30,16 +31,24 @@
 	}
 
 	$: rooms;
+
+	let r = Math.random();
 </script>
 
 <!-- {JSON.stringify(rooms, null, 2)} -->
 <!-- Clean this page -->
 <main class="relative flex h-screen w-screen select-none flex-col items-center justify-center">
 	<div class="absolute left-0 top-0">
-		<HomeBackground />
+		{#if r < 0.5}
+			<HomeBackground />
+		{:else}
+			<HomeBackground2 />
+		{/if}
 	</div>
 	<section
-		class="relative rounded-xl border bg-slate-50 bg-opacity-65 px-16 py-24 shadow-md backdrop-blur-lg"
+		class="relative rounded-xl border bg-slate-50 bg-opacity-{r < 0.5
+			? '65'
+			: '100'} px-16 py-24 shadow-md backdrop-blur-lg"
 	>
 		<div
 			class="group absolute -left-8 top-2 -rotate-[20deg] rounded-md bg-red-900 px-4 py-2 hover:bg-red-800"
@@ -63,8 +72,18 @@
 				<div class="mx-4 flex flex-col justify-between gap-4">
 					<div>
 						<InputText placeholder="Game ID here." iconLeft={Fingerprint} bind:value={gameID} />
-						<span>Not Available</span>
-						<span>Room is Available</span>
+						<div class="flex h-2 gap-1 pl-7 text-sm">
+							{#if gameID.length > 0}
+								{#if checkRoom(gameID)}
+									<Check color="green" size="18" /><span class="text-green-700"
+										>Available({rooms[gameID]})
+									</span>
+								{:else}
+									<X color="red" size="18" />
+									<span class="text-red-600">Not available</span>
+								{/if}
+							{/if}
+						</div>
 					</div>
 					<InputText placeholder="Enter your name." iconLeft={Tag} bind:value={username} />
 					<Button
