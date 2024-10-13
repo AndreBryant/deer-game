@@ -56,7 +56,9 @@ export const webSocketServer = {
 							io.emit('rooms_updated', rooms);
 						}
 					} else {
-						rooms[player.room]--;
+						if (rooms[player.room]) {
+							rooms[player.room]--;
+						}
 					}
 					io.emit('rooms_updated', rooms);
 

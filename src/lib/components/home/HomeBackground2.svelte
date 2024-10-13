@@ -26,12 +26,12 @@
 		for (const [index, line] of lines.entries()) {
 			let currentColor = p5.color(line.currentColor);
 			let targetColor = p5.color(line.targetColor);
-			line.currentColor = p5.lerpColor(currentColor, targetColor, 0.1).toString();
 
+			line.currentColor = p5.lerpColor(currentColor, targetColor, 0.1).toString();
 			p5.stroke(line.currentColor);
 			p5.line(line.line[0][0], line.line[0][1], line.line[1][0], line.line[1][1]);
 
-			if (p5.frameCount % 120 < 90 && p5.random(1) < 0.75) {
+			if (p5.frameCount % 120 < 100 && p5.random(1) < 0.85) {
 				line.targetColor = p5.random(colors);
 			}
 		}

@@ -19,8 +19,14 @@
 
 	let gameID = '';
 	let username = '';
+
 	let valid = false;
 	$: valid = checkRoom(gameID) && checkUsername(username);
+
+	let validStatus: 'valid' | 'invalid' | 'none' = 'none';
+	$: validStatus = gameID.length <= 0 ? 'none' : checkRoom(gameID) ? 'valid' : 'invalid';
+
+	let r = Math.random();
 
 	function checkUsername(username: string) {
 		return username.length > 0;
@@ -31,8 +37,7 @@
 	}
 
 	$: rooms;
-
-	let r = Math.random();
+	$: numOfPlayers = (rooms[gameID] || '').toString();
 </script>
 
 <!-- {JSON.stringify(rooms, null, 2)} -->
@@ -51,7 +56,7 @@
 			: '100'} px-16 py-24 shadow-md backdrop-blur-lg"
 	>
 		<div
-			class="group absolute -left-8 top-2 -rotate-[20deg] rounded-md bg-red-900 px-4 py-2 hover:bg-red-800"
+			class="custom-animation group absolute -left-8 top-2 -rotate-[20deg] rounded-md bg-red-900 px-4 py-2 hover:bg-red-800"
 			title="our excuse if we fail the game physics"
 		>
 			<h2 class="text-xs text-white group-hover:text-slate-50">Physics engine not included!</h2>
@@ -69,21 +74,15 @@
 					<div class="absolute top-5 font-semibold">OR</div>
 					<hr class="mb-4 mt-8 h-0.5 flex-grow border-0 bg-slate-950" />
 				</div>
-				<div class="mx-4 flex flex-col justify-between gap-4">
+				<div class="mx-4 flex flex-col justify-between gap-6">
 					<div>
-						<InputText placeholder="Game ID here." iconLeft={Fingerprint} bind:value={gameID} />
-						<div class="flex h-2 gap-1 pl-7 text-sm">
-							{#if gameID.length > 0}
-								{#if checkRoom(gameID)}
-									<Check color="green" size="18" /><span class="text-green-700"
-										>Available({rooms[gameID]})
-									</span>
-								{:else}
-									<X color="red" size="18" />
-									<span class="text-red-600">Not available</span>
-								{/if}
-							{/if}
-						</div>
+						<InputText
+							placeholder="Game ID here."
+							iconLeft={Fingerprint}
+							bind:value={gameID}
+							bind:valid={validStatus}
+							bind:numOfPlayers
+						/>
 					</div>
 					<InputText placeholder="Enter your name." iconLeft={Tag} bind:value={username} />
 					<Button
@@ -97,3 +96,24 @@
 		</section>
 	</section>
 </main>
+
+<style>
+	.custom-animation {
+		animation: float 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) infinite;
+		backface-visibility: hidden;
+	}
+
+	@keyframes float {
+		0% {
+			scale: 1;
+		}
+
+		50% {
+			scale: 1.03;
+		}
+
+		100% {
+			scale: 1;
+		}
+	}
+</style>
