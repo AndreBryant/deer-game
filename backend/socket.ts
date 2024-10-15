@@ -72,14 +72,14 @@ export const webSocketServer = {
 			});
 		});
 
-		// const updateInterval = 1000 / 60;
-		// setInterval(() => {
-		// 	for (const id in players) {
-		// 		players[id].update(600, 600);
-		// 	}
-		// 	// Add Timestamp then get the time difference
-		// 	io.emit('player_updated', players);
-		// }, updateInterval);
+		const updateInterval = 1000 / 60;
+		setInterval(() => {
+			for (const id in players) {
+				players[id].update(600, 600);
+			}
+
+			io.emit('player_updated', { players, timestamp: new Date().getTime() });
+		}, updateInterval);
 	}
 };
 

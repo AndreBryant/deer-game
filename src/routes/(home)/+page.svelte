@@ -50,11 +50,11 @@
 			<HomeBackground2 />
 		{/if}
 	</div>
+	<!-- bg-opacity not working -->
 	<section
-		class="relative rounded-xl border bg-slate-50 px-16 py-24 shadow-md backdrop-blur-lg bg-opacity-{r <
-		0.5
-			? '65'
-			: '100'}"
+		class="relative rounded-xl border bg-slate-50 px-16 py-24 shadow-md backdrop-blur-lg"
+		class:bg-opacity-65={r < 0.5}
+		class:bg-opacity-100={r >= 0.5}
 	>
 		<div
 			class="custom-animation group absolute -left-8 top-2 -rotate-[20deg] rounded-md bg-red-900 px-4 py-2 hover:bg-red-800"

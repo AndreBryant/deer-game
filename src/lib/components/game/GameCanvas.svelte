@@ -14,10 +14,13 @@
 		p5.background(0);
 		p5.stroke(0);
 
-		for (const data in serverData) {
-			const player = serverData[data];
+		for (const data in serverData.players) {
+			const player = serverData.players[data];
+			// console.log(player);
+			// console.log(serverData)
 			drawPlayer(player, p5);
 		}
+		console.log(serverData);
 	}
 
 	function windowResized(p5: any) {
