@@ -2,10 +2,12 @@ import { Server, Socket, type DefaultEventsMap } from 'socket.io';
 import { Player } from '../player';
 import { getRandomColor } from '../palette';
 
+// TODO: make this a class or make a types.ts file idk
 interface Room {
 	players: number;
 	mapData: string;
 }
+
 const players: { [key: string]: Player } = {};
 export const rooms: { [key: string]: Room } = {};
 

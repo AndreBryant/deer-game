@@ -47,6 +47,7 @@
 	}
 </script>
 
+<!-- FIX ValidStatus when room is deleted on('rooms_updated') -->
 <!-- {validStatus}
 {JSON.stringify(rooms[gameID], null, 2)} -->
 <!-- {JSON.stringify(rooms, null, 2)} -->
@@ -59,7 +60,6 @@
 			<HomeBackground2 />
 		{/if}
 	</div>
-	<!-- bg-opacity not working -->
 	<section
 		class="relative rounded-xl border bg-slate-50 px-16 py-24 shadow-md backdrop-blur-lg"
 		class:bg-opacity-65={r < 0.5}
