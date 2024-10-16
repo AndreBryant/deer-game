@@ -16,11 +16,8 @@
 
 		for (const data in serverData.players) {
 			const player = serverData.players[data];
-			// console.log(player);
-			// console.log(serverData)
 			drawPlayer(player, p5);
 		}
-		console.log(serverData);
 	}
 
 	function windowResized(p5: any) {

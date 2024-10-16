@@ -24,6 +24,7 @@
 	$: valid = checkRoom(gameID) && checkUsername(username);
 
 	let validStatus: 'valid' | 'invalid' | 'none' = 'none';
+	$: validStatus = checkRoom(gameID) ? 'valid' : 'invalid';
 	$: validStatus = gameID.length <= 0 ? 'none' : checkRoom(gameID) ? 'valid' : 'invalid';
 
 	let r = Math.random();
@@ -39,7 +40,6 @@
 	$: rooms;
 
 	let numOfPlayers = '';
-	$: console.log(rooms, numOfPlayers);
 	$: if (rooms[gameID]) {
 		numOfPlayers = rooms[gameID].players.toString();
 	} else {
@@ -47,6 +47,8 @@
 	}
 </script>
 
+<!-- {validStatus}
+{JSON.stringify(rooms[gameID], null, 2)} -->
 <!-- {JSON.stringify(rooms, null, 2)} -->
 <!-- Clean this page -->
 <main class="relative flex h-screen w-screen select-none flex-col items-center justify-center">

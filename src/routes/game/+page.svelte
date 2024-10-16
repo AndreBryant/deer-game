@@ -4,7 +4,13 @@
 	import { io } from 'socket.io-client';
 	const ws = io();
 
-	let serverData = {};
+	let serverData: any = {};
+	let socketId: string | undefined = '';
+
+	ws.on('connect', () => {
+		socketId = ws.id;
+		console.log('Socket ID:', socketId);
+	});
 
 	if (data.host) {
 		ws.emit('create_room', {
@@ -17,12 +23,12 @@
 		});
 	}
 
-	ws.on('player_connected', (data) => {
-		serverData = data;
+	ws.on('player_connected', (dataFromServer) => {
+		serverData = dataFromServer;
 	});
 
-	ws.on('player_updated', (data) => {
-		serverData = data;
+	ws.on('player_updated', (dataFromServer) => {
+		serverData = dataFromServer;
 	});
 
 	$: serverData;
@@ -36,4 +42,7 @@
 	<section>
 		<GameCanvas {serverData} />
 	</section>
+	<pre>
+		{JSON.stringify({ socketId, serverData }, null, 2)}
+	</pre>
 </main>
