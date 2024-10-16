@@ -6,7 +6,6 @@ interface Room {
 	players: number;
 	mapData: string;
 }
-
 const players: { [key: string]: Player } = {};
 export const rooms: { [key: string]: Room } = {};
 
@@ -74,13 +73,18 @@ export function handleDisconnect(
 	}
 }
 
+// This is the function that handles broadcasting to all players
 export function broadcastPlayerUpdates(
 	io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>
 ) {
 	for (const {} in players) {
 		// players[id].update(600, 600);
 	}
-	io.emit('player_updated', { players, timestamp: new Date().getTime() });
+
+	for (const room in rooms) {
+		const ps = Object.values(players).filter((p) => p.room === room);
+		io.to(room).emit('player_connected', { players: ps, timestamp: new Date().getTime() });
+	}
 }
 
 function createPlayer(socketID: string, gameID: string, isHost = false, username = 'Host') {
