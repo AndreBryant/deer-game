@@ -4,11 +4,20 @@ export class Map {
 	scale: number;
 	tiles: string;
 
-	constructor(tiles: string) {
+	constructor() {
 		this.width = 1000;
 		this.height = 600;
 		this.scale = 1;
-		this.tiles = tiles;
+		this.tiles = '';
+	}
+
+	generateMap() {
+		this.tiles = '';
+		for (let i = 0; i < this.height; i++) {
+			for (let j = 0; j < this.width; j++) {
+				this.tiles += MapTile.Walkable;
+			}
+		}
 	}
 
 	getTile(x: number, y: number) {

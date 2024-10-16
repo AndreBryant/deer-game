@@ -8,7 +8,7 @@
 	import { io } from 'socket.io-client';
 	const ws = io();
 
-	let rooms: { [key: string]: number } = {};
+	let rooms: { [key: string]: { players: number; mapData: string } } = {};
 	ws.on('rooms_updated', (data) => {
 		rooms = data;
 	});
@@ -37,7 +37,14 @@
 	}
 
 	$: rooms;
-	$: numOfPlayers = (rooms[gameID] || '').toString();
+
+	let numOfPlayers = '';
+	$: console.log(rooms, numOfPlayers);
+	$: if (rooms[gameID]) {
+		numOfPlayers = rooms[gameID].players.toString();
+	} else {
+		numOfPlayers = '';
+	}
 </script>
 
 <!-- {JSON.stringify(rooms, null, 2)} -->

@@ -10,7 +10,7 @@ export const webSocketServer = {
 		const io = new Server(server.httpServer);
 
 		const players: { [key: string]: Player } = {};
-		const rooms: { [key: string]: number } = {};
+		const rooms: { [key: string]: { players: number; mapData: string } } = {};
 
 		io.on('connection', (socket) => {
 			console.log(socket.id + ' connected.');
@@ -22,7 +22,7 @@ export const webSocketServer = {
 				console.log('room created', data.gameID);
 
 				players[socket.id] = createPlayer(socket.id, data.gameID, true);
-				rooms[data.gameID] = 1;
+				rooms[data.gameID] = { players: 1, mapData: '' };
 				socket.join(data.gameID);
 				io.emit('rooms_updated', rooms);
 				// io.emit('player_connected', players);
@@ -31,7 +31,7 @@ export const webSocketServer = {
 			// Some other player joins a room
 			socket.on('join_room', (data) => {
 				players[socket.id] = createPlayer(socket.id, data.gameID, false);
-				rooms[data.gameID]++;
+				rooms[data.gameID].players++;
 				socket.join(data.gameID);
 				io.emit('rooms_updated', rooms);
 				// io.emit('player_connected', players);
@@ -57,7 +57,7 @@ export const webSocketServer = {
 						}
 					} else {
 						if (rooms[player.room]) {
-							rooms[player.room]--;
+							rooms[player.room].players--;
 						}
 					}
 					io.emit('rooms_updated', rooms);
