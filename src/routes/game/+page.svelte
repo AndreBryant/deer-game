@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { updated } from '$app/stores';
 	export let data: any;
 	import GameCanvas from '$lib/components/game/GameCanvas.svelte';
 	import { io } from 'socket.io-client';
@@ -8,10 +7,11 @@
 
 	let serverData: any = {};
 	let socketId: string | undefined = '';
+	let isConnected = false;
 
 	ws.on('connect', () => {
 		socketId = ws.id;
-		console.log('Socket ID:', socketId);
+		isConnected = true;
 	});
 
 	if (data.host) {
@@ -69,18 +69,29 @@
 			window.removeEventListener('keyup', handleKeyup);
 		};
 	});
-	$: serverData;
+	$: serverData, socketId;
 </script>
 
-{data.host}
-{data.gameID}
-{data.username}
+<main class="XX--ADD-THIS-LATER--XX(select-none) relative h-screen w-screen text-white">
+	<div class="w-scree h-screenn absolute left-0 top-0 -z-10">
+		{#if isConnected && socketId}
+			<GameCanvas {serverData} {socketId} />
+		{:else}
+			<p>Connecting...</p>
+		{/if}
+	</div>
 
-<main class="h-screen w-screen select-none">
 	<section>
-		<GameCanvas {serverData} />
+		<div>
+			{#if data.host}
+				<h1 class="text-3xl">host</h1>
+			{/if}
+		</div>
+		<div>
+			<p>Game ID: {data.gameID}</p>
+		</div>
+		<div>
+			<p>Player: {data.username}</p>
+		</div>
 	</section>
-	<pre>
-		{JSON.stringify({ socketId, serverData }, null, 2)}
-	</pre>
 </main>

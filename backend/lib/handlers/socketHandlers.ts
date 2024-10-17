@@ -28,7 +28,12 @@ export function handleCreateRoom(
 	// create keystates for player
 	initializeKeyState(data.gameID, socket.id);
 
-	const roomPlayers = Object.values(players).filter((p) => p.room === data.gameID);
+	const roomPlayers = Object.values(players)
+		.filter((p) => p.room === data.gameID)
+		.reduce((acc, player) => {
+			acc[player.id] = player;
+			return acc;
+		}, {});
 	io.to(data.gameID).emit('player_connected', roomPlayers);
 }
 
@@ -45,7 +50,12 @@ export function handleJoinRoom(
 
 	initializeKeyState(data.gameID, socket.id);
 
-	const roomPlayers = Object.values(players).filter((p) => p.room === data.gameID);
+	const roomPlayers = Object.values(players)
+		.filter((p) => p.room === data.gameID)
+		.reduce((acc, player) => {
+			acc[player.id] = player;
+			return acc;
+		}, {});
 	io.to(data.gameID).emit('player_connected', roomPlayers);
 }
 
@@ -59,9 +69,14 @@ export function handleDisconnect(
 
 	if (player) {
 		if (player.isHost) {
-			const playersInRoom = Object.values(players).filter((p) => p.room === player.room);
+			const playersInRoom = Object.values(players)
+				.filter((p) => p.room === player.room)
+				.reduce((acc, player) => {
+					acc[player.id] = player;
+					return acc;
+				}, {});
 
-			if (playersInRoom.length === 1) {
+			if (Object.values(playersInRoom).length === 1) {
 				console.log(`Host disconnected, deleting room: ${player.room}`);
 				delete rooms[player.room];
 			} else {
@@ -88,7 +103,12 @@ export function handleKeyInput(
 ) {
 	keyStates[data.gameID][socket.id] = data.keyStates;
 
-	const ps = Object.values(players).filter((p) => p.room === data.gameID);
+	const ps = Object.values(players)
+		.filter((p) => p.room === data.gameID)
+		.reduce((acc, player) => {
+			acc[player.id] = player;
+			return acc;
+		}, {});
 	io.to(data.gameID).emit('player_updated', { players: ps, timestamp: new Date().getTime() });
 }
 
@@ -112,7 +132,13 @@ export function broadcastPlayerUpdates(
 		}
 
 		for (const room in rooms) {
-			const ps = Object.values(players).filter((p) => p.room === room);
+			// TODO: turn all to this
+			const ps = Object.values(players)
+				.filter((p) => p.room === room)
+				.reduce((acc, player) => {
+					acc[player.id] = player;
+					return acc;
+				}, {});
 			io.to(room).emit('player_updated', { players: ps, timestamp: new Date().getTime() });
 		}
 	}
