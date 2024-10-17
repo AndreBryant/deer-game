@@ -15,7 +15,6 @@
 		p5.background(0);
 
 		const player = serverData.players[socketId];
-		console.log(player.x, player.y);
 
 		// FOR TESTING PLAYER CENTERED CAMERA
 		const t = translateCoords({

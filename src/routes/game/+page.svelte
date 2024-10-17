@@ -1,37 +1,15 @@
 <script lang="ts">
 	export let data: any;
 	import GameCanvas from '$lib/components/game/GameCanvas.svelte';
-	import { io } from 'socket.io-client';
+	import type { DefaultEventsMap } from '@socket.io/component-emitter';
+	import { io, Socket } from 'socket.io-client';
 	import { onMount } from 'svelte';
-	const ws = io();
 
 	let serverData: any = {};
-	let socketId: string | undefined = '';
-	let isConnected = false;
-
-	ws.on('connect', () => {
-		socketId = ws.id;
-		isConnected = true;
-	});
-
-	if (data.host) {
-		ws.emit('create_room', {
-			gameID: data.gameID
-		});
-	} else {
-		ws.emit('join_room', {
-			gameID: data.gameID,
-			username: data.username
-		});
-	}
-
-	ws.on('player_connected', (dataFromServer) => {
-		serverData = dataFromServer;
-	});
-
-	ws.on('player_updated', (dataFromServer) => {
-		serverData = dataFromServer;
-	});
+	let connectionState: { socketId: string | undefined; isConnected: boolean } = {
+		socketId: '',
+		isConnected: false
+	};
 
 	let keyStates: { [key: string]: boolean } = { up: false, down: false, left: false, right: false };
 
@@ -42,40 +20,67 @@
 		else if (key === 'd' || key === 'D') keyStates.right = value;
 	}
 
-	function handleKeydown(e: KeyboardEvent) {
+	function handleKeydown(ws: Socket<DefaultEventsMap, DefaultEventsMap>, e: KeyboardEvent) {
 		updateKeyCodes(e.key, true);
 		ws.emit('player_key_input', {
-			socketId,
+			socketId: connectionState.socketId,
 			gameID: data.gameID,
 			keyStates
 		});
 	}
 
-	function handleKeyup(e: KeyboardEvent) {
+	function handleKeyup(ws: Socket<DefaultEventsMap, DefaultEventsMap>, e: KeyboardEvent) {
 		updateKeyCodes(e.key, false);
 		ws.emit('player_key_input', {
-			socketId,
+			socketId: connectionState.socketId,
 			gameID: data.gameID,
 			keyStates
 		});
 	}
 
 	onMount(() => {
-		window.addEventListener('keydown', handleKeydown);
-		window.addEventListener('keyup', handleKeyup);
+		const ws = io();
+
+		ws.on('connect', () => {
+			connectionState.socketId = ws.id;
+			connectionState.isConnected = true;
+		});
+
+		if (data.host) {
+			ws.emit('create_room', {
+				gameID: data.gameID
+			});
+		} else {
+			ws.emit('join_room', {
+				gameID: data.gameID,
+				username: data.username
+			});
+		}
+
+		ws.on('player_connected', (dataFromServer) => {
+			serverData = dataFromServer;
+		});
+
+		ws.on('player_updated', (dataFromServer) => {
+			serverData = dataFromServer;
+		});
+
+		window.addEventListener('keydown', (e) => handleKeydown(ws, e));
+		window.addEventListener('keyup', (e) => handleKeyup(ws, e));
 
 		return () => {
-			window.removeEventListener('keydown', handleKeydown);
-			window.removeEventListener('keyup', handleKeyup);
+			window.removeEventListener('keydown', (e) => handleKeydown(ws, e));
+			window.removeEventListener('keyup', (e) => handleKeyup(ws, e));
 		};
 	});
-	$: serverData, socketId;
+
+	$: serverData, connectionState;
 </script>
 
 <main class="XX--ADD-THIS-LATER--XX(select-none) relative h-screen w-screen text-white">
 	<div class="w-scree h-screenn absolute left-0 top-0 -z-10">
-		{#if isConnected && socketId}
-			<GameCanvas {serverData} {socketId} />
+		{#if connectionState.isConnected && connectionState.socketId}
+			<GameCanvas {serverData} socketId={connectionState.socketId} />
 		{:else}
 			<p>Connecting...</p>
 		{/if}
