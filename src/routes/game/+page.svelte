@@ -36,10 +36,10 @@
 	let keyStates: { [key: string]: boolean } = { up: false, down: false, left: false, right: false };
 
 	function updateKeyCodes(key: string, value: boolean) {
-		if (key === 'w') keyStates.up = value;
-		else if (key === 's') keyStates.down = value;
-		else if (key === 'a') keyStates.left = value;
-		else if (key === 'd') keyStates.right = value;
+		if (key === 'w' || key === 'W') keyStates.up = value;
+		else if (key === 's' || key === 'S') keyStates.down = value;
+		else if (key === 'a' || key === 'A') keyStates.left = value;
+		else if (key === 'd' || key === 'D') keyStates.right = value;
 	}
 
 	function handleKeydown(e: KeyboardEvent) {
