@@ -1,7 +1,9 @@
 <script lang="ts">
+	import { updated } from '$app/stores';
 	export let data: any;
 	import GameCanvas from '$lib/components/game/GameCanvas.svelte';
 	import { io } from 'socket.io-client';
+	import { onMount } from 'svelte';
 	const ws = io();
 
 	let serverData: any = {};
@@ -31,6 +33,42 @@
 		serverData = dataFromServer;
 	});
 
+	let keyStates: { [key: string]: boolean } = { up: false, down: false, left: false, right: false };
+
+	function updateKeyCodes(key: string, value: boolean) {
+		if (key === 'w') keyStates.up = value;
+		else if (key === 's') keyStates.down = value;
+		else if (key === 'a') keyStates.left = value;
+		else if (key === 'd') keyStates.right = value;
+	}
+
+	function handleKeydown(e: KeyboardEvent) {
+		updateKeyCodes(e.key, true);
+		ws.emit('player_key_input', {
+			socketId,
+			gameID: data.gameID,
+			keyStates
+		});
+	}
+
+	function handleKeyup(e: KeyboardEvent) {
+		updateKeyCodes(e.key, false);
+		ws.emit('player_key_input', {
+			socketId,
+			gameID: data.gameID,
+			keyStates
+		});
+	}
+
+	onMount(() => {
+		window.addEventListener('keydown', handleKeydown);
+		window.addEventListener('keyup', handleKeyup);
+
+		return () => {
+			window.removeEventListener('keydown', handleKeydown);
+			window.removeEventListener('keyup', handleKeyup);
+		};
+	});
 	$: serverData;
 </script>
 

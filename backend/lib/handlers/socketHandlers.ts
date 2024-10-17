@@ -10,6 +10,7 @@ interface Room {
 
 const players: { [key: string]: Player } = {};
 export const rooms: { [key: string]: Room } = {};
+const keyStates: { [key: string]: { [key: string]: { [key: string]: boolean } } } = {};
 
 export function handleCreateRoom(
 	io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>,
@@ -23,6 +24,9 @@ export function handleCreateRoom(
 
 	socket.join(data.gameID);
 	io.emit('rooms_updated', rooms);
+
+	// create keystates for player
+	initializeKeyState(data.gameID, socket.id);
 
 	const roomPlayers = Object.values(players).filter((p) => p.room === data.gameID);
 	io.to(data.gameID).emit('player_connected', roomPlayers);
@@ -38,6 +42,8 @@ export function handleJoinRoom(
 
 	socket.join(data.gameID);
 	io.emit('rooms_updated', rooms);
+
+	initializeKeyState(data.gameID, socket.id);
 
 	const roomPlayers = Object.values(players).filter((p) => p.room === data.gameID);
 	io.to(data.gameID).emit('player_connected', roomPlayers);
@@ -75,17 +81,40 @@ export function handleDisconnect(
 	}
 }
 
-// This is the function that handles broadcasting to all players
+export function handleKeyInput(
+	io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>,
+	socket: Socket,
+	data: { gameID: string; keyStates: { [key: string]: boolean } }
+) {
+	keyStates[data.gameID][socket.id] = data.keyStates;
+
+	const ps = Object.values(players).filter((p) => p.room === data.gameID);
+	io.to(data.gameID).emit('player_updated', { players: ps, timestamp: new Date().getTime() });
+}
+
 export function broadcastPlayerUpdates(
 	io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>
 ) {
-	for (const {} in players) {
-		// players[id].update(600, 600);
-	}
+	for (const player in players) {
+		const p = players[player];
+		const roomID = p.room;
+		if (keyStates[roomID][player]['up']) {
+			p.updateY(600, true);
+		}
+		if (keyStates[roomID][player]['down']) {
+			p.updateY(600, false);
+		}
+		if (keyStates[roomID][player]['left']) {
+			p.updateX(600, true);
+		}
+		if (keyStates[roomID][player]['right']) {
+			p.updateX(600, false);
+		}
 
-	for (const room in rooms) {
-		const ps = Object.values(players).filter((p) => p.room === room);
-		io.to(room).emit('player_connected', { players: ps, timestamp: new Date().getTime() });
+		for (const room in rooms) {
+			const ps = Object.values(players).filter((p) => p.room === room);
+			io.to(room).emit('player_updated', { players: ps, timestamp: new Date().getTime() });
+		}
 	}
 }
 
@@ -94,4 +123,14 @@ function createPlayer(socketID: string, gameID: string, isHost = false, username
 	const y = Math.floor(Math.random() * (600 - 20 + 1)) + 20;
 
 	return new Player(socketID, gameID, isHost, username, x, y, getRandomColor());
+}
+
+function initializeKeyState(room: string, player: string) {
+	keyStates[room] = { ...keyStates[room] };
+	keyStates[room][player] = {
+		up: false,
+		down: false,
+		left: false,
+		right: false
+	};
 }

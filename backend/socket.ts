@@ -5,6 +5,7 @@ import {
 	handleJoinRoom,
 	handleDisconnect,
 	broadcastPlayerUpdates,
+	handleKeyInput,
 	rooms
 } from './lib/handlers/socketHandlers';
 
@@ -21,6 +22,9 @@ export const webSocketServer = {
 			socket.on('create_room', (data) => handleCreateRoom(io, socket, data));
 			socket.on('join_room', (data) => handleJoinRoom(io, socket, data));
 			socket.on('disconnect', () => handleDisconnect(io, socket));
+
+			// player input
+			socket.on('player_key_input', (data) => handleKeyInput(io, socket, data));
 		});
 
 		setInterval(() => broadcastPlayerUpdates(io), 1000 / 60);
