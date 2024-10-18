@@ -40,9 +40,12 @@ export function handleCreateRoom(
 export function handleJoinRoom(
 	io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>,
 	socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>,
-	data: { gameID: string }
+	data: {
+		username: string | undefined;
+		gameID: string;
+	}
 ) {
-	players[socket.id] = createPlayer(socket.id, data.gameID, false);
+	players[socket.id] = createPlayer(socket.id, data.gameID, false, data.username);
 	rooms[data.gameID].players++;
 
 	socket.join(data.gameID);

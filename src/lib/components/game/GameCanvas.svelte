@@ -2,13 +2,12 @@
 	export let serverData: any;
 	export let socketId: string;
 	import P5 from '../P5.svelte';
-	import { drawPlayer } from '$lib/utils/render';
 
 	$: serverData;
+
+	// TODO: namespace this if possible (typescirpt namespace) in another file sketch.ts
 	function setup(p5: any) {
 		p5.createCanvas(p5.windowWidth, p5.windowHeight);
-		p5.background(255);
-		p5.stroke(0);
 	}
 
 	function draw(p5: any) {
@@ -36,6 +35,8 @@
 			const p = serverData.players[data];
 			if (data === socketId) {
 				p5.fill(player.color);
+				// p5.textMode(p5.CENTER);
+				p5.text(player.name, p5.width / 2 - player.radius, p5.height / 2 - player.radius * 1.5);
 				p5.ellipse(p5.width / 2, p5.height / 2, player.radius * 2, player.radius * 2);
 				continue;
 			}
@@ -50,8 +51,10 @@
 			});
 
 			p5.fill(p.color);
+			p5.text(p.name, pCoords.x - p.radius, pCoords.y - p.radius * 1.5);
 			p5.ellipse(pCoords.x, pCoords.y, player.radius * 2, player.radius * 2);
 		}
+		// console.log(serverData.players);
 	}
 
 	function windowResized(p5: any) {

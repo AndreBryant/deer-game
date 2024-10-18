@@ -7,7 +7,7 @@
 
 	let serverData: any = {};
 	let connectionState: { socketId: string | undefined; isConnected: boolean } = {
-		socketId: '',
+		socketId: undefined,
 		isConnected: false
 	};
 
@@ -75,6 +75,11 @@
 	});
 
 	$: serverData, connectionState;
+
+	$: clientPlayer =
+		serverData.players && connectionState.isConnected && connectionState.socketId
+			? serverData.players[connectionState.socketId]
+			: undefined;
 </script>
 
 <main class="XX--ADD-THIS-LATER--XX(select-none) relative h-screen w-screen text-white">
@@ -98,5 +103,11 @@
 		<div>
 			<p>Player: {data.username}</p>
 		</div>
+		{#if clientPlayer}
+			<div>
+				<p>x: {clientPlayer.x}</p>
+				<p>y: {clientPlayer.y}</p>
+			</div>
+		{/if}
 	</section>
 </main>
