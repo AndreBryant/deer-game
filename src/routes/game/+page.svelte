@@ -6,7 +6,7 @@
 	import { onMount } from 'svelte';
 
 	let serverData: any = {};
-	let mapData: string | undefined;
+	let mapData: { mapData: string; height: number; width: number } | undefined = undefined;
 	let connectionState: { socketId: string | undefined; isConnected: boolean } = {
 		socketId: undefined,
 		isConnected: false
@@ -67,7 +67,7 @@
 		});
 
 		ws.on('map_generated', (dataFromServer) => {
-			mapData = dataFromServer.mapData;
+			mapData = dataFromServer;
 		});
 
 		window.addEventListener('keydown', (e) => handleKeydown(ws, e));

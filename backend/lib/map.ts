@@ -32,8 +32,8 @@ export class Map {
 		return this.tiles;
 	}
 
-	getTile(x: number, y: number) {
-		if ((x < 0 || x >= this.width) && (y < 0 || y >= this.height)) {
+	getTile(x: number, y: number, playerR: number) {
+		if (x >= playerR && x <= this.width - playerR && y >= playerR && y <= this.height - playerR) {
 			return this.tiles[y * this.width + x];
 		} else return null;
 	}

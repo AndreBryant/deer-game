@@ -1,7 +1,7 @@
 <script lang="ts">
 	export let serverData: any;
 	export let socketId: string;
-	export let mapData: string | undefined;
+	export let mapData: { mapData: string; height: number; width: number } | undefined;
 	import P5 from '../P5.svelte';
 
 	$: serverData;
@@ -19,21 +19,7 @@
 
 			// FOR TESTING PLAYER CENTERED CAMERA
 			// Draw mapData Here
-			const t = translateCoords({
-				h: p5.height,
-				w: p5.width,
-				px: player.x,
-				py: player.y,
-				x: 0,
-				y: 0
-			});
-			p5.fill(25, 120, 13);
-			p5.stroke('white');
-			p5.strokeWeight(5);
-			p5.rect(t.x, t.y, 1000, 600);
-
-			p5.stroke(0);
-			p5.strokeWeight(1);
+			drawMap(p5, mapData, player);
 			for (const data in serverData.players) {
 				const p = serverData.players[data];
 				if (data === socketId) {
@@ -76,6 +62,65 @@
 			x: w / 2 + (x - px),
 			y: h / 2 + (y - py)
 		};
+	}
+
+	function drawMap(
+		p5: any,
+		mapData: { mapData: string; height: number; width: number },
+		player: any
+	) {
+		const t = translateCoords({
+			h: p5.height,
+			w: p5.width,
+			px: player.x,
+			py: player.y,
+			x: 0,
+			y: 0
+		});
+		p5.fill(25, 120, 13);
+		p5.stroke('white');
+		p5.strokeWeight(5);
+		p5.rect(t.x, t.y, mapData.width, mapData.height);
+
+		p5.stroke(0);
+		p5.strokeWeight(1);
+
+		// laggy to be added later or needs to rethink for a solution
+		// const tileSize = 10;
+		// for (let y = 0; y < mapData.height; y++) {
+		// 	for (let x = 0; x < mapData.width; x++) {
+		// 		const tile = mapData.mapData[y * mapData.width + x];
+		// 		const t = translateCoords({
+		// 			h: p5.height,
+		// 			w: p5.width,
+		// 			px: player.x,
+		// 			py: player.y,
+		// 			x: x * tileSize,
+		// 			y: y * tileSize
+		// 		});
+		// 		switch (tile) {
+		// 			case '=':
+		// 				p5.fill(25, 120, 13);
+		// 				break;
+		// 			case '#':
+		// 				p5.fill(100, 100, 255);
+		// 				break;
+		// 			case 'F':
+		// 				p5.fill(255, 0, 0);
+		// 				break;
+		// 			case '~':
+		// 				p5.fill(0, 0, 255);
+		// 				break;
+		// 			case '-':
+		// 				p5.fill(130, 130, 20);
+		// 				break;
+		// 		}
+		// 		// Draw the tile
+		// 		p5.noStroke();
+		// 		p5.point(t.x, t.y);
+		// 		p5.rect(t.x, t.y, tileSize, tileSize);
+		// 	}
+		// }
 	}
 </script>
 

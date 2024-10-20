@@ -15,9 +15,7 @@ const keyStates: { [key: string]: { [key: string]: { [key: string]: boolean } } 
 
 export function handleCreateRoom(io: Server, socket: Socket, data: { gameID: string }) {
 	console.log('room created', data.gameID);
-
 	rooms[data.gameID] = { players: 1, mapData: new Map() };
-
 	joinRoom(io, socket, data.gameID, true);
 }
 
@@ -73,18 +71,17 @@ export function broadcastPlayerUpdates(io: Server) {
 	for (const player in players) {
 		const p = players[player];
 		const roomID = p.room;
-		const map = rooms[roomID].mapData;
 		if (keyStates[roomID][player]['up']) {
-			p.updateY(map.height, true);
+			p.updateY(true);
 		}
 		if (keyStates[roomID][player]['down']) {
-			p.updateY(map.height, false);
+			p.updateY(false);
 		}
 		if (keyStates[roomID][player]['left']) {
-			p.updateX(map.width, true);
+			p.updateX(true);
 		}
 		if (keyStates[roomID][player]['right']) {
-			p.updateX(map.width, false);
+			p.updateX(false);
 		}
 
 		for (const room in rooms) {
@@ -97,10 +94,25 @@ export function broadcastPlayerUpdates(io: Server) {
 	}
 }
 
-function createPlayer(socketID: string, gameID: string, isHost = false, username = 'Host') {
+function createPlayer(
+	socketID: string,
+	gameID: string,
+	isHost = false,
+	username = 'Host',
+	roomID: string
+) {
 	const x = Math.floor(Math.random() * (MAP_WIDTH - 20 + 1));
 	const y = Math.floor(Math.random() * (MAP_HEIGHT - 20 + 1));
-	return new Player(socketID, gameID, isHost, username, x, y, getRandomColor());
+	return new Player(
+		socketID,
+		gameID,
+		isHost,
+		username,
+		x,
+		y,
+		getRandomColor(),
+		rooms[roomID].mapData
+	);
 }
 
 function initializeKeyState(room: string, player: string) {
@@ -123,7 +135,7 @@ function filterPlayersByRoom(players: { [key: string]: Player }, room: string) {
 }
 
 function joinRoom(io: Server, socket: Socket, gameID: string, isHost: boolean, username?: string) {
-	players[socket.id] = createPlayer(socket.id, gameID, isHost, username);
+	players[socket.id] = createPlayer(socket.id, gameID, isHost, username, gameID);
 	if (!isHost) {
 		rooms[gameID].players++;
 	}
@@ -136,6 +148,8 @@ function joinRoom(io: Server, socket: Socket, gameID: string, isHost: boolean, u
 
 	io.to(gameID).emit('player_connected', roomplayers);
 	io.to(gameID).emit('map_generated', {
-		mapData: rooms[gameID].mapData.tiles
+		mapData: rooms[gameID].mapData.tiles,
+		height: rooms[gameID].mapData.height,
+		width: rooms[gameID].mapData.width
 	});
 }
