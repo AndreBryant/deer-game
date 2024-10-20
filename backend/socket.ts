@@ -27,6 +27,6 @@ export const webSocketServer = {
 			socket.on('player_key_input', (data) => handleKeyInput(io, socket, data));
 		});
 
-		setInterval(() => broadcastPlayerUpdates(io), 1000 / 120);
+		setInterval(() => broadcastPlayerUpdates(io), 1000 / 60);
 	}
 };

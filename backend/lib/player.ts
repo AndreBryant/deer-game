@@ -1,5 +1,6 @@
-import type { Map } from './map';
-import { MapTile } from './map';
+import { type Map, MapTile, TILESIZE } from './map';
+
+export const PLAYER_HIT_RADIUS = TILESIZE / 2;
 export class Player {
 	id: string;
 	room: string;
@@ -28,81 +29,48 @@ export class Player {
 		this.name = name;
 		this.x = x;
 		this.y = y;
-		this.dx = 20;
-		this.dy = 20;
-		this.radius = 20;
+		this.radius = PLAYER_HIT_RADIUS;
+		this.dx = 1;
+		this.dy = 1;
 		this.color = color;
 		this.map = map;
 	}
 
 	updateX(left: boolean) {
-		const nextX = left ? this.x - this.dx : this.x + this.dx;
-		const nextTile = this.map.getTile(nextX, this.y, this.radius);
+		const tileSize = this.map.tileSize;
+		const nextX = left ? this.x - this.dx - this.radius : this.x + this.dx + this.radius;
+		const floorX = Math.floor(nextX / tileSize);
+		const floorY = Math.floor(this.y / tileSize);
+		const nextTile = this.map.getTile(Math.floor(nextX / tileSize), floorY);
 
-		if (nextTile === MapTile.Walkable) {
+		if (nextTile && nextTile !== MapTile.Wall) {
 			this.x = nextX;
 		} else {
-			let remainingTiles;
-			const currentIndex = this.y * this.map.width + this.x; //current index sa map
-
 			if (left) {
-				remainingTiles = this.map.tiles.substring(this.y * this.map.width, currentIndex);
-				const nearestWall = remainingTiles.lastIndexOf(MapTile.Wall);
-
-				if (nearestWall !== -1) {
-					this.x = nearestWall + this.radius;
-				} else {
-					this.x = this.radius;
-				}
+				this.x = (floorX + 1) * tileSize + this.radius;
 			} else {
-				remainingTiles = this.map.tiles.substring(currentIndex, (this.y + 1) * this.map.width);
-				const nearestWall = remainingTiles.indexOf(MapTile.Wall);
-
-				if (nearestWall !== -1) {
-					this.x = this.x + nearestWall - this.radius;
-				} else {
-					this.x = this.map.width - this.radius;
-				}
+				this.x = floorX * tileSize - this.radius;
 			}
 		}
+		console.log(Math.floor(this.x / TILESIZE), Math.floor(this.y / TILESIZE));
 	}
 
 	updateY(up: boolean) {
-		const nextY = up ? this.y - this.dy : this.y + this.dy;
-		const nextTile = this.map.getTile(this.x, nextY, this.radius);
+		const tileSize = this.map.tileSize;
+		const nextY = up ? this.y - this.dy - this.radius : this.y + this.dy + this.radius;
+		const floorY = Math.floor(nextY / tileSize);
+		const floorX = Math.floor(this.x / tileSize);
+		const nextTile = this.map.getTile(floorX, Math.floor(nextY / tileSize));
 
-		if (nextTile === MapTile.Walkable) {
+		if (nextTile && nextTile !== MapTile.Wall) {
 			this.y = nextY;
 		} else {
-			let remainingTiles;
-
 			if (up) {
-				remainingTiles = this.map.tiles
-					.split('')
-					.filter((_, index) => index % this.map.width === this.x)
-					.slice(0, this.y);
-
-				const nearestWall = remainingTiles.lastIndexOf(MapTile.Wall);
-
-				if (nearestWall !== -1) {
-					this.y = nearestWall + this.radius;
-				} else {
-					this.y = this.radius;
-				}
+				this.y = (floorY + 1) * tileSize + this.radius;
 			} else {
-				remainingTiles = this.map.tiles
-					.split('')
-					.filter((_, index) => index % this.map.width === this.x)
-					.slice(this.y + 1);
-
-				const nearestWall = remainingTiles.indexOf(MapTile.Wall);
-
-				if (nearestWall !== -1) {
-					this.y = this.y + nearestWall - this.radius;
-				} else {
-					this.y = this.map.height - this.radius;
-				}
+				this.y = floorY * tileSize - this.radius;
 			}
 		}
+		console.log(Math.floor(this.x / TILESIZE), Math.floor(this.y / TILESIZE));
 	}
 }

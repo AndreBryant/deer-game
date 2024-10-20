@@ -6,7 +6,8 @@
 	import { onMount } from 'svelte';
 
 	let serverData: any = {};
-	let mapData: { mapData: string; height: number; width: number } | undefined = undefined;
+	let mapData: { mapData: string; height: number; width: number; tileSize: number } | undefined =
+		undefined;
 	let connectionState: { socketId: string | undefined; isConnected: boolean } = {
 		socketId: undefined,
 		isConnected: false

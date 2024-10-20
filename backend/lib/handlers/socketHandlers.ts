@@ -1,6 +1,6 @@
 import { Server, Socket } from 'socket.io';
-import { Player } from '../player';
-import { Map, MAP_HEIGHT, MAP_WIDTH } from '../map';
+import { Player, PLAYER_HIT_RADIUS } from '../player';
+import { Map, MAP_HEIGHT, MAP_WIDTH, TILESIZE } from '../map';
 import { getRandomColor } from '../palette';
 
 // TODO: make this a class or make a types.ts file idk
@@ -101,8 +101,8 @@ function createPlayer(
 	username = 'Host',
 	roomID: string
 ) {
-	const x = Math.floor(Math.random() * (MAP_WIDTH - 20 + 1));
-	const y = Math.floor(Math.random() * (MAP_HEIGHT - 20 + 1));
+	const x = Math.floor(Math.random() * (MAP_WIDTH * TILESIZE - PLAYER_HIT_RADIUS + 1));
+	const y = Math.floor(Math.random() * (MAP_HEIGHT * TILESIZE - PLAYER_HIT_RADIUS + 1));
 	return new Player(
 		socketID,
 		gameID,
@@ -150,6 +150,7 @@ function joinRoom(io: Server, socket: Socket, gameID: string, isHost: boolean, u
 	io.to(gameID).emit('map_generated', {
 		mapData: rooms[gameID].mapData.tiles,
 		height: rooms[gameID].mapData.height,
-		width: rooms[gameID].mapData.width
+		width: rooms[gameID].mapData.width,
+		tileSize: rooms[gameID].mapData.tileSize
 	});
 }

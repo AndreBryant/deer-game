@@ -1,14 +1,26 @@
+<!-- Transfer other functions to render.ts -->
+
 <script lang="ts">
 	export let serverData: any;
 	export let socketId: string;
-	export let mapData: { mapData: string; height: number; width: number } | undefined;
+	export let mapData:
+		| { mapData: string; height: number; width: number; tileSize: number }
+		| undefined;
 	import P5 from '../P5.svelte';
 
 	$: serverData;
-
-	// TODO: namespace this if possible (typescirpt namespace) in another file sketch.ts
+	let mapImage: any;
 	function setup(p5: any) {
 		p5.createCanvas(p5.windowWidth, p5.windowHeight);
+		if (mapData) {
+			let graphics = p5.createGraphics(
+				mapData?.width * mapData.tileSize,
+				mapData?.height * mapData.tileSize
+			);
+			drawMapTiles(graphics, mapData);
+			mapImage = graphics.get();
+		}
+		p5.noSmooth();
 	}
 
 	// Clean code here and try to draw the real map
@@ -17,8 +29,6 @@
 		if (serverData && mapData && serverData.players && serverData.players[socketId]) {
 			const player = serverData.players[socketId];
 
-			// FOR TESTING PLAYER CENTERED CAMERA
-			// Draw mapData Here
 			drawMap(p5, mapData, player);
 			for (const data in serverData.players) {
 				const p = serverData.players[data];
@@ -66,7 +76,7 @@
 
 	function drawMap(
 		p5: any,
-		mapData: { mapData: string; height: number; width: number },
+		mapData: { mapData: string; height: number; width: number; tileSize: number },
 		player: any
 	) {
 		const t = translateCoords({
@@ -77,50 +87,49 @@
 			x: 0,
 			y: 0
 		});
-		p5.fill(25, 120, 13);
-		p5.stroke('white');
-		p5.strokeWeight(5);
-		p5.rect(t.x, t.y, mapData.width, mapData.height);
+		p5.image(mapImage, t.x, t.y);
+	}
 
-		p5.stroke(0);
-		p5.strokeWeight(1);
+	function drawMapTiles(
+		graphics: any,
+		mapData: { mapData: string; height: number; width: number; tileSize: number }
+	) {
+		graphics.noStroke();
+		graphics.noSmooth();
+		for (let y = 0; y < mapData.height; y++) {
+			for (let x = 0; x < mapData.width; x++) {
+				const index = y * mapData.width + x;
+				const char = mapData.mapData[index];
 
-		// laggy to be added later or needs to rethink for a solution
-		// const tileSize = 10;
-		// for (let y = 0; y < mapData.height; y++) {
-		// 	for (let x = 0; x < mapData.width; x++) {
-		// 		const tile = mapData.mapData[y * mapData.width + x];
-		// 		const t = translateCoords({
-		// 			h: p5.height,
-		// 			w: p5.width,
-		// 			px: player.x,
-		// 			py: player.y,
-		// 			x: x * tileSize,
-		// 			y: y * tileSize
-		// 		});
-		// 		switch (tile) {
-		// 			case '=':
-		// 				p5.fill(25, 120, 13);
-		// 				break;
-		// 			case '#':
-		// 				p5.fill(100, 100, 255);
-		// 				break;
-		// 			case 'F':
-		// 				p5.fill(255, 0, 0);
-		// 				break;
-		// 			case '~':
-		// 				p5.fill(0, 0, 255);
-		// 				break;
-		// 			case '-':
-		// 				p5.fill(130, 130, 20);
-		// 				break;
-		// 		}
-		// 		// Draw the tile
-		// 		p5.noStroke();
-		// 		p5.point(t.x, t.y);
-		// 		p5.rect(t.x, t.y, tileSize, tileSize);
-		// 	}
-		// }
+				switch (char) {
+					case '=':
+						// let grassNoise = graphics.noise(x * 0.1, y * 0.1);
+						graphics.fill(10, graphics.random(75, 95), 10);
+						break; // Grass
+					case '#':
+						graphics.fill(graphics.random(25, 35));
+						break; // Wall
+					case 'F':
+						graphics.fill(100, 0, 0);
+						break; // flag
+					case '~':
+						graphics.fill(20, 20, graphics.random(80, 120));
+						break; // Water
+					case '-':
+						graphics.fill(25);
+						break; // shore
+					default:
+						graphics.fill(255); // Default color
+				}
+
+				graphics.rect(
+					x * mapData.tileSize,
+					y * mapData.tileSize,
+					mapData.tileSize,
+					mapData.tileSize
+				);
+			}
+		}
 	}
 </script>
 
