@@ -6,6 +6,7 @@
 	import { onMount } from 'svelte';
 
 	let serverData: any = {};
+	let mapData: string | undefined;
 	let connectionState: { socketId: string | undefined; isConnected: boolean } = {
 		socketId: undefined,
 		isConnected: false
@@ -65,6 +66,10 @@
 			serverData = dataFromServer;
 		});
 
+		ws.on('map_generated', (dataFromServer) => {
+			mapData = dataFromServer.mapData;
+		});
+
 		window.addEventListener('keydown', (e) => handleKeydown(ws, e));
 		window.addEventListener('keyup', (e) => handleKeyup(ws, e));
 
@@ -74,7 +79,7 @@
 		};
 	});
 
-	$: serverData, connectionState;
+	$: serverData, connectionState, mapData;
 
 	$: clientPlayer =
 		serverData.players && connectionState.isConnected && connectionState.socketId
@@ -85,8 +90,8 @@
 <!-- {connectionState.socketId} -->
 <main class="XX--ADD-THIS-LATER--XX(select-none) relative h-screen w-screen text-white">
 	<div class="w-scree h-screenn absolute left-0 top-0 -z-10">
-		{#if connectionState.isConnected && connectionState.socketId}
-			<GameCanvas {serverData} socketId={connectionState.socketId} />
+		{#if mapData && connectionState.isConnected && connectionState.socketId}
+			<GameCanvas {serverData} {mapData} socketId={connectionState.socketId} />
 		{:else}
 			<p>Connecting...</p>
 		{/if}

@@ -1,6 +1,7 @@
 <script lang="ts">
 	export let serverData: any;
 	export let socketId: string;
+	export let mapData: string | undefined;
 	import P5 from '../P5.svelte';
 
 	$: serverData;
@@ -10,12 +11,14 @@
 		p5.createCanvas(p5.windowWidth, p5.windowHeight);
 	}
 
+	// Clean code here and try to draw the real map
 	function draw(p5: any) {
 		p5.background(0);
-		if (serverData && serverData.players && serverData.players[socketId]) {
+		if (serverData && mapData && serverData.players && serverData.players[socketId]) {
 			const player = serverData.players[socketId];
 
 			// FOR TESTING PLAYER CENTERED CAMERA
+			// Draw mapData Here
 			const t = translateCoords({
 				h: p5.height,
 				w: p5.width,
