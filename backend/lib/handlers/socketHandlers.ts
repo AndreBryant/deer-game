@@ -1,11 +1,12 @@
 import { Server, Socket, type DefaultEventsMap } from 'socket.io';
 import { Player } from '../player';
+import { Map, MAP_HEIGHT, MAP_WIDTH } from '../map';
 import { getRandomColor } from '../palette';
 
 // TODO: make this a class or make a types.ts file idk
 interface Room {
 	players: number;
-	mapData: string;
+	mapData: Map;
 }
 
 const players: { [key: string]: Player } = {};
@@ -20,7 +21,7 @@ export function handleCreateRoom(
 	console.log('room created', data.gameID);
 
 	players[socket.id] = createPlayer(socket.id, data.gameID, true);
-	rooms[data.gameID] = { players: 1, mapData: '' };
+	rooms[data.gameID] = { players: 1, mapData: new Map() };
 
 	socket.join(data.gameID);
 	io.emit('rooms_updated', rooms);
@@ -105,37 +106,34 @@ export function handleKeyInput(
 	data: { gameID: string; keyStates: { [key: string]: boolean } }
 ) {
 	keyStates[data.gameID][socket.id] = data.keyStates;
-
-	const ps = Object.values(players)
-		.filter((p) => p.room === data.gameID)
-		.reduce((acc, player) => {
-			acc[player.id] = player;
-			return acc;
-		}, {});
-	io.to(data.gameID).emit('player_updated', { players: ps, timestamp: new Date().getTime() });
 }
 
 export function broadcastPlayerUpdates(
 	io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>
 ) {
 	for (const player in players) {
+		// Checking idk
+		if (!players[player]) {
+			console.warn(`Player ${player} does not exist`);
+			continue;
+		}
 		const p = players[player];
 		const roomID = p.room;
+		const map = rooms[roomID].mapData;
 		if (keyStates[roomID][player]['up']) {
-			p.updateY(600, true);
+			p.updateY(map.height, true);
 		}
 		if (keyStates[roomID][player]['down']) {
-			p.updateY(600, false);
+			p.updateY(map.height, false);
 		}
 		if (keyStates[roomID][player]['left']) {
-			p.updateX(600, true);
+			p.updateX(map.width, true);
 		}
 		if (keyStates[roomID][player]['right']) {
-			p.updateX(600, false);
+			p.updateX(map.width, false);
 		}
 
 		for (const room in rooms) {
-			// TODO: turn all to this
 			const ps = Object.values(players)
 				.filter((p) => p.room === room)
 				.reduce((acc, player) => {
@@ -148,14 +146,17 @@ export function broadcastPlayerUpdates(
 }
 
 function createPlayer(socketID: string, gameID: string, isHost = false, username = 'Host') {
-	const x = Math.floor(Math.random() * (600 - 20 + 1)) + 20;
-	const y = Math.floor(Math.random() * (600 - 20 + 1)) + 20;
-
+	// !!!Radius is still hardocded as 20 here
+	const x = Math.floor(Math.random() * (MAP_WIDTH - 20 + 1));
+	const y = Math.floor(Math.random() * (MAP_HEIGHT - 20 + 1));
+	// console.log(x, y);
 	return new Player(socketID, gameID, isHost, username, x, y, getRandomColor());
 }
 
 function initializeKeyState(room: string, player: string) {
-	keyStates[room] = { ...keyStates[room] };
+	if (!keyStates[room]) {
+		keyStates[room] = {};
+	}
 	keyStates[room][player] = {
 		up: false,
 		down: false,

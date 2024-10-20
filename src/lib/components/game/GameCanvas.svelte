@@ -12,7 +12,7 @@
 
 	function draw(p5: any) {
 		p5.background(0);
-
+		console.log('SocketID', socketId);
 		const player = serverData.players[socketId];
 
 		// FOR TESTING PLAYER CENTERED CAMERA
@@ -21,13 +21,13 @@
 			w: p5.width,
 			px: player.x,
 			py: player.y,
-			x: 10,
-			y: 10
+			x: 0,
+			y: 0
 		});
-		p5.noFill();
+		p5.fill(25, 120, 13);
 		p5.stroke('white');
 		p5.strokeWeight(5);
-		p5.rect(t.x, t.y, 600, 600);
+		p5.rect(t.x, t.y, 1000, 600);
 
 		p5.stroke(0);
 		p5.strokeWeight(1);
@@ -35,7 +35,7 @@
 			const p = serverData.players[data];
 			if (data === socketId) {
 				p5.fill(player.color);
-				// p5.textMode(p5.CENTER);
+				// fix name later
 				p5.text(player.name, p5.width / 2 - player.radius, p5.height / 2 - player.radius * 1.5);
 				p5.ellipse(p5.width / 2, p5.height / 2, player.radius * 2, player.radius * 2);
 				continue;

@@ -82,6 +82,7 @@
 			: undefined;
 </script>
 
+<!-- {connectionState.socketId} -->
 <main class="XX--ADD-THIS-LATER--XX(select-none) relative h-screen w-screen text-white">
 	<div class="w-scree h-screenn absolute left-0 top-0 -z-10">
 		{#if connectionState.isConnected && connectionState.socketId}

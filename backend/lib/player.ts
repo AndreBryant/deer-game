@@ -31,6 +31,14 @@ export class Player {
 	}
 
 	updateX(width: number, left: boolean) {
+		if (left && this.x - this.radius - this.dx < 0) {
+			this.x = this.radius;
+			return;
+		}
+		if (!left && this.x + this.radius + this.dx > width) {
+			this.x = width - this.radius;
+			return;
+		}
 		if (left) {
 			this.x -= this.dx;
 		} else {
@@ -38,7 +46,15 @@ export class Player {
 		}
 	}
 
-	updateY(width: number, up: boolean) {
+	updateY(height: number, up: boolean) {
+		if (up && this.y - this.radius - this.dy < 0) {
+			this.y = this.radius;
+			return;
+		}
+		if (!up && this.y + this.radius + this.dy > height) {
+			this.y = height - this.radius;
+			return;
+		}
 		if (up) {
 			this.y -= this.dy;
 		} else {
