@@ -1,6 +1,6 @@
 import { type Map, MapTile, TILESIZE } from './map';
 
-export const PLAYER_HIT_RADIUS = TILESIZE;
+export const PLAYER_HIT_RADIUS = TILESIZE * 2;
 export class Player {
 	id: string;
 	room: string;

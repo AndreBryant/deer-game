@@ -2,6 +2,14 @@ export const MAP_HEIGHT = 80;
 export const MAP_WIDTH = 80;
 export const TILESIZE = 32;
 
+export enum MapTile {
+	Walkable = '=',
+	Wall = '#',
+	Flag = 'F',
+	Water = '~',
+	Shore = '-'
+}
+
 export class Map {
 	width: number;
 	height: number;
@@ -57,12 +65,4 @@ export class Map {
 			return this.tiles[y * this.width + x];
 		} else return null;
 	}
-}
-
-export enum MapTile {
-	Walkable = '=',
-	Wall = '#',
-	Flag = 'F',
-	Water = '~',
-	Shore = '-'
 }
