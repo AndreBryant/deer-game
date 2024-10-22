@@ -71,17 +71,29 @@ export function broadcastPlayerUpdates(io: Server) {
 	for (const player in players) {
 		const p = players[player];
 		const roomID = p.room;
+		let isMoving = false;
+
 		if (keyStates[roomID][player]['up']) {
 			p.updateY(true);
+			isMoving = true;
 		}
 		if (keyStates[roomID][player]['down']) {
 			p.updateY(false);
+			isMoving = true;
 		}
 		if (keyStates[roomID][player]['left']) {
 			p.updateX(true);
+			isMoving = true;
 		}
 		if (keyStates[roomID][player]['right']) {
 			p.updateX(false);
+			isMoving = true;
+		}
+
+		if (!isMoving) {
+			p.action = 'idle';
+		} else {
+			p.action = 'walk';
 		}
 
 		for (const room in rooms) {

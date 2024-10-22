@@ -24,9 +24,9 @@ export class Map {
 					this.tiles += MapTile.Wall;
 				} else {
 					const rand = Math.random();
-					if (rand < 0.05) {
+					if (rand < 0.00001) {
 						this.tiles += MapTile.Wall;
-					} else if (rand < 0.07) {
+					} else if (rand < 0.00003) {
 						this.tiles += MapTile.Water;
 					} else {
 						this.tiles += MapTile.Walkable;

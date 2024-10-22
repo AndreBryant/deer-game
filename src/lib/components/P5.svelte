@@ -3,6 +3,7 @@
 	let p5Sketch: import('p5');
 	let canvas: HTMLElement | undefined;
 
+	export let preload = (p5js: any) => {};
 	export let setup = (p5js: any) => {};
 	export let draw = (p5js: any) => {};
 	export let windowResized = (p5js: any) => {};
@@ -13,6 +14,7 @@
 			const p5 = await import('p5');
 
 			p5Sketch = new p5.default((p5js) => {
+				p5js.preload = () => preload(p5js);
 				p5js.setup = () => setup(p5js);
 				p5js.draw = () => draw(p5js);
 				p5js.windowResized = () => windowResized(p5js);
