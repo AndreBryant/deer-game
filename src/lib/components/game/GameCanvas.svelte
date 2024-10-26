@@ -7,9 +7,12 @@
 	import P5 from '../P5.svelte';
 	import mDeer from '$lib/sprites/mDeer.png';
 	import { drawPlayer } from '$lib/sprites/Sprite';
-	import { drawMap, drawMapTiles } from '$lib/utils/render';
+	import { drawMap, drawMapTiles, translateCoords } from '$lib/utils/render';
 
 	$: serverData;
+	$: sortedPlayers = serverData.players
+		? Object.values(serverData.players).sort((a: any, b: any) => a.y - b.y)
+		: [];
 	let mapImage: any;
 	let spriteSheet: any;
 
@@ -40,12 +43,21 @@
 
 			drawMap(p5, mapImage, player);
 
-			for (const data in serverData.players) {
-				const p = serverData.players[data];
-				if (data === socketId) {
+			for (const p of sortedPlayers) {
+				if (p.id === socketId) {
 					drawPlayer(p5, spriteSheet, p5.width / 2, p5.height / 2, player);
 					continue;
 				}
+
+				const pCoords = translateCoords({
+					h: p5.height,
+					w: p5.width,
+					px: player.x,
+					py: player.y,
+					x: p.x,
+					y: p.y
+				});
+				drawPlayer(p5, spriteSheet, pCoords.x, pCoords.y, p);
 			}
 		} else {
 			p5.push();

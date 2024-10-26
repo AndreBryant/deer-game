@@ -23,7 +23,7 @@ export const DEER_SPRITE_ANIMATION_DATA = {
 		]
 	},
 	walk: {
-		slowness_factor: 4,
+		slowness_factor: 1,
 		positions: [
 			{ x: 0 * FRAME_SIZE, y: 2 * FRAME_SIZE },
 			{ x: 1 * FRAME_SIZE, y: 2 * FRAME_SIZE },
@@ -49,13 +49,17 @@ export function drawPlayer(p5: any, spriteSheet: any, x: number, y: number, play
 	const frame =
 		p5.floor(p5.frameCount / slownessFactor) % DEER_SPRITE_ANIMATION_DATA[action].positions.length;
 	p5.push();
+
 	if (isFacingLeft) {
-		p5.scale(-1, 1);
-		p5.translate(-p5.width, 0);
+		// Fix this
+		// p5.scale(-1, 1);
+		// p5.translate(-p5.width, 0);
 	}
+
 	p5.fill(0, 0, 0, 50);
 	p5.noStroke();
-	p5.ellipse(p5.width / 2, p5.height / 2 + 64, 128, 16);
+	// Shadow
+	p5.ellipse(x, y + 64, player.radius * 2, 16);
 	p5.imageMode(p5.CENTER);
 	p5.image(
 		spriteSheet,

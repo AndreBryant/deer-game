@@ -14,6 +14,7 @@ export class Player {
 	dx: number;
 	isFacingLeft: boolean;
 	action: string;
+	actionEndTime: number | null;
 	map: Map;
 	constructor(
 		id: string,
@@ -35,6 +36,7 @@ export class Player {
 		this.dx = 15;
 		this.dy = 15;
 		this.action = 'idle';
+		this.actionEndTime = null;
 		this.color = color;
 		this.isFacingLeft = false;
 		this.map = map;

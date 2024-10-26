@@ -1,4 +1,4 @@
-function translateCoords({ h, w, px, py, x, y }: any) {
+export function translateCoords({ h, w, px, py, x, y }: any) {
 	return {
 		x: w / 2 + (x - px),
 		y: h / 2 + (y - py)

@@ -1,5 +1,5 @@
 import { Server, Socket } from 'socket.io';
-import { Player, PLAYER_HIT_RADIUS } from '../player';
+import { Player, PLAYER_HIT_RADIUS } from '../Player.ts';
 import { Map, MAP_HEIGHT, MAP_WIDTH, TILESIZE } from '../map';
 import { getRandomColor } from '../palette';
 
@@ -91,9 +91,19 @@ export function broadcastPlayerUpdates(io: Server) {
 		}
 
 		if (!isMoving) {
-			p.action = 'idle';
+			if (p.action === 'eat_grass' && p.actionEndTime && p.actionEndTime > new Date().getTime()) {
+				// DO nothing
+			} else {
+				if (Math.random() < 0.001) {
+					p.action = 'eat_grass';
+					p.actionEndTime = new Date().getTime() + 1000;
+				} else {
+					p.action = 'idle';
+				}
+			}
 		} else {
 			p.action = 'walk';
+			p.actionEndTime = null;
 		}
 
 		for (const room in rooms) {
