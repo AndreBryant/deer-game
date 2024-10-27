@@ -49,22 +49,20 @@ export function drawPlayer(p5: any, spriteSheet: any, x: number, y: number, play
 	const frame =
 		p5.floor(p5.frameCount / slownessFactor) % DEER_SPRITE_ANIMATION_DATA[action].positions.length;
 	p5.push();
-
+	p5.translate(x, y);
 	if (isFacingLeft) {
-		// Fix this
-		// p5.scale(-1, 1);
-		// p5.translate(-p5.width, 0);
+		p5.scale(-1, 1);
 	}
 
 	p5.fill(0, 0, 0, 50);
 	p5.noStroke();
 	// Shadow
-	p5.ellipse(x, y + 64, player.radius * 2, 16);
+	p5.ellipse(0, 0 + 64, player.radius * 2, 16);
 	p5.imageMode(p5.CENTER);
 	p5.image(
 		spriteSheet,
-		x,
-		y,
+		0,
+		0,
 		player.radius * 2,
 		player.radius * 2,
 		DEER_SPRITE_ANIMATION_DATA[action].positions[frame].x,
