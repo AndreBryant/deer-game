@@ -21,8 +21,8 @@
 	}
 
 	function setup(p5: any) {
+		console.log(mapData);
 		p5.createCanvas(p5.windowWidth, p5.windowHeight);
-
 		// For the Background (TEMPORARY)
 		if (mapData) {
 			let graphics = p5.createGraphics(

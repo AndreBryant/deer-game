@@ -27,6 +27,11 @@ export function handleJoinRoom(
 		gameID: string;
 	}
 ) {
+	// if (!rooms[data.gameID]) {
+	// io.to(socket.id).emit('allowed_to_join', false);
+	// return;
+	// }
+	// io.to(socket.id).emit('allowed_to_join', true);
 	joinRoom(io, socket, data.gameID, false, data.username);
 }
 
@@ -43,10 +48,11 @@ export function handleDisconnect(io: Server, socket: Socket) {
 				console.log(`Host disconnected, deleting room: ${player.room}`);
 				delete rooms[player.room];
 			} else {
-				// TODO kick everyone in the room and notify everyone that the host has disconnected
-				console.log(`Host disconnected, but other players are still in the room.`);
 				delete rooms[player.room];
 				io.emit('rooms_updated', rooms);
+				for (const p in playersInRoom) {
+					io.to(playersInRoom[p].id).emit('kicked_from_room', true);
+				}
 			}
 		} else {
 			if (rooms[player.room]) {
@@ -64,6 +70,9 @@ export function handleKeyInput(
 	socket: Socket,
 	data: { gameID: string; keyStates: { [key: string]: boolean } }
 ) {
+	if (!keyStates[data.gameID]) {
+		return;
+	}
 	keyStates[data.gameID][socket.id] = data.keyStates;
 }
 
@@ -157,6 +166,10 @@ function filterPlayersByRoom(players: { [key: string]: Player }, room: string) {
 }
 
 function joinRoom(io: Server, socket: Socket, gameID: string, isHost: boolean, username?: string) {
+	if (!rooms[gameID]) {
+		io.to(socket.id).emit('kicked_from_room', true);
+		return;
+	}
 	players[socket.id] = createPlayer(socket.id, gameID, isHost, username, gameID);
 	if (!isHost) {
 		rooms[gameID].players++;

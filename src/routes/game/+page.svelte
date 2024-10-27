@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	export let data: any;
 	import GameCanvas from '$lib/components/game/GameCanvas.svelte';
 	import type { DefaultEventsMap } from '@socket.io/component-emitter';
@@ -69,6 +70,12 @@
 
 		ws.on('map_generated', (dataFromServer) => {
 			mapData = dataFromServer;
+		});
+
+		ws.on('kicked_from_room', (kicked) => {
+			if (kicked) {
+				goto('/');
+			}
 		});
 
 		window.addEventListener('keydown', (e) => handleKeydown(ws, e));
