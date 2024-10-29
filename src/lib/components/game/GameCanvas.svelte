@@ -6,6 +6,7 @@
 		| undefined;
 	import P5 from '../P5.svelte';
 	import mDeer from '$lib/sprites/mDeer.png';
+	import fDeer from '$lib/sprites/fDeer.png';
 	import { drawPlayer } from '$lib/sprites/Sprite';
 	import { drawMap, drawMapTiles, translateCoords } from '$lib/utils/render';
 
@@ -14,10 +15,12 @@
 		? Object.values(serverData.players).sort((a: any, b: any) => a.y - b.y)
 		: [];
 	let mapImage: any;
-	let spriteSheet: any;
+	let maleSpriteSheet: any;
+	let femaleSpriteSheet: any;
 
 	function preload(p5: any) {
-		spriteSheet = p5.loadImage(mDeer);
+		maleSpriteSheet = p5.loadImage(mDeer);
+		femaleSpriteSheet = p5.loadImage(fDeer);
 	}
 
 	function setup(p5: any) {
@@ -36,7 +39,7 @@
 	}
 
 	function draw(p5: any) {
-		p5.background(0);
+		p5.background(20, 25, 55);
 
 		if (serverData && mapData && serverData.players && serverData.players[socketId]) {
 			const player = serverData.players[socketId];
@@ -45,7 +48,13 @@
 
 			for (const p of sortedPlayers) {
 				if (p.id === socketId) {
-					drawPlayer(p5, spriteSheet, p5.width / 2, p5.height / 2, player);
+					drawPlayer(
+						p5,
+						player.sex === 'male' ? maleSpriteSheet : femaleSpriteSheet,
+						p5.width / 2,
+						p5.height / 2,
+						player
+					);
 					continue;
 				}
 
@@ -57,7 +66,13 @@
 					x: p.x,
 					y: p.y
 				});
-				drawPlayer(p5, spriteSheet, pCoords.x, pCoords.y, p);
+				drawPlayer(
+					p5,
+					p.sex === 'male' ? maleSpriteSheet : femaleSpriteSheet,
+					pCoords.x,
+					pCoords.y,
+					p
+				);
 			}
 		} else {
 			p5.push();

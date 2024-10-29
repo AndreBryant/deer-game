@@ -118,7 +118,10 @@
 			<p>Player: {data.username}</p>
 		</div>
 		{#if clientPlayer}
-			<div>
+			<div class="absolute bottom-0">
+				<p class="text-lg">HP: {clientPlayer.health}</p>
+			</div>
+			<div class="absolute right-0 top-0">
 				<p>x: {clientPlayer.x}</p>
 				<p>y: {clientPlayer.y}</p>
 			</div>

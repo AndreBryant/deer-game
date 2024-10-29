@@ -1,5 +1,5 @@
-export const MAP_HEIGHT = 80;
-export const MAP_WIDTH = 80;
+export const MAP_HEIGHT = 160;
+export const MAP_WIDTH = 160;
 export const TILESIZE = 32;
 
 export enum MapTile {

@@ -23,7 +23,7 @@ export const DEER_SPRITE_ANIMATION_DATA = {
 		]
 	},
 	walk: {
-		slowness_factor: 1,
+		slowness_factor: 4,
 		positions: [
 			{ x: 0 * FRAME_SIZE, y: 2 * FRAME_SIZE },
 			{ x: 1 * FRAME_SIZE, y: 2 * FRAME_SIZE },

@@ -16,6 +16,9 @@ export class Player {
 	action: string;
 	actionEndTime: number | null;
 	map: Map;
+	attack: number;
+	health: number;
+	sex: 'male' | 'female';
 	constructor(
 		id: string,
 		room: string,
@@ -40,6 +43,9 @@ export class Player {
 		this.color = color;
 		this.isFacingLeft = false;
 		this.map = map;
+		this.attack = 1;
+		this.health = 15;
+		this.sex = Math.random() > 0.5 ? 'female' : 'male';
 	}
 
 	// TODO FIX nextX so that it does not use this.radius
@@ -62,7 +68,9 @@ export class Player {
 		// 	this.x = floorX * tileSize - this.radius;
 		// }
 		// }
-		console.log(Math.floor(this.x / TILESIZE), Math.floor(this.y / TILESIZE));
+
+		// IMPORTANT DO NOT REMOVE
+		// console.log(Math.floor(this.x / TILESIZE), Math.floor(this.y / TILESIZE));
 	}
 
 	updateY(up: boolean) {
@@ -82,6 +90,8 @@ export class Player {
 		// 		this.y = floorY * tileSize - this.radius;
 		// 	}
 		// }
-		console.log(Math.floor(this.x / TILESIZE), Math.floor(this.y / TILESIZE));
+
+		// IMPORTANT DO NOT REMOVE
+		// console.log(Math.floor(this.x / TILESIZE), Math.floor(this.y / TILESIZE));
 	}
 }

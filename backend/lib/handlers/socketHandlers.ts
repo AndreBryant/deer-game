@@ -27,11 +27,6 @@ export function handleJoinRoom(
 		gameID: string;
 	}
 ) {
-	// if (!rooms[data.gameID]) {
-	// io.to(socket.id).emit('allowed_to_join', false);
-	// return;
-	// }
-	// io.to(socket.id).emit('allowed_to_join', true);
 	joinRoom(io, socket, data.gameID, false, data.username);
 }
 
