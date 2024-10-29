@@ -45,9 +45,9 @@ export function drawPlayer(p5: any, spriteSheet: any, x: number, y: number, play
 	// Add this to player class
 	const isFacingLeft = player.isFacingLeft;
 	const action = player.action;
-	const slownessFactor = DEER_SPRITE_ANIMATION_DATA[action].slowness_factor;
-	const frame =
-		p5.floor(p5.frameCount / slownessFactor) % DEER_SPRITE_ANIMATION_DATA[action].positions.length;
+	const actionData = DEER_SPRITE_ANIMATION_DATA[action];
+	const slownessFactor = actionData.slowness_factor;
+	const frame = p5.floor(p5.frameCount / slownessFactor) % actionData.positions.length;
 	p5.push();
 	p5.translate(x, y);
 	if (isFacingLeft) {
@@ -65,8 +65,8 @@ export function drawPlayer(p5: any, spriteSheet: any, x: number, y: number, play
 		0,
 		player.radius * 2,
 		player.radius * 2,
-		DEER_SPRITE_ANIMATION_DATA[action].positions[frame].x,
-		DEER_SPRITE_ANIMATION_DATA[action].positions[frame].y,
+		actionData.positions[frame].x,
+		actionData.positions[frame].y,
 		FRAME_SIZE,
 		FRAME_SIZE
 	);
