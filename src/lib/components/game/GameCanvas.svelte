@@ -15,18 +15,17 @@
 		? Object.values(serverData.players).sort((a: any, b: any) => a.y - b.y)
 		: [];
 	let mapImage: any;
-	let maleSpriteSheet: any;
-	let femaleSpriteSheet: any;
+	let deerSpriteSheet: any;
+	let hornDeerSpriteSheet: any;
 
 	function preload(p5: any) {
-		maleSpriteSheet = p5.loadImage(mDeer);
-		femaleSpriteSheet = p5.loadImage(fDeer);
+		deerSpriteSheet = p5.loadImage(fDeer);
+		hornDeerSpriteSheet = p5.loadImage(mDeer);
 	}
 
 	function setup(p5: any) {
-		console.log(mapData);
 		p5.createCanvas(p5.windowWidth, p5.windowHeight);
-		// For the Background (TEMPORARY)
+
 		if (mapData) {
 			let graphics = p5.createGraphics(
 				mapData?.width * mapData.tileSize,
@@ -35,22 +34,24 @@
 			drawMapTiles(graphics, mapData);
 			mapImage = graphics.get();
 		}
+
 		p5.noSmooth();
 	}
 
 	function draw(p5: any) {
-		p5.background(20, 25, 55);
+		p5.background(21);
 
 		if (serverData && mapData && serverData.players && serverData.players[socketId]) {
 			const player = serverData.players[socketId];
 
 			drawMap(p5, mapImage, player);
 
-			for (const p of sortedPlayers) {
+			for (let i = 0; i < sortedPlayers.length; i++) {
+				const p: any = sortedPlayers[i];
 				if (p.id === socketId) {
 					drawPlayer(
 						p5,
-						player.sex === 'male' ? maleSpriteSheet : femaleSpriteSheet,
+						player.hasHorn ? hornDeerSpriteSheet : deerSpriteSheet,
 						p5.width / 2,
 						p5.height / 2,
 						player
@@ -66,13 +67,7 @@
 					x: p.x,
 					y: p.y
 				});
-				drawPlayer(
-					p5,
-					p.sex === 'male' ? maleSpriteSheet : femaleSpriteSheet,
-					pCoords.x,
-					pCoords.y,
-					p
-				);
+				drawPlayer(p5, p.hasHorn ? hornDeerSpriteSheet : deerSpriteSheet, pCoords.x, pCoords.y, p);
 			}
 		} else {
 			p5.push();

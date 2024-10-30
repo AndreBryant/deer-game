@@ -3,7 +3,7 @@ export async function load({ url }) {
 	const username = url.searchParams.get('username') || 'Host';
 	const gameID = url.searchParams.get('gameID') || generateRandomGameId();
 
-	return { host, gameID, username }; // Removed currentRooms from the return statement
+	return { host, gameID, username };
 }
 
 function generateRandomGameId() {

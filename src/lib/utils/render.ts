@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export function translateCoords({ h, w, px, py, x, y }: any) {
 	return {
 		x: w / 2 + (x - px),
@@ -34,7 +35,7 @@ export function drawMapTiles(
 					graphics.fill(10, graphics.random(85, 95), 10);
 					break; // Grass
 				case '#':
-					graphics.fill(graphics.random(25, 35));
+					graphics.fill(20, graphics.random(35, 45), 20);
 					break; // Wall
 				case 'F':
 					graphics.fill(100, 0, 0);

@@ -18,7 +18,8 @@ export class Player {
 	map: Map;
 	attack: number;
 	health: number;
-	sex: 'male' | 'female';
+	hasHorn: boolean;
+
 	constructor(
 		id: string,
 		room: string,
@@ -45,29 +46,18 @@ export class Player {
 		this.map = map;
 		this.attack = 1;
 		this.health = 15;
-		this.sex = Math.random() > 0.5 ? 'female' : 'male';
+		this.hasHorn = this.isHost;
 	}
 
-	// TODO FIX nextX so that it does not use this.radius
 	updateX(left: boolean) {
 		this.x += left ? -this.dx : this.dx;
 		this.isFacingLeft = left;
 
-		// const tileSize = this.map.tileSize;
-		// const nextX = left ? this.x - this.dx : this.x + this.dx;
-		// const floorX = Math.floor(nextX / tileSize);
-		// const floorY = Math.floor(this.y / tileSize);
-		// const nextTile = this.map.getTile(Math.floor(nextX / tileSize), floorY);
-
-		// if (nextTile && nextTile !== MapTile.Wall) {
-		// 	this.x = nextX;
-		// } else {
-		// if (left) {
-		// 	this.x = (floorX + 1) * tileSize + this.radius;
-		// } else {
-		// 	this.x = floorX * tileSize - this.radius;
-		// }
-		// }
+		if (this.x + this.radius >= this.map.width * TILESIZE) {
+			this.x = this.map.width * TILESIZE - this.radius;
+		} else if (this.x - this.radius < 0) {
+			this.x = this.radius;
+		}
 
 		// IMPORTANT DO NOT REMOVE
 		// console.log(Math.floor(this.x / TILESIZE), Math.floor(this.y / TILESIZE));
@@ -75,22 +65,12 @@ export class Player {
 
 	updateY(up: boolean) {
 		this.y += up ? -this.dy : this.dy;
-		// const tileSize = this.map.tileSize;
-		// const nextY = up ? this.y - this.dy - this.radius : this.y + this.dy + this.radius;
-		// const floorY = Math.floor(nextY / tileSize);
-		// const floorX = Math.floor(this.x / tileSize);
-		// const nextTile = this.map.getTile(floorX, Math.floor(nextY / tileSize));
 
-		// if (nextTile && nextTile !== MapTile.Wall) {
-		// 	this.y = nextY;
-		// } else {
-		// 	if (up) {
-		// 		this.y = (floorY + 1) * tileSize + this.radius;
-		// 	} else {
-		// 		this.y = floorY * tileSize - this.radius;
-		// 	}
-		// }
-
+		if (this.y + this.radius >= (this.map.height - 1) * TILESIZE) {
+			this.y = (this.map.height - 1) * TILESIZE - this.radius;
+		} else if (this.y - this.radius < -(TILESIZE * 2)) {
+			this.y = this.radius - TILESIZE * 2;
+		}
 		// IMPORTANT DO NOT REMOVE
 		// console.log(Math.floor(this.x / TILESIZE), Math.floor(this.y / TILESIZE));
 	}
