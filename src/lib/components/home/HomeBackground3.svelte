@@ -38,7 +38,7 @@
 	let moon: { x: number; y: number; r: number };
 	let deerHead: any;
 
-	let angle: number = 10;
+	let angle: number = 0;
 
 	let sunPathWidth: number;
 	let sunPathHeight: number;
@@ -122,10 +122,11 @@
 		let mountains = [];
 		const mountainHeight = p5.height / 3;
 		const noiseScale = p5.random(0.001, 0.005);
+		const r = p5.random(0, 10);
 
 		let lastX;
 		for (let x = 0; x <= p5.width; x += 10) {
-			const noiseVal = p5.noise(x * noiseScale);
+			const noiseVal = p5.noise(r + x * noiseScale);
 			const y = mountainBaseHeight - noiseVal * mountainHeight;
 			lastX = x;
 			mountains.push({ x, y });

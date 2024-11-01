@@ -42,6 +42,7 @@
 		p5.background(21);
 
 		if (serverData && mapData && serverData.players && serverData.players[socketId]) {
+			// TODO: only render if player is visible
 			const player = serverData.players[socketId];
 
 			drawMap(p5, mapImage, player);

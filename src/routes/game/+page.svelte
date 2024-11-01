@@ -121,31 +121,43 @@
 			{/if}
 		</div>
 		{#if clientPlayer}
-			<div class="absolute bottom-0 left-0 flex gap-2 opacity-65">
-				<div class="flex flex-col">
-					<div class="flex justify-center">
-						<div class="relative" class:opacity-40={keyStates.up}>
-							<Square size="30" />
-							<span class="absolute left-[10px] top-[3px]">W</span>
+			<div class="absolute bottom-0 left-0 flex flex-col gap-2 opacity-65">
+				<div class="flex">
+					<div class="flex flex-col">
+						<div class="flex justify-center">
+							<div class="relative" class:opacity-40={keyStates.up}>
+								<Square size="30" />
+								<span class="absolute left-[10px] top-[3px]">W</span>
+							</div>
+						</div>
+						<div class="flex">
+							<div class="relative" class:opacity-40={keyStates.left}>
+								<Square size="30" />
+								<span class="absolute left-[10px] top-[3px]">A</span>
+							</div>
+							<div class="relative" class:opacity-40={keyStates.down}>
+								<Square size="30" />
+								<span class="absolute left-[10px] top-[3px]">S</span>
+							</div>
+							<div class="relative" class:opacity-40={keyStates.right}>
+								<Square size="30" />
+								<span class="absolute left-[10px] top-[3px]">D</span>
+							</div>
 						</div>
 					</div>
-					<div class="flex">
-						<div class="relative" class:opacity-40={keyStates.left}>
-							<Square size="30" />
-							<span class="absolute left-[10px] top-[3px]">A</span>
-						</div>
-						<div class="relative" class:opacity-40={keyStates.down}>
-							<Square size="30" />
-							<span class="absolute left-[10px] top-[3px]">S</span>
-						</div>
-						<div class="relative" class:opacity-40={keyStates.right}>
-							<Square size="30" />
-							<span class="absolute left-[10px] top-[3px]">D</span>
-						</div>
+					<div class="flex items-end">
+						<p class="text-lg">- move</p>
 					</div>
 				</div>
-				<div class="flex items-end">
-					<p class="text-lg">- move</p>
+				<div class="flex gap-4">
+					<div class="flex justify-center">
+						<div class="" class:opacity-40={keyStates.up}>
+							<span class="rounded-md border-4 px-2 py-1 text-xs">Space</span>
+						</div>
+					</div>
+					<div>
+						<p class="text-lg">- attack</p>
+					</div>
 				</div>
 			</div>
 			<div class="absolute right-0 top-0">
