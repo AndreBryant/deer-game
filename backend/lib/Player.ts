@@ -18,7 +18,8 @@ export class Player {
 	map: Map;
 	attack: number;
 	health: number;
-	hasHorn: boolean;
+	sex: 'm' | 'f';
+	hasNose: boolean;
 
 	constructor(
 		id: string,
@@ -46,7 +47,9 @@ export class Player {
 		this.map = map;
 		this.attack = 1;
 		this.health = 15;
-		this.hasHorn = this.isHost;
+		// this should be false by default but for now, it's randomized
+		this.hasNose = Math.random() < 0.5;
+		this.sex = Math.random() < 0.5 ? 'f' : 'm';
 	}
 
 	updateX(left: boolean) {
