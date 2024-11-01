@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { DEER_SPRITE_ANIMATION_DATA, FRAME_SIZE } from '$lib/sprites/Sprite';
 	import P5 from '$lib/components/P5.svelte';
 	import mDeer from '$lib/sprites/mDeer.png';
 	import fDeer from '$lib/sprites/fDeer.png';
@@ -7,28 +6,48 @@
 
 	let deerSpriteSheet: any;
 	let hornDeerSpriteSheet: any;
+	const lerpConstant = 0.1;
+
+	// Sky
+	let skyDay = palette.primary.sky_blue;
+	let skyNight = palette.primary.night_sky;
+	let currSky = skyDay;
+	let currGoal = skyNight;
 
 	// Mountains
 	let mountainsA: { x: any; y: any }[] = [];
-	let mountainsB: { x: any; y: any }[] = [];
-	let mountainsC: { x: any; y: any }[] = [];
+	let mADay = palette.primary.mountainA_day;
+	let mANight = palette.primary.mountainA_night;
+	let mACurrMountain = mADay;
+	let mACurrGoal = mANight;
 
-	// Sun
+	let mountainsB: { x: any; y: any }[] = [];
+	let mBDay = palette.primary.mountainB_day;
+	let mBNight = palette.primary.mountainB_night;
+	let mBCurrMountain = mBDay;
+	let mBCurrGoal = mBNight;
+
+	let mountainsC: { x: any; y: any }[] = [];
+	let mCDay = palette.primary.mountainC_day;
+	let mCNight = palette.primary.mountainC_night;
+	let mCCurrMountain = mCDay;
+	let mCCurrGoal = mCNight;
+
+	// Heavenly bodies
 	let sun: { x: number; y: number; r: number };
+	let moon: { x: number; y: number; r: number };
+	let deerHead: any;
+
 	let angle: number = 180;
+
 	let sunPathWidth: number;
 	let sunPathHeight: number;
 	let centerX: number;
 	let centerY: number;
 
-	// Values
-	let scaleFactor: number = 1;
-	let scaleDirection: number = 0.001;
-
-	let rows: number;
-	let cols: number;
-
-	const frameSize = FRAME_SIZE * 4;
+	let stars: { x: number; y: number }[] = [];
+	let starColor = palette.primary.sky_blue;
+	let starCount = 200;
 
 	function preload(p5: any) {
 		deerSpriteSheet = p5.loadImage(fDeer);
@@ -39,36 +58,56 @@
 		p5.createCanvas(p5.windowWidth, p5.windowHeight);
 		p5.noSmooth();
 
-		rows = p5.ceil(p5.height / frameSize);
-		cols = p5.ceil(p5.width / frameSize);
-		mountainsA = setupMountains(p5, p5.height * 0.4);
-		mountainsB = setupMountains(p5, p5.height * 0.6);
-		mountainsC = setupMountains(p5, p5.height * 0.75);
-
-		sunPathWidth = p5.width * 0.6;
-		sunPathHeight = p5.height * 0.1;
-		centerX = p5.width / 2;
-		centerY = p5.height * 0.2;
+		setupValues(p5);
 		sun = { x: p5.width * 0.3, y: p5.height * 0.1, r: 200 };
+		moon = { x: p5.width - p5.width * 0.3, y: p5.height * 0.1, r: 150 };
+
+		deerHead = deerSpriteSheet.get(16, 0, 16, 14);
+		p5.imageMode(p5.CENTER);
 	}
 
 	function draw(p5: any) {
-		p5.background('#87cefa');
-		p5.fill('#fdee00');
+		currSky = p5.lerpColor(p5.color(currSky), p5.color(currGoal), lerpConstant);
+		p5.background(currSky);
 
+		const moonAngle = (angle + 180) % 360;
+		moon.x = centerX + sunPathWidth * p5.cos(p5.radians(moonAngle));
+		moon.y = centerY + sunPathHeight * p5.sin(p5.radians(moonAngle));
 		sun.x = centerX + sunPathWidth * p5.cos(p5.radians(angle));
 		sun.y = centerY + sunPathHeight * p5.sin(p5.radians(angle));
-		p5.noStroke();
-		p5.ellipse(sun.x, sun.y, sun.r, sun.r);
-		angle += angle < 180 && angle > 0 ? 180 : 0.1;
+		drawHeavenlyBodies(p5);
+
+		mACurrMountain = p5.lerpColor(p5.color(mACurrMountain), p5.color(mACurrGoal), lerpConstant);
+		mBCurrMountain = p5.lerpColor(p5.color(mBCurrMountain), p5.color(mBCurrGoal), lerpConstant);
+		mCCurrMountain = p5.lerpColor(p5.color(mCCurrMountain), p5.color(mCCurrGoal), lerpConstant);
+
+		p5.fill(mACurrMountain);
+		drawMountains(p5, mountainsA);
+		p5.fill(mBCurrMountain);
+		drawMountains(p5, mountainsB);
+		p5.fill(mCCurrMountain);
+		drawMountains(p5, mountainsC);
+
+		// angle += angle < 180 ? 0.5 : 180;
+		angle += 0.2;
 		if (angle >= 360) angle = 0;
 
-		p5.fill(palette.primary.darkBrown);
-		drawMountains(p5, mountainsA);
-		p5.fill(palette.primary.brown);
-		drawMountains(p5, mountainsB);
-		p5.fill(palette.primary.yellow);
-		drawMountains(p5, mountainsC);
+		if (angle < 180) {
+			currGoal = skyNight; // Night
+			mACurrGoal = mANight;
+			mBCurrGoal = mBNight;
+			mCCurrGoal = mCNight;
+		} else {
+			currGoal = skyDay; // Day
+			mACurrGoal = mADay;
+			mBCurrGoal = mBDay;
+			mCCurrGoal = mCDay;
+		}
+	}
+
+	function windowResized(p5: any) {
+		p5.resizeCanvas(p5.windowWidth, p5.windowHeight);
+		setupValues(p5);
 	}
 
 	function setupMountains(p5: any, mountainBaseHeight: number) {
@@ -104,13 +143,42 @@
 		p5.endShape(p5.CLOSE);
 	}
 
-	function windowResized(p5: any) {
-		p5.resizeCanvas(p5.windowWidth, p5.windowHeight);
-		rows = p5.ceil(p5.height / frameSize);
-		cols = p5.ceil(p5.width / frameSize);
-		mountainsA = setupMountains(p5, p5.height * 0.4);
-		mountainsB = setupMountains(p5, p5.height * 0.6);
-		mountainsC = setupMountains(p5, p5.height * 0.75);
+	function drawHeavenlyBodies(p5: any) {
+		p5.push();
+		p5.noStroke();
+		p5.fill('#fdee00');
+		p5.ellipse(sun.x, sun.y, sun.r, sun.r);
+
+		if (angle < 180) {
+			p5.stroke(starColor);
+			p5.strokeWeight(2);
+			for (let i = 0; i < stars.length; i++) {
+				const s = stars[i];
+				p5.point(s.x, s.y);
+			}
+			p5.noStroke();
+			p5.tint(255, 255, 255, 180);
+			p5.fill('white');
+			p5.ellipse(moon.x, moon.y, moon.r, moon.r);
+			p5.image(deerHead, moon.x, moon.y - moon.r / 4, moon.r * 1.1, moon.r * 1.1);
+			p5.noTint();
+		}
+		p5.pop();
+	}
+
+	function setupValues(p5: any) {
+		mountainsA = setupMountains(p5, p5.height * 0.65);
+		mountainsB = setupMountains(p5, p5.height * 0.75);
+		mountainsC = setupMountains(p5, p5.height * 0.85);
+
+		sunPathWidth = p5.width * 0.5;
+		sunPathHeight = p5.height * 0.5;
+		centerX = p5.width / 2;
+		centerY = p5.height * 0.65;
+		stars = [];
+		for (let i = 0; i < starCount; i++) {
+			stars.push({ x: p5.random(0, p5.width), y: p5.random(0, p5.height / 2) });
+		}
 	}
 </script>
 
