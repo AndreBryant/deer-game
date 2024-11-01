@@ -20,6 +20,8 @@ export class Player {
 	health: number;
 	sex: 'm' | 'f';
 	hasNose: boolean;
+	invincible: boolean;
+	invincibilityEndTime: number | null;
 
 	constructor(
 		id: string,
@@ -50,8 +52,31 @@ export class Player {
 		// this should be false by default but for now, it's randomized
 		this.hasNose = Math.random() < 0.5;
 		this.sex = Math.random() < 0.5 ? 'f' : 'm';
+		this.invincible = false;
+		this.invincibilityEndTime = null;
 	}
 
+	update() {
+		if (
+			this.action === 'attack' &&
+			this.actionEndTime &&
+			this.actionEndTime > new Date().getTime()
+		) {
+			this.dx = 8;
+			this.dy = 8;
+		} else {
+			this.dx = 15;
+			this.dy = 15;
+		}
+		if (
+			this.invincible &&
+			this.invincibilityEndTime &&
+			this.invincibilityEndTime <= new Date().getTime()
+		) {
+			this.invincible = false; // Remove invincibility
+			this.invincibilityEndTime = null; // Reset end time
+		}
+	}
 	updateX(left: boolean) {
 		this.x += left ? -this.dx : this.dx;
 		this.isFacingLeft = left;
@@ -76,5 +101,11 @@ export class Player {
 		}
 		// IMPORTANT DO NOT REMOVE
 		// console.log(Math.floor(this.x / TILESIZE), Math.floor(this.y / TILESIZE));
+	}
+
+	takeDamage(damage: number) {
+		if (!this.invincible && this.invincibilityEndTime < Date.now()) {
+			this.health -= damage;
+		}
 	}
 }

@@ -33,7 +33,7 @@ export const DEER_SPRITE_ANIMATION_DATA = {
 		]
 	},
 	attack: {
-		slowness_factor: 8,
+		slowness_factor: 4,
 		positions: [
 			{ x: 0 * FRAME_SIZE, y: 5 * FRAME_SIZE },
 			{ x: 1 * FRAME_SIZE, y: 5 * FRAME_SIZE },

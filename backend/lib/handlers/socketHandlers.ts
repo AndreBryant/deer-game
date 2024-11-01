@@ -72,6 +72,7 @@ export function handleKeyInput(
 }
 
 export function broadcastPlayerUpdates(io: Server) {
+	updatePlayers();
 	for (const player in players) {
 		const p = players[player];
 		const roomID = p.room;
@@ -110,6 +111,24 @@ export function broadcastPlayerUpdates(io: Server) {
 			p.actionEndTime = null;
 		}
 
+		if (keyStates[roomID][player]['attack']) {
+			p.action = 'attack';
+			p.actionEndTime = new Date().getTime() + 5000;
+
+			// Check for collisions with other players in the room
+			for (const otherPlayer in players) {
+				if (otherPlayer !== player && players[otherPlayer].room === roomID) {
+					const target = players[otherPlayer];
+					if (isInAttackRange(p, target)) {
+						target.takeDamage(p.attack);
+						target.invincible = true;
+						target.invincibilityEndTime = new Date().getTime() + 100;
+						// io.to(otherPlayer).emit('damaged', { amount: p.attackPower });
+					}
+				}
+			}
+		}
+
 		for (const room in rooms) {
 			const ps = filterPlayersByRoom(players, room);
 			io.to(room).emit('player_updated', {
@@ -120,6 +139,26 @@ export function broadcastPlayerUpdates(io: Server) {
 	}
 }
 
+function updatePlayers() {
+	for (const player in players) {
+		players[player].update();
+	}
+}
+
+function isInAttackRange(attacker: Player, target: Player) {
+	const attackRange = attacker.radius * 1.5; // TODO: Example range
+	const distance = Math.sqrt(
+		Math.pow(attacker.x - target.x, 2) + Math.pow(attacker.y - target.y, 2)
+	);
+
+	if (distance > attackRange) {
+		return false;
+	}
+	const isFacingLeft = attacker.isFacingLeft;
+	const inFront = isFacingLeft ? target.x < attacker.x : target.x > attacker.x;
+
+	return inFront;
+}
 function createPlayer(
 	socketID: string,
 	gameID: string,
@@ -152,7 +191,8 @@ function initializeKeyState(room: string, player: string) {
 		up: false,
 		down: false,
 		left: false,
-		right: false
+		right: false,
+		attack: false
 	};
 }
 

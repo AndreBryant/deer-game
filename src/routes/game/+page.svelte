@@ -15,13 +15,20 @@
 		isConnected: false
 	};
 
-	let keyStates: { [key: string]: boolean } = { up: false, down: false, left: false, right: false };
+	let keyStates: { [key: string]: boolean } = {
+		up: false,
+		down: false,
+		left: false,
+		right: false,
+		attack: false
+	};
 
 	function updateKeyCodes(key: string, value: boolean) {
 		if (key === 'w' || key === 'W') keyStates.up = value;
 		else if (key === 's' || key === 'S') keyStates.down = value;
 		else if (key === 'a' || key === 'A') keyStates.left = value;
 		else if (key === 'd' || key === 'D') keyStates.right = value;
+		if (key === ' ') keyStates.attack = value;
 	}
 
 	function handleKeydown(ws: Socket<DefaultEventsMap, DefaultEventsMap>, e: KeyboardEvent) {
@@ -151,7 +158,7 @@
 				</div>
 				<div class="flex gap-4">
 					<div class="flex justify-center">
-						<div class="" class:opacity-65={keyStates.up}>
+						<div class="" class:opacity-65={keyStates.attack}>
 							<span class="rounded-md border-4 px-2 py-1 text-xs">Space</span>
 						</div>
 					</div>
@@ -163,6 +170,7 @@
 			<div class="absolute right-0 top-0">
 				<p>x: {clientPlayer.x}</p>
 				<p>y: {clientPlayer.y}</p>
+				<p>y: {clientPlayer.action}</p>
 			</div>
 		{/if}
 	</section>
