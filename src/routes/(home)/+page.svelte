@@ -2,8 +2,7 @@
 	import { Swords, SquarePlus, Fingerprint, Tag, Check, X } from 'lucide-svelte';
 	import Button from '$lib/components/ui/Button.svelte';
 	import InputText from '$lib/components/ui/InputText.svelte';
-	import HomeBackground from '$lib/components/home/HomeBackground.svelte';
-	import HomeBackground2 from '$lib/components/home/HomeBackground2.svelte';
+	import HomeBackground3 from '$lib/components/home/HomeBackground3.svelte';
 
 	import { io } from 'socket.io-client';
 	const ws = io();
@@ -27,7 +26,8 @@
 	$: validStatus = checkRoom(gameID) ? 'valid' : 'invalid';
 	$: validStatus = gameID.length <= 0 ? 'none' : checkRoom(gameID) ? 'valid' : 'invalid';
 
-	let r = Math.random();
+	// let r = Math.random();
+	let r = 0.1;
 
 	function checkUsername(username: string) {
 		return username.length > 0;
@@ -47,22 +47,18 @@
 	}
 </script>
 
-<!-- FIX ValidStatus when room is deleted on('rooms_updated') -->
-<!-- {validStatus}
-{JSON.stringify(rooms[gameID], null, 2)} -->
-<!-- {JSON.stringify(rooms, null, 2)} -->
-<!-- Clean this page -->
 <main class="relative flex h-screen w-screen select-none flex-col items-center justify-center">
 	<div class="absolute left-0 top-0">
-		{#if r < 0.5}
+		<!-- {#if r < 0.5}
 			<HomeBackground />
 		{:else}
 			<HomeBackground2 />
-		{/if}
+			{/if} -->
+		<HomeBackground3 />
 	</div>
 	<section
 		class="relative rounded-xl border bg-slate-50 px-16 py-24 shadow-md backdrop-blur-lg"
-		class:bg-opacity-65={r < 0.5}
+		class:bg-opacity-55={r < 0.5}
 		class:bg-opacity-100={r >= 0.5}
 	>
 		<div
