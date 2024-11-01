@@ -38,7 +38,7 @@
 	let moon: { x: number; y: number; r: number };
 	let deerHead: any;
 
-	let angle: number = 180;
+	let angle: number = 10;
 
 	let sunPathWidth: number;
 	let sunPathHeight: number;
@@ -48,6 +48,10 @@
 	let stars: { x: number; y: number }[] = [];
 	let starColor = palette.primary.sky_blue;
 	let starCount = 200;
+
+	// Clouds
+	let clouds: { x: number; y: number; dx: number; r1: number[]; r2: number[]; r3: number[] }[] = [];
+	let cloudCount = 8;
 
 	function preload(p5: any) {
 		deerSpriteSheet = p5.loadImage(fDeer);
@@ -59,7 +63,7 @@
 		p5.noSmooth();
 
 		setupValues(p5);
-		sun = { x: p5.width * 0.3, y: p5.height * 0.1, r: 200 };
+		sun = { x: p5.width * 0.3, y: p5.height * 0.1, r: 175 };
 		moon = { x: p5.width - p5.width * 0.3, y: p5.height * 0.1, r: 150 };
 
 		deerHead = deerSpriteSheet.get(16, 0, 16, 14);
@@ -77,6 +81,10 @@
 		sun.y = centerY + sunPathHeight * p5.sin(p5.radians(angle));
 		drawHeavenlyBodies(p5);
 
+		if (angle >= 180) drawClouds(p5);
+		// makeCloud(p5, cloudx, cloudy - 50);
+		// makeCloud(p5, cloudx + 100, cloudy + 100);
+
 		mACurrMountain = p5.lerpColor(p5.color(mACurrMountain), p5.color(mACurrGoal), lerpConstant);
 		mBCurrMountain = p5.lerpColor(p5.color(mBCurrMountain), p5.color(mBCurrGoal), lerpConstant);
 		mCCurrMountain = p5.lerpColor(p5.color(mCCurrMountain), p5.color(mCCurrGoal), lerpConstant);
@@ -88,8 +96,8 @@
 		p5.fill(mCCurrMountain);
 		drawMountains(p5, mountainsC);
 
-		// angle += angle < 180 ? 0.5 : 180;
-		angle += 0.2;
+		// angle += angle < 180 ? 0.1 : 8;
+		angle += 0.1;
 		if (angle >= 360) angle = 0;
 
 		if (angle < 180) {
@@ -156,12 +164,19 @@
 				const s = stars[i];
 				p5.point(s.x, s.y);
 			}
+			const angleToCenter = p5.atan2(centerY - moon.y, centerX - moon.x);
+
+			// Rotate and draw the deer head
+			p5.push();
 			p5.noStroke();
-			p5.tint(255, 255, 255, 180);
 			p5.fill('white');
-			p5.ellipse(moon.x, moon.y, moon.r, moon.r);
-			p5.image(deerHead, moon.x, moon.y - moon.r / 4, moon.r * 1.1, moon.r * 1.1);
+			p5.translate(moon.x, moon.y - moon.r / 4);
+			p5.ellipse(0, 0, moon.r, moon.r);
+			p5.rotate(angleToCenter - p5.PI / 2);
+			p5.tint(255, 255, 255, 200);
+			p5.image(deerHead, 0, -moon.r / 5, moon.r * 1.1, moon.r * 1.1);
 			p5.noTint();
+			p5.pop();
 		}
 		p5.pop();
 	}
@@ -179,6 +194,34 @@
 		for (let i = 0; i < starCount; i++) {
 			stars.push({ x: p5.random(0, p5.width), y: p5.random(0, p5.height / 2) });
 		}
+
+		clouds = [];
+		for (let i = 0; i < cloudCount; i++) {
+			clouds.push({
+				x: p5.random(0, p5.width / 1.2),
+				y: p5.random(0, p5.height / 4),
+				dx: p5.random(0.1, 1),
+				// dx: 100,
+				r1: [p5.random(100, 200), p5.random(70, 80)],
+				r2: [p5.random(8, 12), p5.random(8, 12), p5.random(100, 150), p5.random(40, 70)],
+				r3: [p5.random(8, 12), p5.random(8, 12), p5.random(150, 250), p5.random(40, 70)]
+			});
+		}
+	}
+
+	function drawClouds(p5: any) {
+		p5.push();
+		for (let i = 0; i < cloudCount; i++) {
+			let cloud = clouds[i];
+			p5.fill(250, 250, 250);
+			p5.ellipse(cloud.x, cloud.y, cloud.r1[0], cloud.r1[1]);
+			p5.ellipse(cloud.x + cloud.r2[0], cloud.y + cloud.r2[1], cloud.r2[2], cloud.r2[3]);
+			p5.ellipse(cloud.x - cloud.r3[0], cloud.y + cloud.r3[1], cloud.r3[2], cloud.r3[3]);
+
+			clouds[i].x += clouds[i].dx;
+			if (clouds[i].x > p5.width + 100) clouds[i].x = -100;
+		}
+		p5.pop();
 	}
 </script>
 

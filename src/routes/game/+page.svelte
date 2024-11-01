@@ -1,10 +1,11 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	export let data: any;
-	import GameCanvas from '$lib/components/game/GameCanvas.svelte';
+	import { goto } from '$app/navigation';
 	import type { DefaultEventsMap } from '@socket.io/component-emitter';
 	import { io, Socket } from 'socket.io-client';
 	import { onMount } from 'svelte';
+	import GameCanvas from '$lib/components/game/GameCanvas.svelte';
+	import { Square } from 'lucide-svelte';
 
 	let serverData: any = {};
 	let mapData: { mapData: string; height: number; width: number; tileSize: number } | undefined =
@@ -95,7 +96,6 @@
 			: undefined;
 </script>
 
-<!-- {connectionState.socketId} -->
 <main class="XX--ADD-THIS-LATER--XX(select-none) relative h-screen w-screen text-white">
 	<div class="w-scree h-screenn absolute left-0 top-0 -z-10">
 		{#if mapData && connectionState.isConnected && connectionState.socketId}
@@ -121,6 +121,33 @@
 			{/if}
 		</div>
 		{#if clientPlayer}
+			<div class="absolute bottom-0 left-0 flex gap-2 opacity-65">
+				<div class="flex flex-col">
+					<div class="flex justify-center">
+						<div class="relative" class:opacity-40={keyStates.up}>
+							<Square size="30" />
+							<span class="absolute left-[10px] top-[3px]">W</span>
+						</div>
+					</div>
+					<div class="flex">
+						<div class="relative" class:opacity-40={keyStates.left}>
+							<Square size="30" />
+							<span class="absolute left-[10px] top-[3px]">A</span>
+						</div>
+						<div class="relative" class:opacity-40={keyStates.down}>
+							<Square size="30" />
+							<span class="absolute left-[10px] top-[3px]">S</span>
+						</div>
+						<div class="relative" class:opacity-40={keyStates.right}>
+							<Square size="30" />
+							<span class="absolute left-[10px] top-[3px]">D</span>
+						</div>
+					</div>
+				</div>
+				<div class="flex items-end">
+					<p class="text-lg">- move</p>
+				</div>
+			</div>
 			<div class="absolute right-0 top-0">
 				<p>x: {clientPlayer.x}</p>
 				<p>y: {clientPlayer.y}</p>

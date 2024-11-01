@@ -57,7 +57,7 @@
 		<HomeBackground3 />
 	</div>
 	<section
-		class="relative rounded-xl border bg-slate-50 px-16 py-24 shadow-md backdrop-blur-lg"
+		class="relative rounded-xl border bg-slate-50 px-16 py-24 shadow-md backdrop-blur-lg transition hover:bg-opacity-75"
 		class:bg-opacity-55={r < 0.5}
 		class:bg-opacity-100={r >= 0.5}
 	>
