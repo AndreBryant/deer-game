@@ -63,8 +63,8 @@
 		p5.noSmooth();
 
 		setupValues(p5);
-		sun = { x: p5.width * 0.3, y: p5.height * 0.1, r: 175 };
-		moon = { x: p5.width - p5.width * 0.3, y: p5.height * 0.1, r: 150 };
+		sun = { x: p5.width * 0.3, y: p5.height * 0.1, r: 125 };
+		moon = { x: p5.width - p5.width * 0.3, y: p5.height * 0.1, r: 100 };
 
 		deerHead = deerSpriteSheet.get(16, 0, 16, 14);
 		p5.imageMode(p5.CENTER);
@@ -72,8 +72,7 @@
 
 	function draw(p5: any) {
 		currSky = p5.lerpColor(p5.color(currSky), p5.color(currGoal), lerpConstant);
-		p5.background(currSky);
-
+		drawSky(p5, currSky);
 		const moonAngle = (angle + 180) % 360;
 		moon.x = centerX + sunPathWidth * p5.cos(p5.radians(moonAngle));
 		moon.y = centerY + sunPathHeight * p5.sin(p5.radians(moonAngle));
@@ -82,8 +81,7 @@
 		drawHeavenlyBodies(p5);
 
 		if (angle >= 180) drawClouds(p5);
-		// makeCloud(p5, cloudx, cloudy - 50);
-		// makeCloud(p5, cloudx + 100, cloudy + 100);
+		// drawClouds(p5);
 
 		mACurrMountain = p5.lerpColor(p5.color(mACurrMountain), p5.color(mACurrGoal), lerpConstant);
 		mBCurrMountain = p5.lerpColor(p5.color(mBCurrMountain), p5.color(mBCurrGoal), lerpConstant);
@@ -121,7 +119,7 @@
 	function setupMountains(p5: any, mountainBaseHeight: number) {
 		let mountains = [];
 		const mountainHeight = p5.height / 3;
-		const noiseScale = p5.random(0.001, 0.005);
+		const noiseScale = p5.random(0.007, 0.01);
 		const r = p5.random(0, 10);
 
 		let lastX;
@@ -141,6 +139,26 @@
 		return mountains;
 	}
 
+	function drawSky(p5: any, currSky: any) {
+		p5.background(currSky);
+		const c1 = p5.color(currSky);
+		let c2;
+		if (currGoal === skyDay) {
+			// gradient night
+			c2 = p5.color(50);
+		} else if (currGoal === skyNight) {
+			c2 = p5.color(175);
+		}
+		p5.push();
+		for (let i = 0; i < p5.height / 1.5; i++) {
+			const n = p5.map(i, 0, p5.height, 0, 1);
+			let newC = p5.lerpColor(c1, c2, n);
+			p5.stroke(newC);
+			p5.line(0, i, p5.width, i);
+		}
+		p5.pop();
+	}
+
 	function drawMountains(p5: any, mountains: typeof mountainsA) {
 		p5.beginShape();
 		p5.noStroke();
@@ -155,7 +173,7 @@
 	function drawHeavenlyBodies(p5: any) {
 		p5.push();
 		p5.noStroke();
-		p5.fill('#fdee00');
+		p5.fill('#fdee00e9');
 		p5.ellipse(sun.x, sun.y, sun.r, sun.r);
 
 		if (angle < 180) {
@@ -170,11 +188,11 @@
 			// Rotate and draw the deer head
 			p5.push();
 			p5.noStroke();
-			p5.fill('white');
+			p5.fill(200);
 			p5.translate(moon.x, moon.y - moon.r / 4);
 			p5.ellipse(0, 0, moon.r, moon.r);
 			p5.rotate(angleToCenter - p5.PI / 2);
-			p5.tint(255, 255, 255, 200);
+			p5.tint(255, 255, 255, 180);
 			p5.image(deerHead, 0, -moon.r / 5, moon.r * 1.1, moon.r * 1.1);
 			p5.noTint();
 			p5.pop();
@@ -183,8 +201,8 @@
 	}
 
 	function setupValues(p5: any) {
-		mountainsA = setupMountains(p5, p5.height * 0.65);
-		mountainsB = setupMountains(p5, p5.height * 0.75);
+		mountainsA = setupMountains(p5, p5.height * 0.7);
+		mountainsB = setupMountains(p5, p5.height * 0.78);
 		mountainsC = setupMountains(p5, p5.height * 0.85);
 
 		sunPathWidth = p5.width * 0.5;
@@ -199,8 +217,8 @@
 		clouds = [];
 		for (let i = 0; i < cloudCount; i++) {
 			clouds.push({
-				x: p5.random(0, p5.width / 1.2),
-				y: p5.random(0, p5.height / 4),
+				x: p5.random(0, p5.width),
+				y: p5.random(0, p5.height / 2),
 				dx: p5.random(0.1, 1),
 				// dx: 100,
 				r1: [p5.random(100, 200), p5.random(70, 80)],
@@ -214,7 +232,7 @@
 		p5.push();
 		for (let i = 0; i < cloudCount; i++) {
 			let cloud = clouds[i];
-			p5.fill(250, 250, 250);
+			p5.fill(250, 250, 250, 160);
 			p5.ellipse(cloud.x, cloud.y, cloud.r1[0], cloud.r1[1]);
 			p5.ellipse(cloud.x + cloud.r2[0], cloud.y + cloud.r2[1], cloud.r2[2], cloud.r2[3]);
 			p5.ellipse(cloud.x - cloud.r3[0], cloud.y + cloud.r3[1], cloud.r3[2], cloud.r3[3]);
