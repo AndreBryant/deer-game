@@ -42,7 +42,6 @@
 		p5.background(21);
 
 		if (serverData && mapData && serverData.players && serverData.players[socketId]) {
-			// TODO: only render if player is visible
 			const player = serverData.players[socketId];
 
 			drawMap(p5, mapImage, player);
@@ -59,16 +58,26 @@
 					);
 					continue;
 				}
+				const xDistance = p5.abs(p.x - player.x) - 100;
+				const yDistance = p5.abs(p.y - player.y) - 100;
 
-				const pCoords = translateCoords({
-					h: p5.height,
-					w: p5.width,
-					px: player.x,
-					py: player.y,
-					x: p.x,
-					y: p.y
-				});
-				drawPlayer(p5, p.hasHorn ? hornDeerSpriteSheet : deerSpriteSheet, pCoords.x, pCoords.y, p);
+				if (xDistance <= p5.width / 2 && yDistance <= p5.height / 2) {
+					const pCoords = translateCoords({
+						h: p5.height,
+						w: p5.width,
+						px: player.x,
+						py: player.y,
+						x: p.x,
+						y: p.y
+					});
+					drawPlayer(
+						p5,
+						p.hasHorn ? hornDeerSpriteSheet : deerSpriteSheet,
+						pCoords.x,
+						pCoords.y,
+						p
+					);
+				}
 			}
 		} else {
 			p5.push();

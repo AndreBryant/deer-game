@@ -125,21 +125,21 @@
 				<div class="flex">
 					<div class="flex flex-col">
 						<div class="flex justify-center">
-							<div class="relative" class:opacity-40={keyStates.up}>
+							<div class="relative" class:opacity-65={keyStates.up}>
 								<Square size="30" />
 								<span class="absolute left-[10px] top-[3px]">W</span>
 							</div>
 						</div>
 						<div class="flex">
-							<div class="relative" class:opacity-40={keyStates.left}>
+							<div class="relative" class:opacity-65={keyStates.left}>
 								<Square size="30" />
 								<span class="absolute left-[10px] top-[3px]">A</span>
 							</div>
-							<div class="relative" class:opacity-40={keyStates.down}>
+							<div class="relative" class:opacity-65={keyStates.down}>
 								<Square size="30" />
 								<span class="absolute left-[10px] top-[3px]">S</span>
 							</div>
-							<div class="relative" class:opacity-40={keyStates.right}>
+							<div class="relative" class:opacity-65={keyStates.right}>
 								<Square size="30" />
 								<span class="absolute left-[10px] top-[3px]">D</span>
 							</div>
@@ -151,7 +151,7 @@
 				</div>
 				<div class="flex gap-4">
 					<div class="flex justify-center">
-						<div class="" class:opacity-40={keyStates.up}>
+						<div class="" class:opacity-65={keyStates.up}>
 							<span class="rounded-md border-4 px-2 py-1 text-xs">Space</span>
 						</div>
 					</div>
