@@ -38,6 +38,10 @@
 	let moon: { x: number; y: number; r: number };
 	let deerHead: any;
 
+	let moonTexture: { x: number; y: number; r: number }[] = [];
+	let sunTexture: { x: number; y: number; r: number }[] = [];
+	let planetaryParticles = 20;
+
 	let angle: number = 0;
 
 	let sunPathWidth: number;
@@ -65,6 +69,28 @@
 		setupValues(p5);
 		sun = { x: p5.width * 0.3, y: p5.height * 0.1, r: 125 };
 		moon = { x: p5.width - p5.width * 0.3, y: p5.height * 0.1, r: 100 };
+
+		for (let i = 0; i < planetaryParticles; i++) {
+			const angle = p5.random(0, p5.TWO_PI);
+			const d1 = p5.sqrt(p5.random(0, 0.8)) * (moon.r / 2);
+			const d2 = p5.sqrt(p5.random(0, 0.8)) * (sun.r / 2);
+
+			const x1 = d1 * p5.cos(angle);
+			const y1 = d1 * p5.sin(angle);
+			const x2 = d2 * p5.cos(angle);
+			const y2 = d2 * p5.sin(angle);
+
+			moonTexture.push({
+				x: x1,
+				y: y1,
+				r: p5.random(2, 10)
+			});
+			sunTexture.push({
+				x: x2,
+				y: y2,
+				r: p5.random(2, 5)
+			});
+		}
 
 		deerHead = deerSpriteSheet.get(16, 0, 16, 14);
 		p5.imageMode(p5.CENTER);
@@ -144,12 +170,12 @@
 		const c1 = p5.color(currSky);
 		let c2;
 		if (currGoal === skyDay) {
-			// gradient night
 			c2 = p5.color(50);
 		} else if (currGoal === skyNight) {
 			c2 = p5.color(175);
 		}
 		p5.push();
+
 		for (let i = 0; i < p5.height / 1.5; i++) {
 			const n = p5.map(i, 0, p5.height, 0, 1);
 			let newC = p5.lerpColor(c1, c2, n);
@@ -172,11 +198,8 @@
 
 	function drawHeavenlyBodies(p5: any) {
 		p5.push();
-		p5.noStroke();
-		p5.fill('#fdee00e9');
-		p5.ellipse(sun.x, sun.y, sun.r, sun.r);
-
 		if (angle < 180) {
+			// NIGHT
 			p5.stroke(starColor);
 			p5.strokeWeight(2);
 			for (let i = 0; i < stars.length; i++) {
@@ -191,11 +214,32 @@
 			p5.fill(200);
 			p5.translate(moon.x, moon.y - moon.r / 4);
 			p5.ellipse(0, 0, moon.r, moon.r);
+			planetTexture(p5, moonTexture, '#96969677');
 			p5.rotate(angleToCenter - p5.PI / 2);
-			p5.tint(255, 255, 255, 180);
-			p5.image(deerHead, 0, -moon.r / 5, moon.r * 1.1, moon.r * 1.1);
+			p5.tint(200, 200, 200, 180);
+			p5.image(deerHead, 0, -moon.r / 5, moon.r * 1, moon.r * 1);
 			p5.noTint();
 			p5.pop();
+		} else {
+			// DAY
+			p5.noStroke();
+			p5.fill('#fdee00e9');
+			p5.ellipse(sun.x, sun.y, sun.r, sun.r);
+			p5.translate(sun.x, sun.y - sun.r / 4);
+		}
+		p5.pop();
+	}
+
+	function planetTexture(
+		p5: any,
+		txtpts: { x: number; y: number; r: number }[],
+		textureColor: string
+	) {
+		p5.push();
+		p5.fill(textureColor);
+		for (let i = 0; i < txtpts.length; i++) {
+			const txtpt = txtpts[i];
+			p5.ellipse(txtpt.x, txtpt.y, txtpt.r, txtpt.r);
 		}
 		p5.pop();
 	}

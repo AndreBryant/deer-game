@@ -166,8 +166,8 @@ function createPlayer(
 	username = 'Host',
 	roomID: string
 ) {
-	const x = Math.floor(Math.random() * (MAP_WIDTH * TILESIZE - PLAYER_HIT_RADIUS + 1));
-	const y = Math.floor(Math.random() * (MAP_HEIGHT * TILESIZE - PLAYER_HIT_RADIUS + 1));
+	const x = Math.floor(Math.random() * ((MAP_WIDTH - 2) * TILESIZE - PLAYER_HIT_RADIUS + 1));
+	const y = Math.floor(Math.random() * ((MAP_HEIGHT - 2) * TILESIZE - PLAYER_HIT_RADIUS + 1));
 
 	if (username === 'Host' && !isHost) {
 		username = '(>.~) andre cute<3';
