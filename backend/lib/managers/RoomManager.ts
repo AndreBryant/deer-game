@@ -9,7 +9,7 @@ export class RoomManager {
 	private rooms: { [key: string]: Room } = {};
 	createRoom(gameId: string) {
 		this.rooms[gameId] = {
-			players: 1,
+			players: 0,
 			mapData: new Map()
 		};
 	}
