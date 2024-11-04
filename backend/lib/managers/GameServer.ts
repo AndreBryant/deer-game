@@ -79,5 +79,14 @@ export class GameServer {
 		this.playerManager.addPlayer(player);
 		socket.join(gameID);
 		this.io.emit('rooms_updated', this.roomManager.getRooms());
+		this.io.to(gameID).emit('player_connected', this.roomManager.getRoom(gameID));
+		this.io.to(gameID).emit('map_generated', {
+			mapData: this.roomManager.getRoom(gameID)?.mapData.tiles,
+			height: this.roomManager.getRoom(gameID)?.mapData.height,
+			width: this.roomManager.getRoom(gameID)?.mapData.width,
+			tileSize: this.roomManager.getRoom(gameID)?.mapData.tileSize
+		});
+
+		this.broadcastPlayerUpdates(gameID);
 	}
 }

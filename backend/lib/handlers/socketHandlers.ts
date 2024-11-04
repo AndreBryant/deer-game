@@ -234,7 +234,9 @@ function joinRoom(io: Server, socket: Socket, gameID: string, isHost: boolean, u
 
 	const roomplayers = filterPlayersByRoom(players, gameID);
 
+	// done
 	io.to(gameID).emit('player_connected', roomplayers);
+	// done
 	io.to(gameID).emit('map_generated', {
 		mapData: rooms[gameID].mapData.tiles,
 		height: rooms[gameID].mapData.height,
