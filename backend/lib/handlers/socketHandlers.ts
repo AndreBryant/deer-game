@@ -119,10 +119,10 @@ export function broadcastPlayerUpdates(io: Server) {
 			for (const otherPlayer in players) {
 				if (otherPlayer !== player && players[otherPlayer].room === roomID) {
 					const target = players[otherPlayer];
-					if (isInAttackRange(p, target)) {
+					if (isInAttackRange(p, target) && !target.invincible) {
 						target.takeDamage(p.attack);
 						target.invincible = true;
-						target.invincibilityEndTime = new Date().getTime() + 100;
+						target.invincibilityEndTime = new Date().getTime() + 2000;
 						// io.to(otherPlayer).emit('damaged', { amount: p.attackPower });
 					}
 				}

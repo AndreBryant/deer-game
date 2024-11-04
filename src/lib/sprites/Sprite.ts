@@ -58,27 +58,33 @@ export function drawPlayer(p5: any, spriteSheet: any, x: number, y: number, play
 	const actionData = DEER_SPRITE_ANIMATION_DATA[action];
 	const slownessFactor = actionData.slowness_factor;
 	const frame = p5.floor(p5.frameCount / slownessFactor) % actionData.positions.length;
-	p5.push();
-	p5.translate(x, y);
-	if (isFacingLeft) {
-		p5.scale(-1, 1);
-	}
+	const invisible = player.invincible ? p5.frameCount % 30 < 15 : false;
+	if (!invisible) {
+		p5.push();
+		if (player.invincible) {
+			p5.tint(255, 150, 150, 180);
+		}
+		p5.translate(x, y);
+		if (isFacingLeft) {
+			p5.scale(-1, 1);
+		}
 
-	p5.fill(0, 0, 0, 50);
-	p5.noStroke();
-	// Shadow
-	p5.ellipse(0, 0 + 64, player.radius * 2, 16);
-	p5.imageMode(p5.CENTER);
-	p5.image(
-		spriteSheet,
-		0,
-		0,
-		player.radius * 2,
-		player.radius * 2,
-		actionData.positions[frame].x,
-		actionData.positions[frame].y,
-		FRAME_SIZE,
-		FRAME_SIZE
-	);
-	p5.pop();
+		p5.fill(0, 0, 0, 50);
+		p5.noStroke();
+		// Shadow
+		p5.ellipse(0, 0 + 64, player.radius * 2, 16);
+		p5.imageMode(p5.CENTER);
+		p5.image(
+			spriteSheet,
+			0,
+			0,
+			player.radius * 2,
+			player.radius * 2,
+			actionData.positions[frame].x,
+			actionData.positions[frame].y,
+			FRAME_SIZE,
+			FRAME_SIZE
+		);
+		p5.pop();
+	}
 }
