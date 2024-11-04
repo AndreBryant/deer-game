@@ -65,88 +65,100 @@ export function handleKeyInput(
 	socket: Socket,
 	data: { gameID: string; keyStates: { [key: string]: boolean } }
 ) {
+	// console.log('received key input from', socket.id, data.keyStates);
 	if (!keyStates[data.gameID]) {
 		return;
 	}
 	keyStates[data.gameID][socket.id] = data.keyStates;
+	broadcastPlayerUpdates(io, data.gameID);
 }
 
-export function broadcastPlayerUpdates(io: Server) {
-	updatePlayers();
-	for (const player in players) {
-		const p = players[player];
-		const roomID = p.room;
-		let isMoving = false;
+export function broadcastPlayerUpdates(io: Server, roomID: string) {
+	updatePlayers(roomID);
+	for (const playerId in players) {
+		const player = players[playerId];
+		if (player.room !== roomID) continue;
 
-		if (keyStates[roomID][player]['up']) {
-			p.updateY(true);
-			isMoving = true;
-		}
-		if (keyStates[roomID][player]['down']) {
-			p.updateY(false);
-			isMoving = true;
-		}
-		if (keyStates[roomID][player]['left']) {
-			p.updateX(true);
-			isMoving = true;
-		}
-		if (keyStates[roomID][player]['right']) {
-			p.updateX(false);
-			isMoving = true;
-		}
-
-		if (!isMoving) {
-			if (p.action === 'eat_grass' && p.actionEndTime && p.actionEndTime > new Date().getTime()) {
-				// DO nothing
-			} else {
-				if (Math.random() < 0.001) {
-					p.action = 'eat_grass';
-					p.actionEndTime = new Date().getTime() + 1000;
-				} else {
-					p.action = 'idle';
-				}
-			}
-		} else {
-			p.action = 'walk';
-			p.actionEndTime = null;
-		}
-
-		if (keyStates[roomID][player]['attack']) {
-			p.action = 'attack';
-			p.actionEndTime = new Date().getTime() + 5000;
-
-			// Check for collisions with other players in the room
-			for (const otherPlayer in players) {
-				if (otherPlayer !== player && players[otherPlayer].room === roomID) {
-					const target = players[otherPlayer];
-					if (isInAttackRange(p, target) && !target.invincible) {
-						target.takeDamage(p.attack);
-						target.invincible = true;
-						target.invincibilityEndTime = new Date().getTime() + 2000;
-						// io.to(otherPlayer).emit('damaged', { amount: p.attackPower });
-					}
-				}
-			}
-		}
-
-		for (const room in rooms) {
-			const ps = filterPlayersByRoom(players, room);
-			io.to(room).emit('player_updated', {
-				players: ps,
-				timestamp: new Date().getTime()
-			});
-		}
+		handleMovement(player);
+		handleActions(player);
 	}
+
+	const ps = filterPlayersByRoom(players, roomID);
+	io.to(roomID).emit('player_updated', {
+		players: ps,
+		timestamp: new Date().getTime()
+	});
 }
 
-function updatePlayers() {
-	for (const player in players) {
+function updatePlayers(roomID: string) {
+	const ps = filterPlayersByRoom(players, roomID);
+	for (const player in ps) {
 		players[player].update();
 	}
 }
 
+function handleMovement(player: Player) {
+	const keys = keyStates[player.room][player.id];
+
+	if (keys.up) {
+		player.updateY(true);
+	}
+	if (keys.down) {
+		player.updateY(false);
+	}
+	if (keys.left) {
+		player.updateX(true);
+	}
+	if (keys.right) {
+		player.updateX(false);
+	}
+}
+
+function handleActions(player: Player) {
+	const keys = keyStates[player.room][player.id];
+	const isMoving = Object.values(keys).some((state) => state === true);
+	if (!isMoving) {
+		if (
+			player.action !== 'eat_grass' ||
+			!player.actionEndTime ||
+			player.actionEndTime <= Date.now()
+		) {
+			if (Math.random() < 0.001) {
+				player.action = 'eat_grass';
+				player.actionEndTime = Date.now() + 1000;
+			} else {
+				player.action = 'idle';
+			}
+		}
+	} else {
+		player.action = 'walk';
+		player.actionEndTime = null;
+	}
+
+	if (keys['attack']) {
+		performAttack(player);
+	}
+}
+
+function performAttack(attacker: Player) {
+	attacker.action = 'attack';
+	attacker.actionEndTime = Date.now() + 5000;
+	console.log(attacker.name, 'attacking');
+	const ps = filterPlayersByRoom(players, attacker.room);
+	for (const otherPlayerId in ps) {
+		const target = ps[otherPlayerId];
+		if (target.id !== attacker.id && isInAttackRange(attacker, target) && !target.invincible) {
+			console.log('beofre', target.health);
+			target.takeDamage(attacker.attack);
+			console.log('after', target.health);
+			target.invincible = true;
+			target.invincibilityEndTime = Date.now() + 2000;
+		}
+	}
+}
+
 function isInAttackRange(attacker: Player, target: Player) {
-	const attackRange = attacker.radius * 1.5; // TODO: Example range
+	const attackRange = attacker.radius * 1.5;
 	const distance = Math.sqrt(
 		Math.pow(attacker.x - target.x, 2) + Math.pow(attacker.y - target.y, 2)
 	);
@@ -159,6 +171,7 @@ function isInAttackRange(attacker: Player, target: Player) {
 
 	return inFront;
 }
+
 function createPlayer(
 	socketID: string,
 	gameID: string,
@@ -228,4 +241,5 @@ function joinRoom(io: Server, socket: Socket, gameID: string, isHost: boolean, u
 		width: rooms[gameID].mapData.width,
 		tileSize: rooms[gameID].mapData.tileSize
 	});
+	broadcastPlayerUpdates(io, gameID);
 }

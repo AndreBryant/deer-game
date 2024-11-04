@@ -11,7 +11,9 @@
 		"lint": "prettier --check . && eslint .",
 		"format": "prettier --write .",
 		"build:backend": "tsc -p backend/tsconfig.json",
-		"start:backend": "node ./backend/server.js"
+		"start:backend": "node ./backend/server.js",
+		"inspect:backend": "node --inspect ./backend/server.js",
+		"prof:backend": "node --prof ./backend/server.js"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^3.0.0",

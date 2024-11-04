@@ -1,7 +1,6 @@
 <script lang="ts">
 	export let data: any;
 	import { goto } from '$app/navigation';
-	import type { DefaultEventsMap } from '@socket.io/component-emitter';
 	import { io, Socket } from 'socket.io-client';
 	import { onMount } from 'svelte';
 	import GameCanvas from '$lib/components/game/GameCanvas.svelte';
@@ -14,6 +13,7 @@
 		socketId: undefined,
 		isConnected: false
 	};
+
 	let keyStates: { [key: string]: boolean } = {
 		up: false,
 		down: false,
@@ -22,7 +22,19 @@
 		attack: false
 	};
 
+	let ws: Socket | undefined;
+	let isEmitting = false;
+
 	let gameStarted = false;
+
+	function emitKeyInput() {
+		if (!ws) return;
+		ws.emit('player_key_input', {
+			socketId: connectionState.socketId,
+			gameID: data.gameID,
+			keyStates
+		});
+	}
 
 	function updateKeyCodes(key: string, value: boolean) {
 		if (key === 'w' || key === 'W') keyStates.up = value;
@@ -32,29 +44,33 @@
 		if (key === ' ') keyStates.attack = value;
 	}
 
-	function handleKeydown(ws: Socket<DefaultEventsMap, DefaultEventsMap>, e: KeyboardEvent) {
+	function handleKeydown(ws: Socket, e: KeyboardEvent) {
 		updateKeyCodes(e.key, true);
-		ws.emit('player_key_input', {
-			socketId: connectionState.socketId,
-			gameID: data.gameID,
-			keyStates
-		});
+		if (!isEmitting) {
+			isEmitting = true;
+			requestAnimationFrame(emissionLoop);
+		}
+		console.log('sent keydown input from', connectionState.socketId, isEmitting);
 	}
 
-	function handleKeyup(ws: Socket<DefaultEventsMap, DefaultEventsMap>, e: KeyboardEvent) {
+	function handleKeyup(ws: Socket, e: KeyboardEvent) {
 		updateKeyCodes(e.key, false);
-		ws.emit('player_key_input', {
-			socketId: connectionState.socketId,
-			gameID: data.gameID,
-			keyStates
-		});
+		if (!Object.values(keyStates).some((state) => state)) {
+			isEmitting = false;
+		}
+		console.log('sent keyup input from', connectionState.socketId, isEmitting);
+	}
+
+	function emissionLoop() {
+		emitKeyInput();
+		if (isEmitting) requestAnimationFrame(emissionLoop);
 	}
 
 	onMount(() => {
-		const ws = io('ws://192.168.68.115:3000');
+		ws = io();
 
 		ws.on('connect', () => {
-			connectionState.socketId = ws.id;
+			connectionState.socketId = ws!.id;
 			connectionState.isConnected = true;
 		});
 
@@ -75,6 +91,7 @@
 
 		ws.on('player_updated', (dataFromServer) => {
 			serverData = dataFromServer;
+			// console.log('received player update', dataFromServer);
 		});
 
 		ws.on('map_generated', (dataFromServer) => {
@@ -87,12 +104,12 @@
 			}
 		});
 
-		window.addEventListener('keydown', (e) => handleKeydown(ws, e));
-		window.addEventListener('keyup', (e) => handleKeyup(ws, e));
+		window.addEventListener('keydown', (e) => handleKeydown(ws!, e));
+		window.addEventListener('keyup', (e) => handleKeyup(ws!, e));
 
 		return () => {
-			window.removeEventListener('keydown', (e) => handleKeydown(ws, e));
-			window.removeEventListener('keyup', (e) => handleKeyup(ws, e));
+			window.removeEventListener('keydown', (e) => handleKeydown(ws!, e));
+			window.removeEventListener('keyup', (e) => handleKeyup(ws!, e));
 		};
 	});
 
@@ -104,6 +121,10 @@
 			: undefined;
 </script>
 
+<h1 class="text-2xl">CURRENTLY BROKEN IM STILL REFACTORING THE SERVER CODE</h1>
+{JSON.stringify(serverData, null, 2)}
+{JSON.stringify(mapData, null, 2)}
+{JSON.stringify(connectionState, null, 2)}
 <main class="XX--ADD-THIS-LATER--XX(select-none) relative h-screen w-screen text-white">
 	<div class="w-scree h-screenn absolute left-0 top-0 -z-10">
 		{#if mapData && connectionState.isConnected && connectionState.socketId}

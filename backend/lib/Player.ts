@@ -1,4 +1,4 @@
-import { type Map, MapTile, TILESIZE } from './map';
+import { type Map, TILESIZE } from './map';
 
 export const PLAYER_HIT_RADIUS = TILESIZE * 2;
 export class Player {
@@ -104,7 +104,7 @@ export class Player {
 	}
 
 	takeDamage(damage: number) {
-		if (!this.invincible && this.invincibilityEndTime && this.invincibilityEndTime < Date.now()) {
+		if (!this.invincible) {
 			this.health -= damage;
 		}
 	}
