@@ -1,5 +1,5 @@
 import { Server, Socket } from 'socket.io';
-import { Player, PLAYER_HIT_RADIUS } from '../Player.ts';
+import { Player, PLAYER_HIT_RADIUS } from '../Player';
 import { Map, MAP_HEIGHT, MAP_WIDTH, TILESIZE } from '../map';
 import { getRandomColor } from '../palette';
 

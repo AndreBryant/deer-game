@@ -5,7 +5,7 @@
 	import HomeBackground3 from '$lib/components/home/HomeBackground3.svelte';
 
 	import { io } from 'socket.io-client';
-	const ws = io();
+	const ws = io('ws://192.168.68.115:3000');
 
 	let rooms: { [key: string]: { players: number; mapData: string } } = {};
 	ws.on('rooms_updated', (data) => {

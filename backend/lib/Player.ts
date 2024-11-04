@@ -104,7 +104,7 @@ export class Player {
 	}
 
 	takeDamage(damage: number) {
-		if (!this.invincible && this.invincibilityEndTime < Date.now()) {
+		if (!this.invincible && this.invincibilityEndTime && this.invincibilityEndTime < Date.now()) {
 			this.health -= damage;
 		}
 	}

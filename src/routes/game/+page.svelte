@@ -14,7 +14,6 @@
 		socketId: undefined,
 		isConnected: false
 	};
-
 	let keyStates: { [key: string]: boolean } = {
 		up: false,
 		down: false,
@@ -22,6 +21,8 @@
 		right: false,
 		attack: false
 	};
+
+	let gameStarted = false;
 
 	function updateKeyCodes(key: string, value: boolean) {
 		if (key === 'w' || key === 'W') keyStates.up = value;
@@ -50,7 +51,7 @@
 	}
 
 	onMount(() => {
-		const ws = io();
+		const ws = io('ws://192.168.68.115:3000');
 
 		ws.on('connect', () => {
 			connectionState.socketId = ws.id;
@@ -171,6 +172,11 @@
 				<p>x: {clientPlayer.x}</p>
 				<p>y: {clientPlayer.y}</p>
 				<p>y: {clientPlayer.action}</p>
+			</div>
+		{/if}
+		{#if !gameStarted && data.host}
+			<div class="absolute bottom-0 flex w-full justify-center">
+				<p>host</p>
 			</div>
 		{/if}
 	</section>
