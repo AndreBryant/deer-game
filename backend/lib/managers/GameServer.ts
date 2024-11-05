@@ -40,8 +40,8 @@ export class GameServer {
 		const player = this.playerManager.getPlayer(socket.id);
 		if (!player) return;
 
-		this.roomManager.removeRoom(player.room);
 		this.playerManager.removePlayer(socket.id);
+		this.roomManager.removeRoom(player.room);
 
 		if (this.roomManager.getRoom(player.room)?.players === 0) {
 			this.roomManager.removeRoom(player.room);
