@@ -1,8 +1,9 @@
 import { Server, Socket } from 'socket.io';
 import { PlayerManager } from './PlayerManager';
 import { RoomManager } from './RoomManager';
-import { Player } from '../Player';
+import { Player, PLAYER_HIT_RADIUS } from '../Player';
 import { getRandomColor } from '../palette';
+import { MAP_HEIGHT, MAP_WIDTH, TILESIZE } from '../map';
 
 export class GameServer {
 	private io: Server;
@@ -54,26 +55,31 @@ export class GameServer {
 		socket: Socket,
 		data: { gameID: string; keyStates: { [key: string]: boolean } }
 	) {
+		this.playerManager.updateKeyStates(socket.id, data.gameID, data.keyStates);
 		this.playerManager.handleMovement(socket.id);
+		this.playerManager.handleActions(socket.id);
 		this.broadcastPlayerUpdates(data.gameID);
 	}
 
 	private broadcastPlayerUpdates(gameID: string) {
 		this.playerManager.updatePlayers(gameID);
 		const playersInRoom = this.playerManager.getPlayersInRoom(gameID);
-		this.io.to(gameID).emit('player_updated', { players: playersInRoom, timestamp: Date.now() });
+		this.io.to(gameID).emit('player_updated', { players: playersInRoom });
 	}
 
 	private joinRoom(socket: Socket, gameID: string, isHost = false, username?: string) {
+		const x = Math.floor(Math.random() * ((MAP_WIDTH - 2) * TILESIZE - PLAYER_HIT_RADIUS + 1));
+		const y = Math.floor(Math.random() * ((MAP_HEIGHT - 2) * TILESIZE - PLAYER_HIT_RADIUS + 1));
+
 		const player = new Player(
 			socket.id,
 			gameID,
 			isHost,
-			username || 'Player',
-			Math.random() * 100,
-			Math.random() * 100,
-			getRandomColor(),
-			this.roomManager.getRoomData(gameID)?.mapData
+			username || (!isHost ? 'Host' : '(>.~) andre cute<3'), //it should be the other way around but this works so idk if i should change this
+			x,
+			y,
+			getRandomColor()
+			// this.roomManager.getRoomData(gameID)?.mapData
 		);
 
 		this.playerManager.addPlayer(player);

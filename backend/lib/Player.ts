@@ -1,4 +1,4 @@
-import { type Map, TILESIZE } from './map';
+import { TILESIZE } from './map';
 
 export const PLAYER_HIT_RADIUS = TILESIZE * 2;
 export class Player {
@@ -15,7 +15,6 @@ export class Player {
 	isFacingLeft: boolean;
 	action: string;
 	actionEndTime: number | null;
-	map: Map;
 	attack: number;
 	health: number;
 	sex: 'm' | 'f';
@@ -30,8 +29,7 @@ export class Player {
 		name: string,
 		x: number,
 		y: number,
-		color: string,
-		map: Map
+		color: string
 	) {
 		this.id = id;
 		this.room = room;
@@ -46,7 +44,6 @@ export class Player {
 		this.actionEndTime = null;
 		this.color = color;
 		this.isFacingLeft = false;
-		this.map = map;
 		this.attack = 1;
 		this.health = 15;
 		// this should be false by default but for now, it's randomized
@@ -77,12 +74,12 @@ export class Player {
 			this.invincibilityEndTime = null; // Reset end time
 		}
 	}
-	updateX(left: boolean) {
+	updateX(left: boolean, w: number) {
 		this.x += left ? -this.dx : this.dx;
 		this.isFacingLeft = left;
 
-		if (this.x + this.radius >= this.map.width * TILESIZE) {
-			this.x = this.map.width * TILESIZE - this.radius;
+		if (this.x + this.radius >= w * TILESIZE) {
+			this.x = w * TILESIZE - this.radius;
 		} else if (this.x - this.radius < 0) {
 			this.x = this.radius;
 		}
@@ -91,11 +88,11 @@ export class Player {
 		// console.log(Math.floor(this.x / TILESIZE), Math.floor(this.y / TILESIZE));
 	}
 
-	updateY(up: boolean) {
+	updateY(up: boolean, h: number) {
 		this.y += up ? -this.dy : this.dy;
 
-		if (this.y + this.radius >= (this.map.height - 1) * TILESIZE) {
-			this.y = (this.map.height - 1) * TILESIZE - this.radius;
+		if (this.y + this.radius >= (h - 1) * TILESIZE) {
+			this.y = (h - 1) * TILESIZE - this.radius;
 		} else if (this.y - this.radius < -(TILESIZE * 2)) {
 			this.y = this.radius - TILESIZE * 2;
 		}

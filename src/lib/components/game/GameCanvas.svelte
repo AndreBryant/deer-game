@@ -42,6 +42,7 @@
 		}
 
 		p5.noSmooth();
+		p5.frameRate(5);
 	}
 
 	function draw(p5: any) {

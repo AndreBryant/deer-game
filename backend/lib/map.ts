@@ -31,14 +31,7 @@ export class Map {
 				if (i == 0 || i == this.height - 1 || j == 0 || j == this.width - 1) {
 					this.tiles += MapTile.Wall;
 				} else {
-					const rand = Math.random();
-					if (rand < 0.00001) {
-						this.tiles += MapTile.Wall;
-					} else if (rand < 0.00003) {
-						this.tiles += MapTile.Water;
-					} else {
-						this.tiles += MapTile.Walkable;
-					}
+					this.tiles += MapTile.Walkable;
 
 					// if (rand < 0.01) {
 					// 	this.tiles += MapTile.Flag; // 10% chance of a flag

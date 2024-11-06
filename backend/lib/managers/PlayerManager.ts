@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Player } from '../Player';
+import { MAP_HEIGHT as mh, MAP_WIDTH as mw } from '../map';
 
 export class PlayerManager {
 	private players: { [key: string]: Player } = {};
@@ -31,19 +32,39 @@ export class PlayerManager {
 		const player = this.players[playerId];
 		const keys = this.keyStates[player.room][playerId];
 
-		if (keys.up) player.updateY(true);
-		if (keys.down) player.updateY(false);
-		if (keys.left) player.updateX(true);
-		if (keys.right) player.updateX(false);
+		if (keys.up) {
+			console.log('key up');
+			player.updateY(true, mh);
+		}
+		if (keys.down) {
+			console.log('key down');
+			player.updateY(false, mh);
+		}
+		if (keys.left) {
+			console.log('key left');
+			player.updateX(true, mw);
+		}
+		if (keys.right) {
+			console.log('key RIGHT');
+			player.updateX(false, mw);
+		}
+		console.log('inside handle movement', player.x, player.y);
+	}
+
+	updateKeyStates(playerId: string, roomID: string, keyStates: { [key: string]: boolean }) {
+		this.keyStates[roomID][playerId] = keyStates;
 	}
 
 	handleActions(playerId: string) {
 		const player = this.players[playerId];
-		const keys = this.keyStates[player.room][playerId];
-		const isMoving = Object.values(keys).some((state) => state);
 
-		player.action = isMoving ? 'walk' : 'idle';
-		if (keys['attack']) this.performAttack(player);
+		if (this.keyStates[player.room] && this.keyStates[player.room][playerId]) {
+			const keys = this.keyStates[player.room][playerId];
+			const isMoving = Object.values(keys).some((state) => state);
+
+			player.action = isMoving ? 'walk' : 'idle';
+			if (keys['attack']) this.performAttack(player);
+		}
 	}
 
 	getPlayersInRoom(room: string): { [key: string]: Player } {

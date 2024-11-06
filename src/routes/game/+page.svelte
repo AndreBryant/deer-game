@@ -190,8 +190,8 @@
 				</div>
 			</div>
 			<div class="absolute right-0 top-0">
-				<p>x: {clientPlayer.x}</p>
-				<p>y: {clientPlayer.y}</p>
+				<p>x: {clientPlayer.x.toFixed(0)}</p>
+				<p>y: {clientPlayer.y.toFixed(0)}</p>
 				<p>y: {clientPlayer.action}</p>
 			</div>
 		{/if}

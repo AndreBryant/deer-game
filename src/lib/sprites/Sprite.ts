@@ -2,7 +2,7 @@
 export const FRAME_SIZE = 32;
 export const DEER_SPRITE_ANIMATION_DATA = {
 	idle: {
-		slowness_factor: 15,
+		slowness_factor: 10,
 		// TopLeft Corners
 		positions: [
 			{ x: 0 * FRAME_SIZE, y: 0 * FRAME_SIZE },
@@ -13,7 +13,7 @@ export const DEER_SPRITE_ANIMATION_DATA = {
 		]
 	},
 	eat_grass: {
-		slowness_factor: 10,
+		slowness_factor: 6,
 		positions: [
 			{ x: 0 * FRAME_SIZE, y: 1 * FRAME_SIZE },
 			{ x: 1 * FRAME_SIZE, y: 1 * FRAME_SIZE },
@@ -23,7 +23,7 @@ export const DEER_SPRITE_ANIMATION_DATA = {
 		]
 	},
 	walk: {
-		slowness_factor: 4,
+		slowness_factor: 2,
 		positions: [
 			{ x: 0 * FRAME_SIZE, y: 2 * FRAME_SIZE },
 			{ x: 1 * FRAME_SIZE, y: 2 * FRAME_SIZE },
@@ -33,7 +33,7 @@ export const DEER_SPRITE_ANIMATION_DATA = {
 		]
 	},
 	attack: {
-		slowness_factor: 4,
+		slowness_factor: 2,
 		positions: [
 			{ x: 0 * FRAME_SIZE, y: 5 * FRAME_SIZE },
 			{ x: 1 * FRAME_SIZE, y: 5 * FRAME_SIZE },
@@ -58,7 +58,7 @@ export function drawPlayer(p5: any, spriteSheet: any, x: number, y: number, play
 	const actionData = DEER_SPRITE_ANIMATION_DATA[action];
 	const slownessFactor = actionData.slowness_factor;
 	const frame = p5.floor(p5.frameCount / slownessFactor) % actionData.positions.length;
-	const invisible = player.invincible ? p5.frameCount % 30 < 15 : false;
+	const invisible = player.invincible ? p5.frameCount % 20 < 10 : false;
 	if (!invisible) {
 		p5.push();
 		if (player.invincible) {
