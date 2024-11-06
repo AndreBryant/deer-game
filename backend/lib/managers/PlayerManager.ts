@@ -25,6 +25,8 @@ export class PlayerManager {
 
 		for (const player in playersInRoom) {
 			this.players[player].update();
+			this.handleMovement(player);
+			this.handleActions(player);
 		}
 	}
 
@@ -33,22 +35,22 @@ export class PlayerManager {
 		const keys = this.keyStates[player.room][playerId];
 
 		if (keys.up) {
-			console.log('key up');
+			// console.log('key up');
 			player.updateY(true, mh);
 		}
 		if (keys.down) {
-			console.log('key down');
+			// console.log('key down');
 			player.updateY(false, mh);
 		}
 		if (keys.left) {
-			console.log('key left');
+			// console.log('key left');
 			player.updateX(true, mw);
 		}
 		if (keys.right) {
-			console.log('key RIGHT');
+			// console.log('key RIGHT');
 			player.updateX(false, mw);
 		}
-		console.log('inside handle movement', player.x, player.y);
+		// console.log('inside handle movement', player.x, player.y);
 	}
 
 	updateKeyStates(playerId: string, roomID: string, keyStates: { [key: string]: boolean }) {

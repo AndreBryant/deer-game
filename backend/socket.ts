@@ -14,5 +14,9 @@ export const webSocketServer = {
 			console.log(socket.id + ' connected.');
 			gameServer.handleConnection(socket);
 		});
+
+		setInterval(() => {
+			gameServer.broadcastAllPlayerUpdates();
+		}, 1000 / 30);
 	}
 };

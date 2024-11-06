@@ -1,38 +1,31 @@
-import express from 'express';
-import { Server } from 'socket.io';
-import http from 'http';
-import {
-	handleCreateRoom,
-	handleJoinRoom,
-	handleDisconnect,
-	handleKeyInput,
-	rooms
-} from './build/lib/handlers/socketHandlers.js';
+// import express from 'express';
+// import { Server } from 'socket.io';
+// import http from 'http';
+// import { GameServer } from './build/managers/GameServer.js';
 
-const app = express();
-const server = http.createServer(app);
-const io = new Server(server, {
-	cors: {
-		origin: '*', // for now, all reqs are allowed
-		methods: ['GET', 'POST']
-	}
-});
+// const app = express();
+// const server = http.createServer(app);
+// const io = new Server(server, {
+// 	cors: {
+// 		origin: '*', // for now, all reqs are allowed
+// 		methods: ['GET', 'POST']
+// 	}
+// });
 
-io.on('connection', (socket) => {
-	console.log(`${socket.id} connected.`);
+// const gameServer = new GameServer(io);
 
-	io.emit('rooms_updated', rooms);
+// io.on('connection', (socket) => {
+// 	console.log(socket.id + ' connected.');
+// 	gameServer.handleConnection(socket);
+// });
 
-	socket.on('create_room', (data) => handleCreateRoom(io, socket, data));
-	socket.on('join_room', (data) => handleJoinRoom(io, socket, data));
-	socket.on('disconnect', () => handleDisconnect(io, socket));
+// setInterval(() => {
+// 	gameServer.broadcastAllPlayerUpdates();
+// }, 1000 / 60);
 
-	socket.on('player_key_input', (data) => handleKeyInput(io, socket, data));
-});
+// const HOST = '10.103.7.248';
+// const PORT = process.env.PORT || 3000;
 
-const HOST = '0.0.0.0';
-const PORT = process.env.PORT || 3000;
-
-server.listen(PORT, HOST, () => {
-	console.log(`Server is running on http://${HOST}:${PORT}`);
-});
+// server.listen(PORT, HOST, () => {
+// 	console.log(`Server is running on http://${HOST}:${PORT}`);
+// });

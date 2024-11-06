@@ -12,6 +12,7 @@
 	onMount(async () => {
 		if (typeof window !== 'undefined') {
 			const p5 = await import('p5');
+			p5.disableFriendlyErrors = true;
 
 			p5Sketch = new p5.default((p5js) => {
 				p5js.preload = () => preload(p5js);
@@ -20,6 +21,7 @@
 				p5js.windowResized = () => windowResized(p5js);
 				p5js.mouseMoved = () => mouseMoved(p5js);
 			}, canvas);
+			// console.log(p5Sketch, p5);
 		}
 	});
 

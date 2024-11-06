@@ -22,6 +22,8 @@
 	let redDeerSpriteSheet: any;
 	let redHornDeerSpriteSheet: any;
 
+	let fps = 30;
+
 	function preload(p5: any) {
 		deerSpriteSheet = p5.loadImage(fDeer);
 		hornDeerSpriteSheet = p5.loadImage(mDeer);
@@ -31,7 +33,13 @@
 
 	function setup(p5: any) {
 		p5.createCanvas(p5.windowWidth, p5.windowHeight);
+		p5.frameRate(fps);
+		p5.noSmooth();
 
+		setupMap(p5);
+	}
+
+	function setupMap(p5: any) {
 		if (mapData) {
 			let graphics = p5.createGraphics(
 				mapData?.width * mapData.tileSize,
@@ -40,17 +48,17 @@
 			drawMapTiles(graphics, mapData);
 			mapImage = graphics.get();
 		}
-
-		p5.noSmooth();
-		p5.frameRate(5);
 	}
 
 	function draw(p5: any) {
+		const frame = p5.frameCount % fps;
+		if (frame === 0) console.time('draw ' + p5.frameCount);
+
 		p5.background(21);
 
 		if (serverData && mapData && serverData.players && serverData.players[socketId]) {
 			const player = serverData.players[socketId];
-			drawMap(p5, mapImage, player);
+			drawMap(p5, mapImage, player.x, player.y);
 
 			sortedPlayers.forEach((p: any) => {
 				const spriteSheet = p.hasNose
@@ -81,6 +89,7 @@
 					drawPlayer(p5, spriteSheet, pCoords.x, pCoords.y, p);
 				}
 			});
+			if (frame === 0) console.timeEnd('draw ' + p5.frameCount);
 		} else {
 			p5.push();
 			p5.fill(255);
@@ -95,4 +104,11 @@
 	}
 </script>
 
-<P5 {preload} {setup} {draw} {windowResized} />
+<div class="absolute flex h-full w-full justify-center">
+	<p class="text-red-600">
+		Frame Rate {fps.toFixed(0)}
+	</p>
+</div>
+<div>
+	<P5 {preload} {setup} {draw} {windowResized} />
+</div>

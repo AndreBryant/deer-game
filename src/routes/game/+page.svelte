@@ -23,7 +23,13 @@
 	};
 
 	let ws: Socket | undefined;
-	let isEmitting = false;
+	let isEmitting: { [key: string]: boolean } = {
+		up: false,
+		down: false,
+		left: false,
+		right: false,
+		attack: false
+	};
 
 	let gameStarted = false;
 
@@ -36,37 +42,42 @@
 		});
 	}
 
+	// TODO: use a better solution
 	function updateKeyCodes(key: string, value: boolean) {
-		if (key === 'w' || key === 'W') keyStates.up = value;
-		else if (key === 's' || key === 'S') keyStates.down = value;
-		else if (key === 'a' || key === 'A') keyStates.left = value;
-		else if (key === 'd' || key === 'D') keyStates.right = value;
-		if (key === ' ') keyStates.attack = value;
+		let changed = false;
+		if ((key === 'w' || key === 'W') && keyStates.up !== value) {
+			keyStates.up = value;
+			changed = true;
+		} else if ((key === 's' || key === 'S') && keyStates.down !== value) {
+			changed = true;
+			keyStates.down = value;
+		} else if ((key === 'a' || key === 'A') && keyStates.left !== value) {
+			changed = true;
+			keyStates.left = value;
+		} else if ((key === 'd' || key === 'D') && keyStates.right !== value) {
+			changed = true;
+			keyStates.right = value;
+		} else if (key === ' ' && keyStates.attack !== value) {
+			changed = true;
+			keyStates.attack = value;
+		}
+		return changed;
 	}
 
 	function handleKeydown(ws: Socket, e: KeyboardEvent) {
-		updateKeyCodes(e.key, true);
-		if (!isEmitting) {
-			isEmitting = true;
-			requestAnimationFrame(emissionLoop);
+		const changed = updateKeyCodes(e.key, true);
+		if (changed) {
+			emitKeyInput();
 		}
-		console.log('sent keydown input from', connectionState.socketId, isEmitting);
 	}
 
 	function handleKeyup(ws: Socket, e: KeyboardEvent) {
-		updateKeyCodes(e.key, false);
-		if (!Object.values(keyStates).some((state) => state)) {
-			isEmitting = false;
-		}
-		console.log('sent keyup input from', connectionState.socketId, isEmitting);
-	}
-
-	function emissionLoop() {
-		emitKeyInput();
-		if (isEmitting) requestAnimationFrame(emissionLoop);
+		const changed = updateKeyCodes(e.key, false);
+		if (changed) emitKeyInput();
 	}
 
 	onMount(() => {
+		// ws = io('ws://10.103.7.248:3000');
 		ws = io();
 
 		ws.on('connect', () => {
@@ -110,6 +121,7 @@
 		return () => {
 			window.removeEventListener('keydown', (e) => handleKeydown(ws!, e));
 			window.removeEventListener('keyup', (e) => handleKeyup(ws!, e));
+			ws?.disconnect();
 		};
 	});
 
@@ -121,10 +133,10 @@
 			: undefined;
 </script>
 
-<h1 class="text-2xl">CURRENTLY BROKEN IM STILL REFACTORING THE SERVER CODE</h1>
+<!-- <h1 class="text-2xl">CURRENTLY BROKEN IM STILL REFACTORING THE SERVER CODE</h1>
 {JSON.stringify(serverData, null, 2)}
 {JSON.stringify(mapData, null, 2)}
-{JSON.stringify(connectionState, null, 2)}
+{JSON.stringify(connectionState, null, 2)} -->
 <main class="XX--ADD-THIS-LATER--XX(select-none) relative h-screen w-screen text-white">
 	<div class="w-scree h-screenn absolute left-0 top-0 -z-10">
 		{#if mapData && connectionState.isConnected && connectionState.socketId}
@@ -190,9 +202,9 @@
 				</div>
 			</div>
 			<div class="absolute right-0 top-0">
+				<p>action: {clientPlayer.action}</p>
 				<p>x: {clientPlayer.x.toFixed(0)}</p>
 				<p>y: {clientPlayer.y.toFixed(0)}</p>
-				<p>y: {clientPlayer.action}</p>
 			</div>
 		{/if}
 		{#if !gameStarted && data.host}

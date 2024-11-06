@@ -9,5 +9,5 @@
 		"skipLibCheck": true,
 		"forceConsistentCasingInFileNames": true
 	},
-	"include": ["./index.ts", "./lib/handlers/**/*.ts"]
+	"include": ["./index.ts", "./lib/managers/**/*.ts"]
 }

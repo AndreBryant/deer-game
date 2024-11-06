@@ -4,8 +4,11 @@
 	import InputText from '$lib/components/ui/InputText.svelte';
 	import HomeBackground3 from '$lib/components/home/HomeBackground3.svelte';
 	import { io } from 'socket.io-client';
+	import { onDestroy } from 'svelte';
 
+	// const ws = io('ws://10.103.7.248:3000');
 	const ws = io();
+
 	let rooms: { [key: string]: { players: number; mapData: string } } = {};
 	ws.on('rooms_updated', (data) => {
 		rooms = data;
@@ -25,9 +28,6 @@
 	$: validStatus = checkRoom(gameID) ? 'valid' : 'invalid';
 	$: validStatus = gameID.length <= 0 ? 'none' : checkRoom(gameID) ? 'valid' : 'invalid';
 
-	// let r = Math.random();
-	let r = 0.1;
-
 	function checkUsername(username: string) {
 		return username.length > 0;
 	}
@@ -44,21 +44,16 @@
 	} else {
 		numOfPlayers = '';
 	}
+
+	onDestroy(() => ws?.disconnect());
 </script>
 
 <main class="relative flex h-screen w-screen select-none flex-col items-center justify-center">
 	<div class="absolute left-0 top-0">
-		<!-- {#if r < 0.5}
-			<HomeBackground />
-		{:else}
-			<HomeBackground2 />
-			{/if} -->
 		<HomeBackground3 />
 	</div>
 	<section
-		class="relative rounded-xl border bg-slate-50 px-16 py-24 shadow-md backdrop-blur-lg transition hover:bg-opacity-75"
-		class:bg-opacity-55={r < 0.5}
-		class:bg-opacity-100={r >= 0.5}
+		class="relative rounded-xl border bg-slate-50 bg-opacity-55 px-16 py-24 shadow-md backdrop-blur-lg transition hover:bg-opacity-75"
 	>
 		<div
 			class="custom-animation group absolute -left-8 top-2 -rotate-[20deg] rounded-md bg-red-900 px-4 py-2 hover:bg-red-800"

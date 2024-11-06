@@ -6,14 +6,14 @@ export function translateCoords({ h, w, px, py, x, y }: any) {
 	};
 }
 
-export function drawMap(p5: any, mapImage: any, player: any) {
+export function drawMap(p5: any, mapImage: any, px: number, py: number) {
 	const t = translateCoords({
 		h: p5.height,
 		w: p5.width,
-		px: player.x,
-		py: player.y,
 		x: 0,
-		y: 0
+		y: 0,
+		px,
+		py
 	});
 	p5.image(mapImage, t.x, t.y);
 }
@@ -32,16 +32,16 @@ export function drawMapTiles(
 			switch (char) {
 				case '=':
 					// let grassNoise = graphics.noise(x * 0.1, y * 0.1);
-					graphics.fill(10, graphics.random(85, 95), 10);
+					graphics.fill(10, getRandomArbitrary(85, 95), 10);
 					break; // Grass
 				case '#':
-					graphics.fill(20, graphics.random(35, 45), 20);
+					graphics.fill(20, getRandomArbitrary(35, 45), 20);
 					break; // Wall
 				case 'F':
 					graphics.fill(100, 0, 0);
 					break; // flag
 				case '~':
-					graphics.fill(20, 20, graphics.random(80, 120));
+					graphics.fill(20, 20, getRandomArbitrary(80, 120));
 					break; // Water
 				case '-':
 					graphics.fill(25);
@@ -53,4 +53,8 @@ export function drawMapTiles(
 			graphics.rect(x * mapData.tileSize, y * mapData.tileSize, mapData.tileSize, mapData.tileSize);
 		}
 	}
+}
+
+function getRandomArbitrary(min: number, max: number) {
+	return Math.random() * (max - min) + min;
 }

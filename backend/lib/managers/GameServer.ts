@@ -58,13 +58,21 @@ export class GameServer {
 		this.playerManager.updateKeyStates(socket.id, data.gameID, data.keyStates);
 		this.playerManager.handleMovement(socket.id);
 		this.playerManager.handleActions(socket.id);
-		this.broadcastPlayerUpdates(data.gameID);
+		// this.broadcastPlayerUpdates(data.gameID);
 	}
 
 	private broadcastPlayerUpdates(gameID: string) {
 		this.playerManager.updatePlayers(gameID);
+		// rEMOVED FOR NOW
 		const playersInRoom = this.playerManager.getPlayersInRoom(gameID);
 		this.io.to(gameID).emit('player_updated', { players: playersInRoom });
+	}
+
+	broadcastAllPlayerUpdates() {
+		const rooms = this.roomManager.getRooms();
+		for (const room in rooms) {
+			this.broadcastPlayerUpdates(room);
+		}
 	}
 
 	private joinRoom(socket: Socket, gameID: string, isHost = false, username?: string) {

@@ -38,8 +38,8 @@ export class Player {
 		this.x = x;
 		this.y = y;
 		this.radius = PLAYER_HIT_RADIUS;
-		this.dx = 15;
-		this.dy = 15;
+		this.dx = 50;
+		this.dy = 50;
 		this.action = 'idle';
 		this.actionEndTime = null;
 		this.color = color;
@@ -59,11 +59,11 @@ export class Player {
 			this.actionEndTime &&
 			this.actionEndTime > new Date().getTime()
 		) {
-			this.dx = 8;
-			this.dy = 8;
+			this.dx = 25;
+			this.dy = 25;
 		} else {
-			this.dx = 15;
-			this.dy = 15;
+			this.dx = 35;
+			this.dy = 35;
 		}
 		if (
 			this.invincible &&
