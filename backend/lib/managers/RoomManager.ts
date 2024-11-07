@@ -18,6 +18,10 @@ export class RoomManager {
 		if (this.rooms[gameId]) this.rooms[gameId].players++;
 	}
 
+	leaveRoom(gameId: string) {
+		if (this.rooms[gameId]) this.rooms[gameId].players--;
+	}
+
 	removeRoom(gameId: string) {
 		delete this.rooms[gameId];
 	}

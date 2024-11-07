@@ -23,6 +23,7 @@
 	let redHornDeerSpriteSheet: any;
 
 	let fps = 30;
+	let fpsDisplay = fps;
 
 	function preload(p5: any) {
 		deerSpriteSheet = p5.loadImage(fDeer);
@@ -51,8 +52,9 @@
 	}
 
 	function draw(p5: any) {
-		const frame = p5.frameCount % fps;
-		if (frame === 0) console.time('draw ' + p5.frameCount);
+		// const frame = p5.frameCount % fps;
+		// if (frame === 0) console.time('draw ' + p5.frameCount);
+		fpsDisplay = p5.frameRate();
 
 		p5.background(21);
 
@@ -89,7 +91,7 @@
 					drawPlayer(p5, spriteSheet, pCoords.x, pCoords.y, p);
 				}
 			});
-			if (frame === 0) console.timeEnd('draw ' + p5.frameCount);
+			// if (frame === 0) console.timeEnd('draw ' + p5.frameCount);
 		} else {
 			p5.push();
 			p5.fill(255);
@@ -106,7 +108,7 @@
 
 <div class="absolute flex h-full w-full justify-center">
 	<p class="text-red-600">
-		Frame Rate {fps.toFixed(0)}
+		Frame Rate {fpsDisplay.toFixed(0)}
 	</p>
 </div>
 <div>

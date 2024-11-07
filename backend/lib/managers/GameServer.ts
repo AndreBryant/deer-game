@@ -21,12 +21,11 @@ export class GameServer {
 		socket.on('join_room', (data) => this.handleJoinRoom(socket, data));
 		socket.on('disconnect', () => this.handleDisconnect(socket));
 		socket.on('player_key_input', (data) => this.handleKeyInput(socket, data));
-		socket.on('disconnect', () => console.log(socket.id + ' disconnected.'));
 	}
 
 	private handleCreateRoom(socket: Socket, data: { gameID: string }) {
 		this.roomManager.createRoom(data.gameID);
-		this.joinRoom(socket, data.gameID);
+		this.joinRoom(socket, data.gameID, true);
 	}
 
 	private handleJoinRoom(socket: Socket, data: { username?: string; gameID: string }) {
@@ -41,14 +40,26 @@ export class GameServer {
 		const player = this.playerManager.getPlayer(socket.id);
 		if (!player) return;
 
+		const gameID = player.room;
+
+		if (player.isHost) {
+			const players = this.playerManager.getPlayersInRoom(player.room);
+
+			for (const pl in players) {
+				this.playerManager.removePlayer(pl);
+				this.roomManager.leaveRoom(gameID);
+				this.io.to(players[pl].id).emit('kicked_from_room', true);
+			}
+		}
+
 		this.playerManager.removePlayer(socket.id);
-		this.roomManager.removeRoom(player.room);
 
 		if (this.roomManager.getRoom(player.room)?.players === 0) {
 			this.roomManager.removeRoom(player.room);
 		}
 
 		this.io.emit('rooms_updated', this.roomManager.getRooms());
+		console.log(socket.id + ' disconnected.');
 	}
 
 	private handleKeyInput(
@@ -58,12 +69,10 @@ export class GameServer {
 		this.playerManager.updateKeyStates(socket.id, data.gameID, data.keyStates);
 		this.playerManager.handleMovement(socket.id);
 		this.playerManager.handleActions(socket.id);
-		// this.broadcastPlayerUpdates(data.gameID);
 	}
 
 	private broadcastPlayerUpdates(gameID: string) {
 		this.playerManager.updatePlayers(gameID);
-		// rEMOVED FOR NOW
 		const playersInRoom = this.playerManager.getPlayersInRoom(gameID);
 		this.io.to(gameID).emit('player_updated', { players: playersInRoom });
 	}
@@ -83,11 +92,10 @@ export class GameServer {
 			socket.id,
 			gameID,
 			isHost,
-			username || (!isHost ? 'Host' : '(>.~) andre cute<3'), //it should be the other way around but this works so idk if i should change this
+			username || (isHost ? 'Host' : '(>.~) andre cute<3'),
 			x,
 			y,
 			getRandomColor()
-			// this.roomManager.getRoomData(gameID)?.mapData
 		);
 
 		this.playerManager.addPlayer(player);
