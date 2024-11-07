@@ -1,9 +1,9 @@
 import { Server, Socket } from 'socket.io';
-import { PlayerManager } from './PlayerManager';
-import { RoomManager } from './RoomManager';
-import { Player, PLAYER_HIT_RADIUS } from '../Player';
-import { getRandomColor } from '../palette';
-import { MAP_HEIGHT, MAP_WIDTH, TILESIZE } from '../map';
+import { PlayerManager } from './PlayerManager.js';
+import { RoomManager } from './RoomManager.js';
+import { Player, PLAYER_HIT_RADIUS } from '../Player.js';
+import { getRandomColor } from '../palette.js';
+import { MAP_HEIGHT, MAP_WIDTH, TILESIZE } from '../map.js';
 
 export class GameServer {
 	private io: Server;
@@ -21,6 +21,8 @@ export class GameServer {
 		socket.on('join_room', (data) => this.handleJoinRoom(socket, data));
 		socket.on('disconnect', () => this.handleDisconnect(socket));
 		socket.on('player_key_input', (data) => this.handleKeyInput(socket, data));
+
+		socket.on('start_game', (data) => this.handleStartGame(socket, data));
 	}
 
 	private handleCreateRoom(socket: Socket, data: { gameID: string }) {
@@ -60,6 +62,10 @@ export class GameServer {
 
 		this.io.emit('rooms_updated', this.roomManager.getRooms());
 		console.log(socket.id + ' disconnected.');
+	}
+
+	private handleStartGame(socket: Socket, data: { gameID: string }) {
+		console.log('game started');
 	}
 
 	private handleKeyInput(

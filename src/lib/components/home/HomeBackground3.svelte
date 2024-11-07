@@ -49,7 +49,7 @@
 	let centerX: number;
 	let centerY: number;
 
-	let stars: { x: number; y: number }[] = [];
+	let stars: { x: number; y: number; r: number }[] = [];
 	let starColor = palette.primary.sky_blue;
 	let starCount = 200;
 
@@ -107,7 +107,6 @@
 		drawHeavenlyBodies(p5);
 
 		if (angle >= 180) drawClouds(p5);
-		// drawClouds(p5);
 
 		mACurrMountain = p5.lerpColor(p5.color(mACurrMountain), p5.color(mACurrGoal), lerpConstant);
 		mBCurrMountain = p5.lerpColor(p5.color(mBCurrMountain), p5.color(mBCurrGoal), lerpConstant);
@@ -120,7 +119,6 @@
 		p5.fill(mCCurrMountain);
 		drawMountains(p5, mountainsC);
 
-		// angle += angle < 180 ? 0.1 : 8;
 		angle += 0.1;
 		if (angle >= 360) angle = 0;
 
@@ -204,6 +202,7 @@
 			p5.strokeWeight(2);
 			for (let i = 0; i < stars.length; i++) {
 				const s = stars[i];
+				p5.strokeWeight(s.r);
 				p5.point(s.x, s.y);
 			}
 			const angleToCenter = p5.atan2(centerY - moon.y, centerX - moon.x);
@@ -255,7 +254,7 @@
 		centerY = p5.height * 0.65;
 		stars = [];
 		for (let i = 0; i < starCount; i++) {
-			stars.push({ x: p5.random(0, p5.width), y: p5.random(0, p5.height / 2) });
+			stars.push({ x: p5.random(0, p5.width), y: p5.random(0, p5.height / 2), r: p5.random(1, 3) });
 		}
 
 		clouds = [];

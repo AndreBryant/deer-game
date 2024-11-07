@@ -31,6 +31,7 @@
 		attack: false
 	};
 
+	let gameLoaded = false;
 	let gameStarted = false;
 
 	function emitKeyInput() {
@@ -76,6 +77,14 @@
 		if (changed) emitKeyInput();
 	}
 
+	function startGame() {
+		if (!ws) return;
+		ws.emit('start_game', {
+			gameID: data.gameID
+		});
+		gameStarted = true;
+	}
+
 	onMount(() => {
 		// ws = io('ws://10.103.7.248:3000');
 		ws = io();
@@ -102,7 +111,6 @@
 
 		ws.on('player_updated', (dataFromServer) => {
 			serverData = dataFromServer;
-			// console.log('received player update', dataFromServer);
 		});
 
 		ws.on('map_generated', (dataFromServer) => {
@@ -207,9 +215,9 @@
 				<p>y: {clientPlayer.y.toFixed(0)}</p>
 			</div>
 		{/if}
-		{#if !gameStarted && data.host}
+		{#if !gameLoaded && data.host}
 			<div class="absolute bottom-0 flex w-full justify-center">
-				<p>host</p>
+				<button class="rounded-lg border-2 px-4 py-2" on:click={startGame}>Start Game</button>
 			</div>
 		{/if}
 	</section>

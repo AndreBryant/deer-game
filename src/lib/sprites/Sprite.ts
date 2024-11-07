@@ -2,7 +2,7 @@
 export const FRAME_SIZE = 32;
 export const DEER_SPRITE_ANIMATION_DATA = {
 	idle: {
-		slowness_factor: 10,
+		slowness_factor: 20,
 		// TopLeft Corners
 		positions: [
 			{ x: 0 * FRAME_SIZE, y: 0 * FRAME_SIZE },
@@ -13,7 +13,7 @@ export const DEER_SPRITE_ANIMATION_DATA = {
 		]
 	},
 	eat_grass: {
-		slowness_factor: 6,
+		slowness_factor: 12,
 		positions: [
 			{ x: 0 * FRAME_SIZE, y: 1 * FRAME_SIZE },
 			{ x: 1 * FRAME_SIZE, y: 1 * FRAME_SIZE },
@@ -23,7 +23,7 @@ export const DEER_SPRITE_ANIMATION_DATA = {
 		]
 	},
 	walk: {
-		slowness_factor: 2,
+		slowness_factor: 4,
 		positions: [
 			{ x: 0 * FRAME_SIZE, y: 2 * FRAME_SIZE },
 			{ x: 1 * FRAME_SIZE, y: 2 * FRAME_SIZE },
@@ -33,7 +33,7 @@ export const DEER_SPRITE_ANIMATION_DATA = {
 		]
 	},
 	attack: {
-		slowness_factor: 2,
+		slowness_factor: 4,
 		positions: [
 			{ x: 0 * FRAME_SIZE, y: 5 * FRAME_SIZE },
 			{ x: 1 * FRAME_SIZE, y: 5 * FRAME_SIZE },

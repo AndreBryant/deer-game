@@ -22,7 +22,7 @@
 	let redDeerSpriteSheet: any;
 	let redHornDeerSpriteSheet: any;
 
-	let fps = 30;
+	let fps = 60;
 	let fpsDisplay = fps;
 
 	function preload(p5: any) {
@@ -107,7 +107,7 @@
 </script>
 
 <div class="absolute flex h-full w-full justify-center">
-	<p class="text-red-600">
+	<p class="text-red-300">
 		Frame Rate {fpsDisplay.toFixed(0)}
 	</p>
 </div>

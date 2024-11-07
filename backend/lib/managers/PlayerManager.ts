@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Player } from '../Player';
-import { MAP_HEIGHT as mh, MAP_WIDTH as mw } from '../map';
+import { Player } from '../Player.js';
+import { MAP_HEIGHT as mh, MAP_WIDTH as mw } from '../map.js';
 
 export class PlayerManager {
 	private players: { [key: string]: Player } = {};
@@ -63,8 +63,24 @@ export class PlayerManager {
 		if (this.keyStates[player.room] && this.keyStates[player.room][playerId]) {
 			const keys = this.keyStates[player.room][playerId];
 			const isMoving = Object.values(keys).some((state) => state);
+			if (!isMoving) {
+				if (
+					player.action !== 'eat_grass' ||
+					!player.actionEndTime ||
+					player.actionEndTime <= Date.now()
+				) {
+					if (Math.random() < 0.001) {
+						player.action = 'eat_grass';
+						player.actionEndTime = Date.now() + 1000;
+					} else {
+						player.action = 'idle';
+					}
+				}
+			} else {
+				player.action = 'walk';
+				player.actionEndTime = null;
+			}
 
-			player.action = isMoving ? 'walk' : 'idle';
 			if (keys['attack']) this.performAttack(player);
 		}
 	}

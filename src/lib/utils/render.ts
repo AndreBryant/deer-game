@@ -35,7 +35,7 @@ export function drawMapTiles(
 					graphics.fill(10, getRandomArbitrary(85, 95), 10);
 					break; // Grass
 				case '#':
-					graphics.fill(20, getRandomArbitrary(35, 45), 20);
+					graphics.fill(20, getRandomArbitrary(35, 45), 20, 200);
 					break; // Wall
 				case 'F':
 					graphics.fill(100, 0, 0);
@@ -51,6 +51,7 @@ export function drawMapTiles(
 			}
 
 			graphics.rect(x * mapData.tileSize, y * mapData.tileSize, mapData.tileSize, mapData.tileSize);
+			// graphics.rect(x * mapData.tileSize, y * mapData.tileSize, 10, 10, 100);
 		}
 	}
 }

@@ -1,6 +1,10 @@
-import { TILESIZE } from './map';
+import { TILESIZE } from './map.js';
 
 export const PLAYER_HIT_RADIUS = TILESIZE * 2;
+const playerSpeedX = 12;
+const playerSpeedXAttack = 4;
+const playerSpeedY = 7;
+const playerSpeedYAttack = 2;
 export class Player {
 	id: string;
 	room: string;
@@ -38,8 +42,8 @@ export class Player {
 		this.x = x;
 		this.y = y;
 		this.radius = PLAYER_HIT_RADIUS;
-		this.dx = 50;
-		this.dy = 50;
+		this.dx = playerSpeedX;
+		this.dy = playerSpeedY;
 		this.action = 'idle';
 		this.actionEndTime = null;
 		this.color = color;
@@ -59,11 +63,11 @@ export class Player {
 			this.actionEndTime &&
 			this.actionEndTime > new Date().getTime()
 		) {
-			this.dx = 25;
-			this.dy = 25;
+			this.dx = playerSpeedXAttack;
+			this.dy = playerSpeedYAttack;
 		} else {
-			this.dx = 35;
-			this.dy = 35;
+			this.dx = playerSpeedX;
+			this.dy = playerSpeedY;
 		}
 		if (
 			this.invincible &&

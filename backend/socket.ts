@@ -1,6 +1,6 @@
 import { type ViteDevServer } from 'vite';
 import { Server } from 'socket.io';
-import { GameServer } from './lib/managers/GameServer';
+import { GameServer } from './lib/managers/GameServer.js';
 
 export const webSocketServer = {
 	name: 'websocket',
@@ -17,6 +17,6 @@ export const webSocketServer = {
 
 		setInterval(() => {
 			gameServer.broadcastAllPlayerUpdates();
-		}, 1000 / 30);
+		}, 1000 / 60);
 	}
 };
