@@ -212,9 +212,13 @@
 					</div>
 				</div>
 			</div>
-			<div class="absolute right-0 top-0">
+			<div class="absolute right-0 top-0 flex flex-col gap-2">
 				<p>x: {clientPlayer.x.toFixed(0)}</p>
 				<p>y: {clientPlayer.y.toFixed(0)}</p>
+				<div class="flex gap-2">
+					<User />
+					{numOfPlayers}
+				</div>
 			</div>
 		{/if}
 		{#if clientPlayer}
@@ -246,10 +250,6 @@
 						<span class="inline group-hover:hidden">Start Game</span>
 						<span class="hidden group-hover:inline">Start Game?</span>
 					</button>
-				</div>
-				<div class="flex gap-2">
-					<User />
-					{numOfPlayers} player{numOfPlayers === 1 ? '' : 's'}
 				</div>
 			</div>
 		{/if}
