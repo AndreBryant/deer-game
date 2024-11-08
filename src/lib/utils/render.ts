@@ -38,8 +38,8 @@ export function drawMapTiles(
 			switch (char) {
 				case '=':
 					{
-						const min = 45;
-						graphics.fill(min * 0.8, value + min, min * 0.6);
+						const min = 100;
+						graphics.fill(min * 0.7, min * 0.8, value + min, 40);
 						graphics.rect(
 							x * mapData.tileSize,
 							y * mapData.tileSize,
@@ -75,51 +75,92 @@ export function drawBGGradient(graphics: any) {
 	const c1 = graphics.color(r, g, b);
 	const c2 = graphics.color(20);
 
-	// Transfer this outside createGraphics, I want them to have parallax effect
 	for (let i = 0; i < graphics.height; i++) {
 		const n = graphics.map(i, 0, graphics.height, 0, 1);
 		const newC = graphics.lerpColor(c1, c2, n);
 		graphics.stroke(newC);
 		graphics.line(0, i, graphics.width, i);
 	}
-	const starColor = palette.primary.sky_blue;
+}
 
-	for (let i = 0; i < 100; i++) {
-		const x = getRandomArbitrary(0, graphics.width);
-		const y = getRandomArbitrary(0, graphics.height);
-		const r = getRandomArbitrary(1, 3);
-		graphics.fill(starColor);
-		graphics.ellipse(x, y, r);
+export function setupGalaxy(p5: any, starCount: number, treeCount: number) {
+	const mapSize = 160 * 32;
+
+	const stars = [];
+	for (let i = 0; i < starCount; i++) {
+		const x = randomArbitrary(-p5.width / 2, mapSize + p5.width / 2);
+		const y = randomArbitrary(-p5.height / 2, p5.height / 2 + mapSize / 4);
+		const size = p5.random(1, 3);
+		stars.push({ x, y, z: size });
+	}
+	const trees = [];
+	for (let i = 0; i < treeCount; i++) {
+		const x = randomArbitrary(-p5.width / 2, mapSize + p5.width / 2);
+		const y = randomArbitrary(-p5.height / 2, p5.height / 2 + mapSize / 4);
+		const z = p5.random(1, 20);
+		const angle = randomArbitrary(0, 2 * Math.PI);
+		trees.push({ x, y, z, angle });
 	}
 
-	drawForest(graphics);
-}
-function drawTriangleTree(graphics: any, x: number, y: number, size: number) {
-	graphics.push();
-
-	graphics.translate(x, y);
-	const rotationAngle = (Math.random() * Math.PI) / 4 - Math.PI / 8;
-	graphics.rotate(rotationAngle);
-
-	graphics.fill(palette.primary.darkBrown);
-	graphics.rect(-size / 8, 0, size / 4, size / 2);
-
-	graphics.fill(25, 100, 25);
-	graphics.triangle(-size / 2, 0, size / 2, 0, 0, -size / 2);
-	graphics.triangle(-size / 3, -size / 4, size / 3, -size / 4, 0, -size * 0.75);
-	graphics.triangle(-size / 4, -size / 2, size / 4, -size / 2, 0, -size);
-
-	graphics.pop();
+	return { stars, trees };
 }
 
-function drawForest(graphics: any) {
-	for (let i = 0; i < 20; i++) {
-		const x = graphics.random(graphics.width);
-		const y = graphics.random(graphics.height);
-		const size = graphics.random(1, 20);
-		drawTriangleTree(graphics, x, y, size);
+export function setupBGGradientGraphics(p5: any) {
+	const graphics = p5.createGraphics(p5.width, p5.height);
+	drawBGGradient(graphics);
+	return graphics.get();
+}
+
+export function setupMap(p5: any, mapData: any) {
+	const graphics = p5.createGraphics(
+		mapData?.width * mapData.tileSize,
+		mapData?.height * mapData.tileSize
+	);
+	drawMapTiles(graphics, mapData);
+	return graphics.get();
+}
+
+export function drawGalaxy(p5: any, starSet: any, treeSet: any, px: number, py: number) {
+	for (const star of starSet) {
+		drawStar(p5, star.x, star.y, star.z, px, py);
 	}
+	for (const tree of treeSet) {
+		drawTree(p5, tree.x, tree.y, tree.z, tree.angle, px, py);
+	}
+	console.log('draw galaxy');
 }
-function getRandomArbitrary(min: number, max: number) {
+
+function drawStar(p5: any, x: number, y: number, z: number, px: number, py: number) {
+	// compute parallax effect here
+	const parallaxX = x - px / z;
+	const parallaxY = y - py / z;
+	p5.push();
+	p5.stroke(palette.primary.sky_blue);
+	p5.strokeWeight(z);
+	p5.point(parallaxX, parallaxY);
+	p5.pop();
+}
+
+function drawTree(p5: any, x: number, y: number, z: number, angle: number, px: number, py: number) {
+	const parallaxX = x - px / z;
+	const parallaxY = y - py / z;
+
+	p5.push();
+
+	p5.translate(parallaxX, parallaxY);
+	p5.rotate(angle);
+
+	p5.fill(palette.primary.darkBrown);
+	p5.rect(-z / 8, 0, z / 4, z / 2);
+
+	p5.fill(25, 100, 25);
+	p5.triangle(-z / 2, 0, z / 2, 0, 0, -z / 2);
+	p5.triangle(-z / 3, -z / 4, z / 3, -z / 4, 0, -z * 0.75);
+	p5.triangle(-z / 4, -z / 2, z / 4, -z / 2, 0, -z);
+
+	p5.pop();
+}
+
+function randomArbitrary(min: number, max: number) {
 	return Math.random() * (max - min) + min;
 }

@@ -10,7 +10,14 @@
 	import fDeer from '$lib/sprites/fDeer.png';
 	import fDeerRed from '$lib/sprites/fDeerRed.png';
 	import { drawPlayer } from '$lib/sprites/Sprite';
-	import { drawMap, drawMapTiles, drawBGGradient, translateCoords } from '$lib/utils/render';
+	import {
+		drawMap,
+		translateCoords,
+		setupMap,
+		setupGalaxy,
+		setupBGGradientGraphics,
+		drawGalaxy
+	} from '$lib/utils/render';
 
 	$: serverData;
 	$: sortedPlayers = serverData.players
@@ -18,6 +25,12 @@
 		: [];
 	let mapImage: any;
 	let bgImage: any;
+	// Parallax bg
+	let starCount = 250;
+	let treeCount = 200;
+	let starSet: { x: number; y: number; z: number }[] = [];
+	let treeSet: { x: number; y: number; z: number; angle: number }[] = [];
+
 	let deerSpriteSheet: any;
 	let hornDeerSpriteSheet: any;
 	let redDeerSpriteSheet: any;
@@ -38,36 +51,24 @@
 		p5.frameRate(fps);
 		p5.noSmooth();
 
-		setupMap(p5);
-		setupBGGradientGraphics(p5);
-	}
+		mapImage = setupMap(p5, mapData);
+		bgImage = setupBGGradientGraphics(p5);
 
-	function setupBGGradientGraphics(p5: any) {
-		let graphics = p5.createGraphics(p5.width, p5.height);
-		drawBGGradient(graphics);
-		bgImage = graphics.get();
-	}
-
-	function setupMap(p5: any) {
-		if (mapData) {
-			let graphics = p5.createGraphics(
-				mapData?.width * mapData.tileSize,
-				mapData?.height * mapData.tileSize
-			);
-			drawMapTiles(graphics, mapData);
-			mapImage = graphics.get();
-		}
+		let { stars, trees } = setupGalaxy(p5, starCount, treeCount);
+		starSet = stars;
+		treeSet = trees;
+		console.log(starSet);
 	}
 
 	function draw(p5: any) {
-		// const frame = p5.frameCount % fps;
-		// if (frame === 0) console.time('draw ' + p5.frameCount);
 		fpsDisplay = p5.frameRate();
 
 		p5.background(bgImage);
+		// Draw the parallaxed objects here
 
 		if (serverData && mapData && serverData.players && serverData.players[socketId]) {
 			const player = serverData.players[socketId];
+			drawGalaxy(p5, starSet, treeSet, player.x, player.y);
 			drawMap(p5, mapImage, player.x, player.y);
 
 			sortedPlayers.forEach((p: any) => {
@@ -99,7 +100,6 @@
 					drawPlayer(p5, spriteSheet, pCoords.x, pCoords.y, p);
 				}
 			});
-			// if (frame === 0) console.timeEnd('draw ' + p5.frameCount);
 		} else {
 			p5.push();
 			p5.fill(255);
@@ -112,8 +112,12 @@
 	function windowResized(p5: any) {
 		p5.resizeCanvas(p5.windowWidth, p5.windowHeight);
 
-		setupMap(p5);
-		setupBGGradientGraphics(p5);
+		mapImage = setupMap(p5, mapData);
+		bgImage = setupBGGradientGraphics(p5);
+
+		let { stars, trees } = setupGalaxy(p5, starCount, treeCount);
+		starSet = stars;
+		treeSet = trees;
 	}
 </script>
 
