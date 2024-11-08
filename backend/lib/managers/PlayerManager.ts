@@ -32,35 +32,34 @@ export class PlayerManager {
 
 	handleMovement(playerId: string) {
 		const player = this.players[playerId];
-		const keys = this.keyStates[player.room][playerId];
 
-		if (keys.up) {
-			// console.log('key up');
-			player.updateY(true, mh);
+		if (player && this.keyStates[player.room] && this.keyStates[player.room][playerId]) {
+			const keys = this.keyStates[player.room][playerId];
+			if (keys.up) {
+				player.updateY(true, mh);
+			}
+			if (keys.down) {
+				player.updateY(false, mh);
+			}
+			if (keys.left) {
+				player.updateX(true, mw);
+			}
+			if (keys.right) {
+				player.updateX(false, mw);
+			}
 		}
-		if (keys.down) {
-			// console.log('key down');
-			player.updateY(false, mh);
-		}
-		if (keys.left) {
-			// console.log('key left');
-			player.updateX(true, mw);
-		}
-		if (keys.right) {
-			// console.log('key RIGHT');
-			player.updateX(false, mw);
-		}
-		// console.log('inside handle movement', player.x, player.y);
 	}
 
 	updateKeyStates(playerId: string, roomID: string, keyStates: { [key: string]: boolean }) {
-		this.keyStates[roomID][playerId] = keyStates;
+		if (this.keyStates[roomID] && this.keyStates[roomID][playerId]) {
+			this.keyStates[roomID][playerId] = keyStates;
+		}
 	}
 
 	handleActions(playerId: string) {
 		const player = this.players[playerId];
 
-		if (this.keyStates[player.room] && this.keyStates[player.room][playerId]) {
+		if (player && this.keyStates[player.room] && this.keyStates[player.room][playerId]) {
 			const keys = this.keyStates[player.room][playerId];
 			const isMoving = Object.values(keys).some((state) => state);
 			if (!isMoving) {
