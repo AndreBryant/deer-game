@@ -10,13 +10,14 @@
 	import fDeer from '$lib/sprites/fDeer.png';
 	import fDeerRed from '$lib/sprites/fDeerRed.png';
 	import { drawPlayer } from '$lib/sprites/Sprite';
-	import { drawMap, drawMapTiles, translateCoords } from '$lib/utils/render';
+	import { drawMap, drawMapTiles, drawBGGradient, translateCoords } from '$lib/utils/render';
 
 	$: serverData;
 	$: sortedPlayers = serverData.players
 		? Object.values(serverData.players).sort((a: any, b: any) => a.y - b.y)
 		: [];
 	let mapImage: any;
+	let bgImage: any;
 	let deerSpriteSheet: any;
 	let hornDeerSpriteSheet: any;
 	let redDeerSpriteSheet: any;
@@ -38,6 +39,13 @@
 		p5.noSmooth();
 
 		setupMap(p5);
+		setupBGGradientGraphics(p5);
+	}
+
+	function setupBGGradientGraphics(p5: any) {
+		let graphics = p5.createGraphics(p5.width, p5.height);
+		drawBGGradient(graphics);
+		bgImage = graphics.get();
 	}
 
 	function setupMap(p5: any) {
@@ -56,7 +64,7 @@
 		// if (frame === 0) console.time('draw ' + p5.frameCount);
 		fpsDisplay = p5.frameRate();
 
-		p5.background(21);
+		p5.background(bgImage);
 
 		if (serverData && mapData && serverData.players && serverData.players[socketId]) {
 			const player = serverData.players[socketId];
@@ -103,6 +111,9 @@
 
 	function windowResized(p5: any) {
 		p5.resizeCanvas(p5.windowWidth, p5.windowHeight);
+
+		setupMap(p5);
+		setupBGGradientGraphics(p5);
 	}
 </script>
 

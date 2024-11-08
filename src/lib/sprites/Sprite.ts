@@ -45,7 +45,7 @@ export const DEER_SPRITE_ANIMATION_DATA = {
 };
 
 export function drawPlayer(p5: any, spriteSheet: any, x: number, y: number, player: any) {
-	// username
+	// Player username tag
 	p5.textFont('monospace');
 	p5.textSize(24);
 	p5.textAlign(p5.CENTER, p5.CENTER);
@@ -71,7 +71,8 @@ export function drawPlayer(p5: any, spriteSheet: any, x: number, y: number, play
 
 		p5.fill(0, 0, 0, 50);
 		p5.noStroke();
-		// Shadow
+
+		// Player Shadow
 		p5.ellipse(0, 0 + 64, player.radius * 2, 16);
 		p5.imageMode(p5.CENTER);
 		p5.image(

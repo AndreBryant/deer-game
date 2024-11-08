@@ -1,5 +1,6 @@
 export const MAP_HEIGHT = 160;
 export const MAP_WIDTH = 160;
+export const INITIAL_SAFEZONE_BOUNDARY = 160;
 export const TILESIZE = 32;
 
 export enum MapTile {
@@ -15,10 +16,12 @@ export class Map {
 	height: number;
 	tiles: string;
 	tileSize: number;
+	safeZoneBoundary: number;
 
 	constructor() {
 		this.width = MAP_WIDTH;
 		this.height = MAP_HEIGHT;
+		this.safeZoneBoundary = INITIAL_SAFEZONE_BOUNDARY;
 		this.tiles = '';
 		this.tileSize = TILESIZE;
 		this.generateMap();

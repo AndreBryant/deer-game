@@ -1,10 +1,12 @@
 import { TILESIZE } from './map.js';
 
 export const PLAYER_HIT_RADIUS = TILESIZE * 2;
+
 const playerSpeedX = 12;
-const playerSpeedXAttack = 4;
-const playerSpeedY = 7;
-const playerSpeedYAttack = 2;
+const playerSpeedXAttack = 6;
+const playerSpeedY = 12;
+const playerSpeedYAttack = 6;
+
 export class Player {
 	id: string;
 	room: string;

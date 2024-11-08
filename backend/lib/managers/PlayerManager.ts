@@ -107,7 +107,7 @@ export class PlayerManager {
 			if (target.id !== player.id && isInAttackRange(player, target) && !target.invincible) {
 				target.takeDamage(player.attack);
 				target.invincible = true;
-				target.invincibilityEndTime = Date.now() + 2000;
+				target.invincibilityEndTime = Date.now() + 1000;
 			}
 		}
 	}

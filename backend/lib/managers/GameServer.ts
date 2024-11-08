@@ -36,6 +36,7 @@ export class GameServer {
 			return;
 		}
 		this.joinRoom(socket, data.gameID, false, data.username);
+		this.io.to(data.gameID).emit('specific_room_updated', this.roomManager.getRoom(data.gameID));
 	}
 
 	private handleDisconnect(socket: Socket) {
@@ -52,15 +53,17 @@ export class GameServer {
 				this.roomManager.leaveRoom(gameID);
 				this.io.to(players[pl].id).emit('kicked_from_room', true);
 			}
+		} else {
+			this.playerManager.removePlayer(socket.id);
+			this.roomManager.leaveRoom(gameID);
 		}
-
-		this.playerManager.removePlayer(socket.id);
 
 		if (this.roomManager.getRoom(player.room)?.players === 0) {
 			this.roomManager.removeRoom(player.room);
 		}
 
 		this.io.emit('rooms_updated', this.roomManager.getRooms());
+		this.io.to(player.room).emit('specific_room_updated', this.roomManager.getRoom(player.room));
 		console.log(socket.id + ' disconnected.');
 	}
 

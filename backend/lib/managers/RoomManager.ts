@@ -3,42 +3,55 @@ import { Map } from '../map.js';
 interface Room {
 	players: number;
 	mapData: Map;
+	isGameStarted: boolean;
+	gameStartTime: number;
 }
 
 export class RoomManager {
 	private rooms: { [key: string]: Room } = {};
-	createRoom(gameId: string) {
-		this.rooms[gameId] = {
+
+	createRoom(gameID: string) {
+		this.rooms[gameID] = {
 			players: 0,
-			mapData: new Map()
+			mapData: new Map(),
+			isGameStarted: false,
+			gameStartTime: 0
 		};
 	}
 
-	joinRoom(gameId: string) {
-		if (this.rooms[gameId]) this.rooms[gameId].players++;
+	joinRoom(gameID: string) {
+		if (this.rooms[gameID]) this.rooms[gameID].players++;
 	}
 
-	leaveRoom(gameId: string) {
-		if (this.rooms[gameId]) this.rooms[gameId].players--;
+	leaveRoom(gameID: string) {
+		if (this.rooms[gameID]) this.rooms[gameID].players--;
 	}
 
-	removeRoom(gameId: string) {
-		delete this.rooms[gameId];
+	removeRoom(gameID: string) {
+		delete this.rooms[gameID];
 	}
 
-	getRoom(gameId: string): Room | undefined {
-		return this.rooms[gameId];
+	getRoom(gameID: string): Room | undefined {
+		return this.rooms[gameID];
 	}
 
-	roomExists(gameId: string): boolean {
-		return !!this.rooms[gameId];
+	roomExists(gameID: string): boolean {
+		return !!this.rooms[gameID];
 	}
 
-	getRoomData(gameId: string): Room {
-		return this.rooms[gameId];
+	getRoomData(gameID: string): Room {
+		return this.rooms[gameID];
 	}
 
 	getRooms(): { [key: string]: Room } {
 		return this.rooms;
+	}
+
+	decreaseSafeZone(gameID: string) {
+		console.log('game map safezone decreased', gameID);
+		// TODO
+		// get map safeBoundary
+		// decrease
+		// client handles red zone textures
 	}
 }

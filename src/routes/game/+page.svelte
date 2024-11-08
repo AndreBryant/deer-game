@@ -4,9 +4,10 @@
 	import { io, Socket } from 'socket.io-client';
 	import { onMount } from 'svelte';
 	import GameCanvas from '$lib/components/game/GameCanvas.svelte';
-	import { Square } from 'lucide-svelte';
+	import { Square, Activity, Heart, Sword, User } from 'lucide-svelte';
 
 	let serverData: any = {};
+	let numOfPlayers: number = 1;
 	let mapData: { mapData: string; height: number; width: number; tileSize: number } | undefined =
 		undefined;
 	let connectionState: { socketId: string | undefined; isConnected: boolean } = {
@@ -109,6 +110,11 @@
 			serverData = dataFromServer;
 		});
 
+		ws.on('specific_room_updated', (dataFromServer) => {
+			numOfPlayers = dataFromServer.players;
+			console.log('updated specific room');
+		});
+
 		ws.on('player_updated', (dataFromServer) => {
 			serverData = dataFromServer;
 		});
@@ -133,7 +139,7 @@
 		};
 	});
 
-	$: serverData, connectionState, mapData;
+	$: serverData, connectionState, mapData, numOfPlayers;
 
 	$: clientPlayer =
 		serverData.players && connectionState.isConnected && connectionState.socketId
@@ -141,8 +147,8 @@
 			: undefined;
 </script>
 
-<!-- <h1 class="text-2xl">CURRENTLY BROKEN IM STILL REFACTORING THE SERVER CODE</h1>
-{JSON.stringify(serverData, null, 2)}
+<!-- TODO: THE CODE LOOKS UGLY I NEED TO REFACTOR THIS 😭😭😭 -->
+<!--{JSON.stringify(serverData, null, 2)}
 {JSON.stringify(mapData, null, 2)}
 {JSON.stringify(connectionState, null, 2)} -->
 <main class="XX--ADD-THIS-LATER--XX(select-none) relative h-screen w-screen text-white">
@@ -165,13 +171,10 @@
 		</div>
 		<div>
 			<p>Player: {data.username}</p>
-			{#if clientPlayer}
-				<p class="text-lg">HP: {clientPlayer.health}</p>
-			{/if}
 		</div>
 		{#if clientPlayer}
 			<div class="absolute bottom-0 left-0 flex flex-col gap-2 opacity-65">
-				<div class="flex">
+				<div class="flex gap-1">
 					<div class="flex flex-col">
 						<div class="flex justify-center">
 							<div class="relative" class:opacity-65={keyStates.up}>
@@ -198,10 +201,10 @@
 						<p class="text-lg">- move</p>
 					</div>
 				</div>
-				<div class="flex gap-4">
+				<div class="flex gap-1">
 					<div class="flex justify-center">
 						<div class="" class:opacity-65={keyStates.attack}>
-							<span class="rounded-md border-4 px-2 py-1 text-xs">Space</span>
+							<span class="rounded-md border-4 px-6 py-1 text-xs">Space</span>
 						</div>
 					</div>
 					<div>
@@ -210,14 +213,44 @@
 				</div>
 			</div>
 			<div class="absolute right-0 top-0">
-				<p>action: {clientPlayer.action}</p>
 				<p>x: {clientPlayer.x.toFixed(0)}</p>
 				<p>y: {clientPlayer.y.toFixed(0)}</p>
 			</div>
 		{/if}
+		{#if clientPlayer}
+			<div class="absolute bottom-0 flex w-full flex-col items-center gap-2">
+				<div class="flex gap-4">
+					<div class="flex gap-2 text-lg">
+						<Heart />
+						{clientPlayer.health}
+					</div>
+					<div class="flex gap-2 text-lg">
+						<Sword />
+						{clientPlayer.attack}
+					</div>
+				</div>
+				<div class="flex gap-2">
+					<Activity />
+					{clientPlayer.action.replace('_', ' ')}
+				</div>
+			</div>
+		{/if}
+		<!-- Add if !gameStarted here -->
 		{#if !gameLoaded && data.host}
-			<div class="absolute bottom-0 flex w-full justify-center">
-				<button class="rounded-lg border-2 px-4 py-2" on:click={startGame}>Start Game</button>
+			<div class="absolute bottom-24 flex w-full flex-col items-center gap-4">
+				<div>
+					<button
+						class="group animate-pulse rounded-lg border-2 px-4 py-2 backdrop-blur-lg transition-all hover:animate-none hover:text-xl"
+						on:click={startGame}
+					>
+						<span class="inline group-hover:hidden">Start Game</span>
+						<span class="hidden group-hover:inline">Start Game?</span>
+					</button>
+				</div>
+				<div class="flex gap-2">
+					<User />
+					{numOfPlayers} player{numOfPlayers === 1 ? '' : 's'}
+				</div>
 			</div>
 		{/if}
 	</section>
