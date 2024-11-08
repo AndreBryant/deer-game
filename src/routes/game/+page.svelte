@@ -213,8 +213,8 @@
 				</div>
 			</div>
 			<div class="absolute right-0 top-0 flex flex-col gap-2">
-				<p>x: {clientPlayer.x.toFixed(0)}</p>
-				<p>y: {clientPlayer.y.toFixed(0)}</p>
+				<p>x: {Math.floor(clientPlayer.x / 32) - 2}</p>
+				<p>y: {Math.floor(clientPlayer.y / 32)}</p>
 				<div class="flex gap-2">
 					<User />
 					{numOfPlayers}
@@ -235,7 +235,7 @@
 				</div>
 				<div class="flex gap-2">
 					<Activity />
-					{clientPlayer.action.replace('_', ' ')}
+					{clientPlayer.action.replace('_', ' ').replace('grass', 'glass')}
 				</div>
 			</div>
 		{/if}

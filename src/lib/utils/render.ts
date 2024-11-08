@@ -9,15 +9,17 @@ export function translateCoords({ h, w, px, py, x, y }: any) {
 }
 
 export function drawMap(p5: any, mapImage: any, px: number, py: number) {
-	const t = translateCoords({
-		h: p5.height,
-		w: p5.width,
-		x: 0,
-		y: 0,
-		px,
-		py
-	});
-	p5.image(mapImage, t.x, t.y);
+	p5.image(
+		mapImage,
+		0,
+		0,
+		p5.width,
+		p5.height,
+		px - p5.width / 2,
+		py - p5.height / 2,
+		p5.width,
+		p5.height
+	);
 }
 
 export function drawMapTiles(
@@ -27,7 +29,7 @@ export function drawMapTiles(
 	graphics.noStroke();
 	graphics.noSmooth();
 
-	const noiseVal = 0.015;
+	const noiseVal = 0.1;
 
 	for (let y = 0; y < mapData.height; y++) {
 		for (let x = 0; x < mapData.width; x++) {
@@ -89,14 +91,14 @@ export function setupGalaxy(p5: any, starCount: number, treeCount: number) {
 	const stars = [];
 	for (let i = 0; i < starCount; i++) {
 		const x = randomArbitrary(-p5.width / 2, mapSize + p5.width / 2);
-		const y = randomArbitrary(-p5.height / 2, p5.height / 2 + mapSize / 4);
+		const y = randomArbitrary(-p5.height / 2, p5.height / 2 + mapSize);
 		const size = p5.random(1, 3);
 		stars.push({ x, y, z: size });
 	}
 	const trees = [];
 	for (let i = 0; i < treeCount; i++) {
 		const x = randomArbitrary(-p5.width / 2, mapSize + p5.width / 2);
-		const y = randomArbitrary(-p5.height / 2, p5.height / 2 + mapSize / 4);
+		const y = randomArbitrary(-p5.height / 2, p5.height / 2 + mapSize);
 		const z = p5.random(1, 20);
 		const angle = randomArbitrary(0, 2 * Math.PI);
 		trees.push({ x, y, z, angle });
@@ -134,6 +136,9 @@ function drawStar(p5: any, x: number, y: number, z: number, px: number, py: numb
 	// compute parallax effect here
 	const parallaxX = x - px / z;
 	const parallaxY = y - py / z;
+	if (parallaxX > p5.width || parallaxX < 0 || parallaxY > p5.height || parallaxY < 0) {
+		return;
+	}
 	p5.push();
 	p5.stroke(palette.primary.sky_blue);
 	p5.strokeWeight(z);
@@ -142,8 +147,13 @@ function drawStar(p5: any, x: number, y: number, z: number, px: number, py: numb
 }
 
 function drawTree(p5: any, x: number, y: number, z: number, angle: number, px: number, py: number) {
-	const parallaxX = x - px / z;
-	const parallaxY = y - py / z;
+	const zprime = p5.map(z, 1, 20, 1, 3);
+	const parallaxX = x - px / zprime;
+	const parallaxY = y - py / zprime;
+
+	if (parallaxX > p5.width || parallaxX < 0 || parallaxY > p5.height || parallaxY < 0) {
+		return;
+	}
 
 	p5.push();
 
