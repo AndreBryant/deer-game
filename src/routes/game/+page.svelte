@@ -87,7 +87,7 @@
 	}
 
 	onMount(() => {
-		ws = io(import.meta.env.VITE_SERVER_URL);
+		ws = io(import.meta.env.MODE === 'development' ? '' : import.meta.env.VITE_SERVER_URL);
 
 		ws.on('connect', () => {
 			connectionState.socketId = ws!.id;

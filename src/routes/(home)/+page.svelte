@@ -6,7 +6,7 @@
 	import { io } from 'socket.io-client';
 	import { onDestroy } from 'svelte';
 
-	const ws = io(import.meta.env.VITE_SERVER_URL);
+	const ws = io(import.meta.env.MODE === 'development' ? '' : import.meta.env.VITE_SERVER_URL);
 
 	let rooms: { [key: string]: { players: number; mapData: string } } = {};
 	ws.on('rooms_updated', (data) => {
