@@ -12,7 +12,10 @@
 	onMount(async () => {
 		if (typeof window !== 'undefined') {
 			const p5 = await import('p5');
-			p5.disableFriendlyErrors = true;
+
+			if (import.meta.env.MODE === 'development') {
+				p5.disableFriendlyErrors = true;
+			}
 
 			p5Sketch = new p5.default((p5js) => {
 				p5js.preload = () => preload(p5js);

@@ -1,31 +1,30 @@
-// import express from 'express';
-// import { Server } from 'socket.io';
-// import http from 'http';
-// import { GameServer } from './build/managers/GameServer.js';
+import express from 'express';
+import { Server } from 'socket.io';
+import http from 'http';
+import { GameServer } from './build/managers/GameServer.js';
 
-// const app = express();
-// const server = http.createServer(app);
-// const io = new Server(server, {
-// 	cors: {
-// 		origin: '*', // for now, all reqs are allowed
-// 		methods: ['GET', 'POST']
-// 	}
-// });
+const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+	cors: {
+		origin: '*', // for now, all reqs are allowed
+		methods: ['GET', 'POST']
+	}
+});
 
-// const gameServer = new GameServer(io);
+const PORT = process.env.PORT || 3000;
 
-// io.on('connection', (socket) => {
-// 	console.log(socket.id + ' connected.');
-// 	gameServer.handleConnection(socket);
-// });
+server.listen(PORT, () => {
+	console.log(`Server is listening in port ${PORT}`);
+});
 
-// setInterval(() => {
-// 	gameServer.broadcastAllPlayerUpdates();
-// }, 1000 / 60);
+const gameServer = new GameServer(io);
 
-// const HOST = '10.103.7.248';
-// const PORT = process.env.PORT || 3000;
+io.on('connection', (socket) => {
+	console.log(socket.id + ' connected.');
+	gameServer.handleConnection(socket);
+});
 
-// server.listen(PORT, HOST, () => {
-// 	console.log(`Server is running on http://${HOST}:${PORT}`);
-// });
+setInterval(() => {
+	gameServer.broadcastAllPlayerUpdates();
+}, 1000 / 60);

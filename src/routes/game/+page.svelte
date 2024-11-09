@@ -87,8 +87,7 @@
 	}
 
 	onMount(() => {
-		// ws = io('ws://10.103.7.248:3000');
-		ws = io();
+		ws = io(import.meta.env.VITE_SERVER_URL);
 
 		ws.on('connect', () => {
 			connectionState.socketId = ws!.id;
