@@ -32,6 +32,7 @@ export class PlayerManager {
 
 	handleMovement(playerId: string) {
 		const player = this.players[playerId];
+		if (player.isDead) return;
 
 		if (player && this.keyStates[player.room] && this.keyStates[player.room][playerId]) {
 			const keys = this.keyStates[player.room][playerId];
@@ -58,6 +59,7 @@ export class PlayerManager {
 
 	handleActions(playerId: string) {
 		const player = this.players[playerId];
+		if (player.isDead) return;
 
 		if (player && this.keyStates[player.room] && this.keyStates[player.room][playerId]) {
 			const keys = this.keyStates[player.room][playerId];
@@ -102,10 +104,14 @@ export class PlayerManager {
 	}
 
 	private performAttack(player: Player) {
+		if (player.isDead) return;
+
 		player.action = 'attack';
 		player.actionEndTime = Date.now() + 5000;
 		const targets = this.getPlayersInRoom(player.room);
 		for (const target of Object.values(targets)) {
+			if (target.isDead) continue;
+
 			if (target.id !== player.id && isInAttackRange(player, target) && !target.invincible) {
 				const health = target.takeDamage(player.attack);
 				if (health <= 0) {
@@ -122,16 +128,18 @@ export class PlayerManager {
 }
 
 function isInAttackRange(attacker: Player, target: Player) {
+	if (attacker.isDead || target.isDead) return false;
+
 	const attackRange = attacker.radius * 1.5;
 	const distance = Math.sqrt(
-		Math.pow(attacker.x - target.x, 2) + Math.pow(attacker.y - target.y, 2)
+		Math.pow(attacker.x! - target.x!, 2) + Math.pow(attacker.y! - target.y!, 2)
 	);
 
 	if (distance > attackRange) {
 		return false;
 	}
 	const isFacingLeft = attacker.isFacingLeft;
-	const inFront = isFacingLeft ? target.x < attacker.x : target.x > attacker.x;
+	const inFront = isFacingLeft ? target.x! < attacker.x! : target.x! > attacker.x!;
 
 	return inFront;
 }

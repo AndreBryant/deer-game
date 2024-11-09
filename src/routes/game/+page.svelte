@@ -111,7 +111,6 @@
 
 		ws.on('specific_room_updated', (dataFromServer) => {
 			numOfPlayers = dataFromServer.players;
-			console.log('updated specific room');
 		});
 
 		ws.on('player_updated', (dataFromServer) => {

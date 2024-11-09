@@ -41,6 +41,10 @@ export const DEER_SPRITE_ANIMATION_DATA = {
 			{ x: 3 * FRAME_SIZE, y: 5 * FRAME_SIZE },
 			{ x: 4 * FRAME_SIZE, y: 5 * FRAME_SIZE }
 		]
+	},
+	die: {
+		slowness_factor: 4,
+		positions: []
 	}
 };
 

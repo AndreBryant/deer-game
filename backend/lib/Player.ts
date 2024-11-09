@@ -144,6 +144,7 @@ export class Player {
 		this.respawnTime = new Date().getTime() + 5000;
 		this.x = null;
 		this.y = null;
+		this.action = 'die';
 	}
 
 	addScore() {

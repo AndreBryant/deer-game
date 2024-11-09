@@ -129,6 +129,7 @@
 		p5.noStroke();
 		p5.rect(0, 0, p5.width, p5.height);
 
+		p5.textAlign(p5.CENTER);
 		p5.fill(200, 0, 0);
 		p5.textSize(64);
 		p5.text('You DEER...', p5.width / 2, p5.height / 2);
