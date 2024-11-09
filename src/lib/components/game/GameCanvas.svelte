@@ -127,7 +127,7 @@
 		const startColor = p5.color(0, 0, 0, 10);
 
 		const timeDiff = time - Date.now();
-		const progress = p5.constrain(1 - timeDiff / 4500, 0, 1);
+		const progress = p5.constrain(1 - timeDiff / 4900, 0, 1);
 		const currentColor = p5.lerpColor(startColor, goalColor, progress);
 
 		const timeLeft = Math.ceil((time - Date.now()) / 1000);
@@ -141,9 +141,9 @@
 		p5.textAlign(p5.CENTER);
 		p5.fill(180, 0, 0, txtOpacity);
 		p5.textSize(64);
-		p5.text('You DEER...', p5.width / 2, p5.height / 2);
+		p5.text('You DEER', p5.width / 2, p5.height / 2);
 		p5.textSize(32);
-		p5.text('Respawn in ' + timeLeft, p5.width / 2, p5.height / 2 + 64);
+		p5.text('respawning in ' + timeLeft, p5.width / 2, p5.height / 2 + 64);
 		p5.pop();
 	}
 
