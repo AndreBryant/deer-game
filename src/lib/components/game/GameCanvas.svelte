@@ -9,7 +9,7 @@
 	import mDeerRed from '$lib/sprites/mDeerRed.png';
 	import fDeer from '$lib/sprites/fDeer.png';
 	import fDeerRed from '$lib/sprites/fDeerRed.png';
-	import { drawPlayer } from '$lib/sprites/Sprite';
+	import { drawPlayer } from '$lib/utils/Sprite';
 	import {
 		drawMap,
 		translateCoords,
@@ -26,8 +26,8 @@
 	let mapImage: any;
 	let bgImage: any;
 	// Parallax bg
-	let starCount = 250;
-	let treeCount = 200;
+	let starCount = 300;
+	let treeCount = 150;
 	let starSet: { x: number; y: number; z: number }[] = [];
 	let treeSet: { x: number; y: number; z: number; angle: number }[] = [];
 
@@ -38,6 +38,8 @@
 
 	let fps = 60;
 	let fpsDisplay = fps;
+	let previousX = 0;
+	let previousY = 0;
 
 	function preload(p5: any) {
 		deerSpriteSheet = p5.loadImage(fDeer);
@@ -57,7 +59,6 @@
 		let { stars, trees } = setupGalaxy(p5, starCount, treeCount);
 		starSet = stars;
 		treeSet = trees;
-		console.log(starSet);
 	}
 
 	function draw(p5: any) {
@@ -67,11 +68,20 @@
 		// Draw the parallaxed objects here
 
 		if (serverData && mapData && serverData.players && serverData.players[socketId]) {
-			const player = serverData.players[socketId];
+			let player = serverData.players[socketId];
+			// Sacrilegious but i think this works
+			if (player.isDead) {
+				player.x = previousX;
+				player.y = previousY;
+			} else {
+				previousX = player.x;
+				previousY = player.y;
+			}
+
 			drawGalaxy(p5, starSet, treeSet, player.x, player.y);
 			drawMap(p5, mapImage, player.x, player.y);
-
 			sortedPlayers.forEach((p: any) => {
+				if (p.isDead) return;
 				const spriteSheet = p.hasNose
 					? p.sex === 'm'
 						? redHornDeerSpriteSheet
@@ -80,7 +90,7 @@
 						? hornDeerSpriteSheet
 						: deerSpriteSheet;
 
-				if (p.id === socketId) {
+				if (p.id === socketId && !p.isDead) {
 					drawPlayer(p5, spriteSheet, p5.width / 2, p5.height / 2, p);
 					return;
 				}
@@ -100,6 +110,9 @@
 					drawPlayer(p5, spriteSheet, pCoords.x, pCoords.y, p);
 				}
 			});
+			if (player.isDead) {
+				drawDeadScreen(p5, player.respawnTime);
+			}
 		} else {
 			p5.push();
 			p5.fill(255);
@@ -107,6 +120,21 @@
 			p5.text('loading', p5.width / 2, p5.height / 2);
 			p5.pop();
 		}
+	}
+
+	function drawDeadScreen(p5: any, time: number) {
+		const timeLeft = Math.ceil((time - Date.now()) / 1000);
+		p5.push();
+		p5.fill(80, 0, 0, 100);
+		p5.noStroke();
+		p5.rect(0, 0, p5.width, p5.height);
+
+		p5.fill(200, 0, 0);
+		p5.textSize(64);
+		p5.text('You DEER...', p5.width / 2, p5.height / 2);
+		p5.textSize(32);
+		p5.text('Respawn in ' + timeLeft, p5.width / 2, p5.height / 2 + 64);
+		p5.pop();
 	}
 
 	function windowResized(p5: any) {

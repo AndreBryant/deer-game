@@ -62,6 +62,8 @@ export class PlayerManager {
 		if (player && this.keyStates[player.room] && this.keyStates[player.room][playerId]) {
 			const keys = this.keyStates[player.room][playerId];
 			const isMoving = Object.values(keys).some((state) => state);
+
+			// If stationary, has a chance to eat grass (afk animation)
 			if (!isMoving) {
 				if (
 					player.action !== 'eat_grass' ||
@@ -105,7 +107,13 @@ export class PlayerManager {
 		const targets = this.getPlayersInRoom(player.room);
 		for (const target of Object.values(targets)) {
 			if (target.id !== player.id && isInAttackRange(player, target) && !target.invincible) {
-				target.takeDamage(player.attack);
+				const health = target.takeDamage(player.attack);
+				if (health <= 0) {
+					target.die();
+					player.addScore();
+					// Make sure to notify everyone about this haha
+					console.log(target.name + ' was killed by ' + player.name);
+				}
 				target.invincible = true;
 				target.invincibilityEndTime = Date.now() + 1000;
 			}

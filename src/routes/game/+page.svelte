@@ -4,7 +4,7 @@
 	import { io, Socket } from 'socket.io-client';
 	import { onMount } from 'svelte';
 	import GameCanvas from '$lib/components/game/GameCanvas.svelte';
-	import { Square, Activity, Heart, Sword, User } from 'lucide-svelte';
+	import { Square, Activity, Heart, Sword, User, Trophy } from 'lucide-svelte';
 
 	let serverData: any = {};
 	let numOfPlayers: number = 1;
@@ -230,6 +230,10 @@
 					<div class="flex gap-2 text-lg">
 						<Sword />
 						{clientPlayer.attack}
+					</div>
+					<div class="flex gap-2 text-lg">
+						<Trophy />
+						{clientPlayer.score}
 					</div>
 				</div>
 				<div class="flex gap-2">

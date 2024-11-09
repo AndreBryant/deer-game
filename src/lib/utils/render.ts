@@ -129,7 +129,6 @@ export function drawGalaxy(p5: any, starSet: any, treeSet: any, px: number, py: 
 	for (const tree of treeSet) {
 		drawTree(p5, tree.x, tree.y, tree.z, tree.angle, px, py);
 	}
-	console.log('draw galaxy');
 }
 
 function drawStar(p5: any, x: number, y: number, z: number, px: number, py: number) {
