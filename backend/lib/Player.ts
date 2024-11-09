@@ -6,7 +6,7 @@ const playerSpeedX = 12;
 const playerSpeedXAttack = 6;
 const playerSpeedY = 12;
 const playerSpeedYAttack = 6;
-const startingHealth = 2;
+const startingHealth = 3;
 
 export class Player {
 	id: string;
@@ -31,6 +31,8 @@ export class Player {
 	isDead: boolean;
 	respawnTime: number | null;
 	score: number;
+	powerUp: boolean;
+	powerUpTime: number | null;
 
 	constructor(
 		id: string,
@@ -56,14 +58,15 @@ export class Player {
 		this.isFacingLeft = false;
 		this.attack = 1;
 		this.health = startingHealth;
-		// this should be false by default but for now, it's randomized
-		this.hasNose = Math.random() < 0.5;
+		this.hasNose = false;
 		this.sex = Math.random() < 0.5 ? 'f' : 'm';
 		this.invincible = false;
 		this.invincibilityEndTime = null;
 		this.isDead = false;
 		this.respawnTime = null;
 		this.score = 0;
+		this.powerUp = false;
+		this.powerUpTime = null;
 	}
 
 	update() {
@@ -71,9 +74,15 @@ export class Player {
 			if (this.respawnTime <= new Date().getTime()) {
 				this.isDead = false;
 				this.respawnTime = null;
-				this.x = Math.floor(Math.random() * ((MAP_WIDTH - 2) * TILESIZE - PLAYER_HIT_RADIUS + 1));
-				this.y = Math.floor(Math.random() * ((MAP_HEIGHT - 2) * TILESIZE - PLAYER_HIT_RADIUS + 1));
 				this.health = startingHealth;
+
+				const maxX = (MAP_WIDTH - 8) * TILESIZE - PLAYER_HIT_RADIUS;
+				const minX = 8 * TILESIZE + PLAYER_HIT_RADIUS;
+				const maxY = (MAP_HEIGHT - 8) * TILESIZE - PLAYER_HIT_RADIUS;
+				const minY = 8 * TILESIZE + PLAYER_HIT_RADIUS;
+
+				this.x = Math.floor(Math.random() * (maxX - minX) + minX);
+				this.y = Math.floor(Math.random() * (maxY - minY) + minY);
 			}
 		} else {
 			if (
@@ -148,6 +157,6 @@ export class Player {
 	}
 
 	addScore() {
-		this.score++;
+		this.score += 1000;
 	}
 }

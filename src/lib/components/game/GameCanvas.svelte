@@ -63,10 +63,7 @@
 
 	function draw(p5: any) {
 		fpsDisplay = p5.frameRate();
-
 		p5.background(bgImage);
-		// Draw the parallaxed objects here
-
 		if (serverData && mapData && serverData.players && serverData.players[socketId]) {
 			let player = serverData.players[socketId];
 			// Sacrilegious but i think this works
@@ -98,6 +95,7 @@
 				const xDistance = p5.abs(p.x - player.x) - 100;
 				const yDistance = p5.abs(p.y - player.y) - 100;
 
+				// if player is visible on screen, draw the player sprite, else draw an arrow pointing to their direction
 				if (xDistance <= p5.width / 2 && yDistance <= p5.height / 2) {
 					const pCoords = translateCoords({
 						h: p5.height,
@@ -108,6 +106,8 @@
 						y: p.y
 					});
 					drawPlayer(p5, spriteSheet, pCoords.x, pCoords.y, p);
+				} else {
+					drawPlayerArrow(p5, player, p);
 				}
 			});
 			if (player.isDead) {
@@ -123,18 +123,46 @@
 	}
 
 	function drawDeadScreen(p5: any, time: number) {
+		const goalColor = p5.color(80, 0, 0, 100);
+		const startColor = p5.color(0, 0, 0, 10);
+
+		const timeDiff = time - Date.now();
+		const progress = p5.constrain(1 - timeDiff / 3000, 0, 1);
+		const currentColor = p5.lerpColor(startColor, goalColor, progress);
+
 		const timeLeft = Math.ceil((time - Date.now()) / 1000);
+
 		p5.push();
-		p5.fill(80, 0, 0, 100);
+		p5.fill(currentColor);
 		p5.noStroke();
 		p5.rect(0, 0, p5.width, p5.height);
 
 		p5.textAlign(p5.CENTER);
-		p5.fill(200, 0, 0);
+		p5.fill(180, 0, 0);
 		p5.textSize(64);
 		p5.text('You DEER...', p5.width / 2, p5.height / 2);
 		p5.textSize(32);
 		p5.text('Respawn in ' + timeLeft, p5.width / 2, p5.height / 2 + 64);
+		p5.pop();
+	}
+
+	function drawPlayerArrow(p5: any, player: any, p: any) {
+		const factor = 6;
+		const dir = p5.atan2(p.y - player.y, p.x - player.x);
+
+		p5.push();
+		p5.translate(p5.width / 2, p5.height / 2);
+
+		p5.rotate(dir + 1.5 * p5.PI);
+
+		p5.stroke(255);
+		p5.fill(p.color);
+		p5.beginShape();
+		p5.vertex(0, player.radius * factor);
+		p5.vertex(-8, player.radius * factor - 25);
+		p5.vertex(8, player.radius * factor - 25);
+		p5.endShape(p5.CLOSE);
+
 		p5.pop();
 	}
 

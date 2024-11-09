@@ -94,8 +94,13 @@ export class GameServer {
 	}
 
 	private joinRoom(socket: Socket, gameID: string, isHost = false, username?: string) {
-		const x = Math.floor(Math.random() * ((MAP_WIDTH - 2) * TILESIZE - PLAYER_HIT_RADIUS + 1));
-		const y = Math.floor(Math.random() * ((MAP_HEIGHT - 2) * TILESIZE - PLAYER_HIT_RADIUS + 1));
+		const maxX = (MAP_WIDTH - 8) * TILESIZE - PLAYER_HIT_RADIUS;
+		const minX = 8 * TILESIZE + PLAYER_HIT_RADIUS;
+		const x = Math.floor(Math.random() * (maxX - minX) + minX);
+
+		const maxY = (MAP_HEIGHT - 8) * TILESIZE - PLAYER_HIT_RADIUS;
+		const minY = 8 * TILESIZE + PLAYER_HIT_RADIUS;
+		const y = Math.floor(Math.random() * (maxY - minY) + minY);
 
 		const player = new Player(
 			socket.id,
