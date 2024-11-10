@@ -166,7 +166,7 @@
 		<div class="flex flex-col gap-1 text-sm">
 			{#if data.host}
 				<div>
-					<h1 class="text-2xl">host</h1>
+					<h1 class="text-2xl">Host</h1>
 				</div>
 			{/if}
 			<div class="flex flex-col gap-1">

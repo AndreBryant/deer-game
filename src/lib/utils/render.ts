@@ -99,7 +99,7 @@ export function setupGalaxy(p5: any, starCount: number, treeCount: number) {
 	for (let i = 0; i < treeCount; i++) {
 		const x = randomArbitrary(-p5.width / 2, mapSize + p5.width / 2);
 		const y = randomArbitrary(-p5.height / 2, p5.height / 2 + mapSize);
-		const z = p5.random(1, 20);
+		const z = p5.random(1, 15);
 		const angle = randomArbitrary(-Math.PI / 2, (3 * Math.PI) / 4);
 		trees.push({ x, y, z, angle });
 	}
@@ -147,7 +147,7 @@ function drawStar(p5: any, x: number, y: number, z: number, px: number, py: numb
 }
 
 function drawTree(p5: any, x: number, y: number, z: number, angle: number, px: number, py: number) {
-	const zprime = p5.map(z, 1, 20, 1, 3);
+	const zprime = p5.map(z, 1, 15, 1, 3);
 	const parallaxX = x - px / zprime;
 	const parallaxY = y - py / zprime;
 
