@@ -2,7 +2,7 @@
 	export let text: string;
 	export let iconLeft: any = null;
 	export let href: string = '';
-	export let variant: 'primary' | 'disabled' = 'primary';
+	export let variant: 'primary' | 'disabled' | 'link' = 'primary';
 	export let onclick = () => {};
 </script>
 
@@ -12,9 +12,16 @@
 	on:click={onclick}
 >
 	{#if iconLeft}
-		<svelte:component this={iconLeft} class="mr-1 inline-block" />
+		<svelte:component
+			this={iconLeft}
+			class={`inline-block transition-all ${variant === 'link' ? 'stroke-1 opacity-90 group-hover:stroke-2 group-hover:opacity-100' : ''}`}
+			size={variant === 'link' ? 18 : 20}
+		/>
 	{/if}
 	{text}
-	<span class="block h-0.5 max-w-0 bg-slate-950 transition-all duration-100 group-hover:max-w-full"
-	></span>
+	{#if variant !== 'link'}
+		<span
+			class="block h-0.5 max-w-0 bg-slate-950 transition-all duration-100 group-hover:max-w-full"
+		></span>
+	{/if}
 </a>

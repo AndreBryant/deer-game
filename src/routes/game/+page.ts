@@ -1,6 +1,6 @@
 export async function load({ url }) {
 	const host = url.searchParams.get('host') === 'true';
-	const username = url.searchParams.get('username') || 'Host';
+	const username = url.searchParams.get('username');
 	const gameID = url.searchParams.get('gameID') || generateRandomGameId();
 
 	return { host, gameID, username };

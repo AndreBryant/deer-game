@@ -25,9 +25,9 @@ export class GameServer {
 		socket.on('start_game', (data) => this.handleStartGame(socket, data));
 	}
 
-	private handleCreateRoom(socket: Socket, data: { gameID: string }) {
+	private handleCreateRoom(socket: Socket, data: { gameID: string; username: string }) {
 		this.roomManager.createRoom(data.gameID);
-		this.joinRoom(socket, data.gameID, true);
+		this.joinRoom(socket, data.gameID, true, data.username);
 	}
 
 	private handleJoinRoom(socket: Socket, data: { username?: string; gameID: string }) {
@@ -102,11 +102,12 @@ export class GameServer {
 		const minY = 8 * TILESIZE + PLAYER_HIT_RADIUS;
 		const y = Math.floor(Math.random() * (maxY - minY) + minY);
 
+		if (username?.trim() === '') username = 'Andre cute >.<';
 		const player = new Player(
 			socket.id,
 			gameID,
 			isHost,
-			username || (isHost ? 'Host' : '(>.~) andre cute<3'),
+			username || 'Andre cute >.<',
 			x,
 			y,
 			getRandomColor()

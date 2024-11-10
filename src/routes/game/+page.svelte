@@ -24,13 +24,6 @@
 	};
 
 	let ws: Socket | undefined;
-	let isEmitting: { [key: string]: boolean } = {
-		up: false,
-		down: false,
-		left: false,
-		right: false,
-		attack: false
-	};
 
 	let gameLoaded = false;
 	let gameStarted = false;
@@ -78,13 +71,15 @@
 		if (changed) emitKeyInput();
 	}
 
-	function startGame() {
+	let startGameButton: HTMLButtonElement;
+	const startGame = () => {
 		if (!ws) return;
 		ws.emit('start_game', {
 			gameID: data.gameID
 		});
 		gameStarted = true;
-	}
+		startGameButton.blur();
+	};
 
 	onMount(() => {
 		ws = io(import.meta.env.MODE === 'development' ? '' : import.meta.env.VITE_SERVER_URL);
@@ -96,7 +91,8 @@
 
 		if (data.host) {
 			ws.emit('create_room', {
-				gameID: data.gameID
+				gameID: data.gameID,
+				username: data.username
 			});
 		} else {
 			ws.emit('join_room', {
@@ -248,6 +244,7 @@
 					<button
 						class="group animate-pulse rounded-lg border-2 px-4 py-2 backdrop-blur-lg transition-all hover:animate-none hover:text-xl"
 						on:click={startGame}
+						bind:this={startGameButton}
 					>
 						<span class="inline group-hover:hidden">Start Game</span>
 						<span class="hidden group-hover:inline">Start Game?</span>
