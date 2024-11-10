@@ -4,7 +4,7 @@
 	import { io, Socket } from 'socket.io-client';
 	import { onMount } from 'svelte';
 	import GameCanvas from '$lib/components/game/GameCanvas.svelte';
-	import { Square, Activity, Heart, Sword, User, Trophy } from 'lucide-svelte';
+	import { Square, Activity, Heart, Sword, Trophy, ChevronLeft } from 'lucide-svelte';
 
 	let serverData: any = {};
 	let numOfPlayers: number = 1;
@@ -155,19 +155,37 @@
 	</div>
 
 	<section>
-		<div>
+		<div class="group absolute flex h-full w-16 items-center transition-all">
+			<a href="/" class="group hidden gap-2 group-hover:block">
+				<p class=" flex items-center gap-2">
+					<ChevronLeft />
+					<span class="hidden transition-all group-hover:inline"> back to home </span>
+				</p>
+			</a>
+		</div>
+		<div class="flex flex-col gap-1 text-sm">
 			{#if data.host}
-				<h1 class="text-3xl">host</h1>
+				<div>
+					<h1 class="text-2xl">host</h1>
+				</div>
 			{/if}
-		</div>
-		<div>
-			<p>Game ID: {data.gameID}</p>
-		</div>
-		<div class="w-80">
-			<p class="truncate">Player: {data.username}</p>
+			<div class="flex flex-col gap-1">
+				<div>
+					<p>Game ID: {data.gameID}</p>
+				</div>
+				<div class="w-80">
+					<p class="truncate">Username: {data.username}</p>
+				</div>
+				<div class="flex gap-2">
+					<p>
+						Players:
+						{numOfPlayers}
+					</p>
+				</div>
+			</div>
 		</div>
 		{#if clientPlayer}
-			<div class="absolute bottom-0 left-0 flex flex-col gap-2 opacity-65">
+			<div class="absolute bottom-0 left-0 mb-2 flex flex-col gap-2 text-sm opacity-65">
 				<div class="flex gap-1">
 					<div class="flex flex-col">
 						<div class="flex justify-center">
@@ -192,7 +210,7 @@
 						</div>
 					</div>
 					<div class="flex items-end">
-						<p class="text-lg">- move</p>
+						<p>- move</p>
 					</div>
 				</div>
 				<div class="flex gap-1">
@@ -202,16 +220,8 @@
 						</div>
 					</div>
 					<div>
-						<p class="text-lg">- attack</p>
+						<p>- attack</p>
 					</div>
-				</div>
-			</div>
-			<div class="absolute right-0 top-0 flex flex-col gap-2">
-				<p>x: {Math.floor(clientPlayer.x / 32) - 2}</p>
-				<p>y: {Math.floor(clientPlayer.y / 32)}</p>
-				<div class="flex gap-2">
-					<User />
-					{numOfPlayers}
 				</div>
 			</div>
 		{/if}
@@ -231,6 +241,14 @@
 						{clientPlayer.score}
 					</div>
 				</div>
+				<div class="flex gap-4">
+					<div>
+						<p>x: {Math.floor(clientPlayer.x / 32) - 2}</p>
+					</div>
+					<div>
+						<p>y: {Math.floor(clientPlayer.y / 32)}</p>
+					</div>
+				</div>
 				<div class="flex gap-2">
 					<Activity />
 					{clientPlayer.action.replace('_', ' ').replace('grass', 'glass')}
@@ -239,7 +257,7 @@
 		{/if}
 		<!-- Add if !gameStarted here -->
 		{#if !gameLoaded && data.host}
-			<div class="absolute bottom-24 flex w-full flex-col items-center gap-4">
+			<div class="absolute bottom-28 flex w-full flex-col items-center gap-4">
 				<div>
 					<button
 						class="group animate-pulse rounded-lg border-2 px-4 py-2 backdrop-blur-lg transition-all hover:animate-none hover:text-xl"

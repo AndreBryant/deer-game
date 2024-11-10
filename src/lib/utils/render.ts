@@ -100,7 +100,7 @@ export function setupGalaxy(p5: any, starCount: number, treeCount: number) {
 		const x = randomArbitrary(-p5.width / 2, mapSize + p5.width / 2);
 		const y = randomArbitrary(-p5.height / 2, p5.height / 2 + mapSize);
 		const z = p5.random(1, 20);
-		const angle = randomArbitrary(0, 2 * Math.PI);
+		const angle = randomArbitrary(-Math.PI / 2, (3 * Math.PI) / 4);
 		trees.push({ x, y, z, angle });
 	}
 

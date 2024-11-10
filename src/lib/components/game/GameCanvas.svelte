@@ -179,8 +179,8 @@
 	}
 </script>
 
-<div class="absolute flex h-full w-full justify-center">
-	<p class="text-red-300">
+<div class="absolute bottom-0 right-0">
+	<p class="text-end text-red-300">
 		Frame Rate {fpsDisplay.toFixed(0)}
 	</p>
 </div>
