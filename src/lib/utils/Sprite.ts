@@ -54,7 +54,12 @@ export function drawPlayer(p5: any, spriteSheet: any, x: number, y: number, play
 	p5.textSize(24);
 	p5.textAlign(p5.CENTER, p5.CENTER);
 	p5.fill(player.color);
-	p5.text((player.isHost ? '★ ' : '') + player.name, x, y - player.radius * 1.5);
+	p5.text(
+		(player.isHost ? '★ ' : '') +
+			(player.name.length > 30 ? player.name.substring(0, 27) + '...' : player.name),
+		x,
+		y - player.radius * 1.5
+	);
 
 	// Add this to player class
 	const isFacingLeft = player.isFacingLeft;

@@ -163,8 +163,8 @@
 		<div>
 			<p>Game ID: {data.gameID}</p>
 		</div>
-		<div>
-			<p>Player: {data.username}</p>
+		<div class="w-80">
+			<p class="truncate">Player: {data.username}</p>
 		</div>
 		{#if clientPlayer}
 			<div class="absolute bottom-0 left-0 flex flex-col gap-2 opacity-65">

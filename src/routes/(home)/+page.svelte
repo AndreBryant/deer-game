@@ -118,12 +118,12 @@
 							bind:numOfPlayers
 						/>
 					</div>
-					<div>
-						<h2 class="text-xs font-normal">
-							Joining as <span class="font-semibold">
+					<div class="max-h-4 w-full overflow-hidden text-xs font-normal">
+						<p class="truncate">
+							Joining as <span class="text-ellipsis font-semibold">
 								{username.trim().length <= 0 ? '_blank' : username}
 							</span>
-						</h2>
+						</p>
 					</div>
 					<div
 						class="custom-scrollbar flex h-64 flex-col overflow-y-auto border-y border-black py-1 pr-2"

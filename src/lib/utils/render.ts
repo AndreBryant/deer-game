@@ -132,12 +132,13 @@ export function drawGalaxy(p5: any, starSet: any, treeSet: any, px: number, py: 
 }
 
 function drawStar(p5: any, x: number, y: number, z: number, px: number, py: number) {
-	// compute parallax effect here
 	const parallaxX = x - px / z;
 	const parallaxY = y - py / z;
+
 	if (parallaxX > p5.width || parallaxX < 0 || parallaxY > p5.height || parallaxY < 0) {
 		return;
 	}
+
 	p5.push();
 	p5.stroke(palette.primary.sky_blue);
 	p5.strokeWeight(z);
