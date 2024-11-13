@@ -68,7 +68,13 @@ export class GameServer {
 	}
 
 	private handleStartGame(socket: Socket, data: { gameID: string }) {
-		console.log('game started');
+		if (this.roomManager.getRoom(data.gameID)!.players < 2) {
+			this.io.to(data.gameID).emit('game_started', { gameStarted: false });
+			return;
+		} else {
+			this.roomManager.startGame(data.gameID);
+			this.io.to(data.gameID).emit('game_started', { gameStarted: true });
+		}
 	}
 
 	private handleKeyInput(
@@ -77,11 +83,11 @@ export class GameServer {
 	) {
 		this.playerManager.updateKeyStates(socket.id, data.gameID, data.keyStates);
 		this.playerManager.handleMovement(socket.id);
-		this.playerManager.handleActions(socket.id);
+		this.playerManager.handleActions(socket.id, this.roomManager.isGameStarted(data.gameID));
 	}
 
 	private broadcastPlayerUpdates(gameID: string) {
-		this.playerManager.updatePlayers(gameID);
+		this.playerManager.updatePlayers(gameID, this.roomManager.isGameStarted(gameID));
 		const playersInRoom = this.playerManager.getPlayersInRoom(gameID);
 		this.io.to(gameID).emit('player_updated', { players: playersInRoom });
 	}

@@ -35,6 +35,9 @@
 	$: joinValid = checkUsername(username);
 
 	let joinRoomPressed = false;
+	function toggleJoinPressed() {
+		joinRoomPressed = !joinRoomPressed;
+	}
 
 	function checkUsername(username: string) {
 		return username.length > 0;
@@ -77,16 +80,16 @@
 			</div>
 			{#if !joinRoomPressed}
 				<div class="flex flex-col gap-8">
-					<div class="h-4 w-full">
+					<div class="h-8 w-full">
 						<InputText placeholder="Enter your name." iconLeft={Tag} bind:value={username} />
 					</div>
 					<div class="flex h-12 w-80">
 						<div class="flex flex-col justify-center">
 							<Button
-								text="Join Game"
-								variant={joinValid ? 'primary' : 'disabled'}
-								iconLeft={SquarePlus}
-								onclick={() => (joinRoomPressed = true)}
+								text="Create Game"
+								iconLeft={Swords}
+								variant={createValid ? 'primary' : 'disabled'}
+								href={`./game?host=true&username=${username}`}
 							/>
 						</div>
 						<div class="ml-12 flex w-[1px] flex-col">
@@ -96,10 +99,10 @@
 						</div>
 						<div class="flex flex-grow items-center justify-center pl-4">
 							<Button
-								text="Create Game"
-								iconLeft={Swords}
-								variant={createValid ? 'primary' : 'disabled'}
-								href={`./game?host=true&username=${username}`}
+								text="Join Game"
+								variant={joinValid ? 'primary' : 'disabled'}
+								iconLeft={SquarePlus}
+								onclick={toggleJoinPressed}
 							/>
 						</div>
 					</div>
@@ -126,12 +129,12 @@
 						</p>
 					</div>
 					<div
-						class="custom-scrollbar flex h-64 flex-col overflow-y-auto border-y border-black py-1 pr-2"
+						class="custom-scrollbar flex h-56 flex-col overflow-y-auto border-y border-black py-1 pr-2"
 					>
 						{#if Object.entries(filteredRooms).length > 0}
 							{#each Object.entries(filteredRooms) as [gameID, { players }]}
 								<div
-									class="flex w-full justify-between border-t border-black border-opacity-20 px-2 py-4 transition-all duration-75 hover:rounded-lg hover:border hover:bg-[#f5f5f5] hover:bg-opacity-20"
+									class="flex w-full justify-between border-t border-black border-opacity-20 px-2 py-4 transition-all duration-75 hover:bg-[#f5f5f5] hover:bg-opacity-20"
 								>
 									<div class="flex flex-col gap-2">
 										<div class="">
@@ -160,12 +163,7 @@
 						{/if}
 					</div>
 					<div>
-						<Button
-							text="Back"
-							variant="link"
-							iconLeft={ChevronLeft}
-							onclick={() => (joinRoomPressed = false)}
-						/>
+						<Button text="Back" variant="link" iconLeft={ChevronLeft} onclick={toggleJoinPressed} />
 					</div>
 				</div>
 			{/if}

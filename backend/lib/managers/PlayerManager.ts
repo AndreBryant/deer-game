@@ -20,13 +20,13 @@ export class PlayerManager {
 		delete this.keyStates[playerId];
 	}
 
-	updatePlayers(roomID: string) {
+	updatePlayers(roomID: string, gameStarted: boolean) {
 		const playersInRoom = this.getPlayersInRoom(roomID);
 
 		for (const player in playersInRoom) {
 			this.players[player].update();
 			this.handleMovement(player);
-			this.handleActions(player);
+			this.handleActions(player, gameStarted);
 		}
 	}
 
@@ -57,7 +57,7 @@ export class PlayerManager {
 		}
 	}
 
-	handleActions(playerId: string) {
+	handleActions(playerId: string, gameStarted: boolean) {
 		const player = this.players[playerId];
 		if (player.isDead) return;
 
@@ -84,7 +84,7 @@ export class PlayerManager {
 				player.actionEndTime = null;
 			}
 
-			if (keys['attack']) this.performAttack(player);
+			if (keys['attack']) this.performAttack(player, gameStarted);
 		}
 	}
 
@@ -103,7 +103,7 @@ export class PlayerManager {
 		};
 	}
 
-	private performAttack(player: Player) {
+	private performAttack(player: Player, gameStarted: boolean) {
 		if (player.isDead) return;
 
 		player.action = 'attack';
@@ -113,7 +113,8 @@ export class PlayerManager {
 			if (target.isDead) continue;
 
 			if (target.id !== player.id && isInAttackRange(player, target) && !target.invincible) {
-				const health = target.takeDamage(player.attack);
+				const health = target.takeDamage(player.attack, gameStarted);
+
 				if (health <= 0) {
 					target.die();
 					player.addScore();

@@ -19,6 +19,15 @@ export class RoomManager {
 		};
 	}
 
+	startGame(gameID: string) {
+		if (this.rooms[gameID]) this.rooms[gameID].isGameStarted = true;
+		console.log('Room Manager: Game Started', gameID);
+	}
+
+	isGameStarted(gameID: string): boolean {
+		return this.rooms[gameID].isGameStarted;
+	}
+
 	joinRoom(gameID: string) {
 		if (this.rooms[gameID]) this.rooms[gameID].players++;
 	}

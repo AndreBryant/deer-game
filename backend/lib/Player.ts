@@ -139,8 +139,8 @@ export class Player {
 		// console.log(Math.floor(this.x / TILESIZE), Math.floor(this.y / TILESIZE));
 	}
 
-	takeDamage(damage: number): number {
-		if (!this.invincible) {
+	takeDamage(damage: number, gameStarted: boolean): number {
+		if (gameStarted && !this.invincible) {
 			this.health -= damage;
 		}
 		return this.health;

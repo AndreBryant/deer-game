@@ -74,10 +74,11 @@
 	let startGameButton: HTMLButtonElement;
 	const startGame = () => {
 		if (!ws) return;
-		ws.emit('start_game', {
-			gameID: data.gameID
-		});
-		gameStarted = true;
+		if (data.host) {
+			ws.emit('start_game', { gameID: data.gameID });
+			gameStarted = true;
+		}
+
 		startGameButton.blur();
 	};
 
@@ -123,6 +124,11 @@
 			}
 		});
 
+		ws.on('game_started', (data) => {
+			console.log(data, gameStarted);
+			gameStarted = data.gameStarted;
+		});
+
 		window.addEventListener('keydown', (e) => handleKeydown(ws!, e));
 		window.addEventListener('keyup', (e) => handleKeyup(ws!, e));
 
@@ -156,10 +162,10 @@
 
 	<section>
 		<div class="group absolute flex h-full w-16 items-center transition-all">
-			<a href="/" class="group hidden gap-2 group-hover:block">
+			<a href="/" class="group gap-2 opacity-0 group-hover:opacity-100">
 				<p class=" flex items-center gap-2">
 					<ChevronLeft />
-					<span class="hidden transition-all group-hover:inline"> back to home </span>
+					<span class="transition-opac opacity-0 group-hover:opacity-100"> back to home </span>
 				</p>
 			</a>
 		</div>
@@ -256,7 +262,7 @@
 			</div>
 		{/if}
 		<!-- Add if !gameStarted here -->
-		{#if !gameLoaded && data.host}
+		{#if !gameStarted && !gameLoaded && data.host}
 			<div class="absolute bottom-28 flex w-full flex-col items-center gap-4">
 				<div>
 					<button
