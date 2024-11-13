@@ -9,6 +9,7 @@ export class GameServer {
 	private io: Server;
 	private playerManager = new PlayerManager();
 	private roomManager = new RoomManager();
+	private;
 
 	constructor(io: Server) {
 		this.io = io;
@@ -53,6 +54,8 @@ export class GameServer {
 				this.roomManager.leaveRoom(gameID);
 				this.io.to(players[pl].id).emit('kicked_from_room', true);
 			}
+
+			if (this.roomManager.isGameStarted(gameID)) this.roomManager.endGame(gameID);
 		} else {
 			this.playerManager.removePlayer(socket.id);
 			this.roomManager.leaveRoom(gameID);

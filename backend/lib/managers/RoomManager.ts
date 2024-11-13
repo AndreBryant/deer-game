@@ -9,6 +9,7 @@ interface Room {
 
 export class RoomManager {
 	private rooms: { [key: string]: Room } = {};
+	private intervals: { [key: string]: NodeJS.Timeout } = {};
 
 	createRoom(gameID: string) {
 		this.rooms[gameID] = {
@@ -22,6 +23,13 @@ export class RoomManager {
 	startGame(gameID: string) {
 		if (this.rooms[gameID]) this.rooms[gameID].isGameStarted = true;
 		console.log('Room Manager: Game Started', gameID);
+
+		this.intervals[gameID] = setInterval(() => console.log('update_Map'), 5000);
+	}
+
+	endGame(gameID: string) {
+		if (this.rooms[gameID]) this.rooms[gameID].isGameStarted = false;
+		clearInterval(this.intervals[gameID]);
 	}
 
 	isGameStarted(gameID: string): boolean {
