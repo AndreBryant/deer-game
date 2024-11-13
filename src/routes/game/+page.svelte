@@ -8,8 +8,10 @@
 
 	let serverData: any = {};
 	let numOfPlayers: number = 1;
-	let mapData: { mapData: string; height: number; width: number; tileSize: number } | undefined =
-		undefined;
+	let mapData:
+		| { mapData: string; height: number; width: number; tileSize: number; safeZoneBoundary: number }
+		| undefined = undefined;
+	let safeZoneBoundary: number = 159;
 	let connectionState: { socketId: string | undefined; isConnected: boolean } = {
 		socketId: undefined,
 		isConnected: false
@@ -118,6 +120,10 @@
 			mapData = dataFromServer;
 		});
 
+		ws.on('safe_zone_updated', (dataFromServer) => {
+			safeZoneBoundary = dataFromServer.safeZoneBoundary;
+		});
+
 		ws.on('kicked_from_room', (kicked) => {
 			if (kicked) {
 				goto('/');
@@ -139,7 +145,7 @@
 		};
 	});
 
-	$: serverData, connectionState, mapData, numOfPlayers;
+	$: serverData, connectionState, mapData, safeZoneBoundary, numOfPlayers;
 
 	$: clientPlayer =
 		serverData.players && connectionState.isConnected && connectionState.socketId
@@ -148,13 +154,16 @@
 </script>
 
 <!-- TODO: THE CODE LOOKS UGLY I NEED TO REFACTOR THIS 😭😭😭 -->
-<!--{JSON.stringify(serverData, null, 2)}
-{JSON.stringify(mapData, null, 2)}
-{JSON.stringify(connectionState, null, 2)} -->
-<main class="XX--ADD-THIS-LATER--XX(select-none) relative h-screen w-screen text-white">
+<!-- {JSON.stringify(serverData, null, 2)} -->
+<!-- {#if mapData}
+	{JSON.stringify(mapData, null, 2)}
+{/if} -->
+<!-- {JSON.stringify(connectionState, null, 2)} -->
+<!-- {safeZoneBoundary} -->
+<main class="relative h-screen w-screen select-none text-white">
 	<div class="w-scree h-screenn absolute left-0 top-0 -z-10">
 		{#if mapData && connectionState.isConnected && connectionState.socketId}
-			<GameCanvas {serverData} {mapData} socketId={connectionState.socketId} />
+			<GameCanvas {safeZoneBoundary} {serverData} {mapData} socketId={connectionState.socketId} />
 		{:else}
 			<p>Connecting...</p>
 		{/if}

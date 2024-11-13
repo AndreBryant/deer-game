@@ -1,3 +1,4 @@
+import { Server } from 'socket.io';
 import { Map } from '../map.js';
 
 interface Room {
@@ -10,6 +11,8 @@ interface Room {
 export class RoomManager {
 	private rooms: { [key: string]: Room } = {};
 	private intervals: { [key: string]: NodeJS.Timeout } = {};
+	private safeZoneDecreaseTime: number = 1500;
+	private minMapSize: number = 60;
 
 	createRoom(gameID: string) {
 		this.rooms[gameID] = {
@@ -20,16 +23,29 @@ export class RoomManager {
 		};
 	}
 
-	startGame(gameID: string) {
+	startGame(gameID: string, io: Server) {
 		if (this.rooms[gameID]) this.rooms[gameID].isGameStarted = true;
 		console.log('Room Manager: Game Started', gameID);
-
-		this.intervals[gameID] = setInterval(() => console.log('update_Map'), 5000);
+		this.startInterval(gameID, io);
 	}
 
 	endGame(gameID: string) {
 		if (this.rooms[gameID]) this.rooms[gameID].isGameStarted = false;
-		clearInterval(this.intervals[gameID]);
+		if (this.intervals[gameID]) this.stopInterval(this.intervals[gameID]);
+	}
+
+	private startInterval(gameID: string, io: Server) {
+		this.intervals[gameID] = setInterval(() => {
+			const safeZoneBoundary = this.decreaseSafeZone(gameID);
+			if (safeZoneBoundary <= this.minMapSize) {
+				this.stopInterval(this.intervals[gameID]);
+			}
+			if (io) io.to(gameID).emit('safe_zone_updated', { safeZoneBoundary });
+		}, this.safeZoneDecreaseTime);
+	}
+
+	private stopInterval(interval: NodeJS.Timeout) {
+		clearInterval(interval);
 	}
 
 	isGameStarted(gameID: string): boolean {
@@ -66,9 +82,6 @@ export class RoomManager {
 
 	decreaseSafeZone(gameID: string) {
 		console.log('game map safezone decreased', gameID);
-		// TODO
-		// get map safeBoundary
-		// decrease
-		// client handles red zone textures
+		return this.rooms[gameID].mapData.decreaseSafeZone();
 	}
 }

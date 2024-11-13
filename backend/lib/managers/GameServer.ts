@@ -9,7 +9,6 @@ export class GameServer {
 	private io: Server;
 	private playerManager = new PlayerManager();
 	private roomManager = new RoomManager();
-	private;
 
 	constructor(io: Server) {
 		this.io = io;
@@ -71,13 +70,13 @@ export class GameServer {
 	}
 
 	private handleStartGame(socket: Socket, data: { gameID: string }) {
-		if (this.roomManager.getRoom(data.gameID)!.players < 2) {
-			this.io.to(data.gameID).emit('game_started', { gameStarted: false });
-			return;
-		} else {
-			this.roomManager.startGame(data.gameID);
-			this.io.to(data.gameID).emit('game_started', { gameStarted: true });
-		}
+		// if (this.roomManager.getRoom(data.gameID)!.players < 2) {
+		// 	this.io.to(data.gameID).emit('game_started', { gameStarted: false });
+		// 	return;
+		// } else {
+		this.roomManager.startGame(data.gameID, this.io);
+		this.io.to(data.gameID).emit('game_started', { gameStarted: true });
+		// }
 	}
 
 	private handleKeyInput(
@@ -111,12 +110,11 @@ export class GameServer {
 		const minY = 8 * TILESIZE + PLAYER_HIT_RADIUS;
 		const y = Math.floor(Math.random() * (maxY - minY) + minY);
 
-		if (username?.trim() === '') username = 'Andre cute >.<';
 		const player = new Player(
 			socket.id,
 			gameID,
 			isHost,
-			username || 'Andre cute >.<',
+			username && username.trim() !== '' ? username : 'Andre cute >.<',
 			x,
 			y,
 			getRandomColor()

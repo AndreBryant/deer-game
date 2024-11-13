@@ -4,6 +4,7 @@
 	export let mapData:
 		| { mapData: string; height: number; width: number; tileSize: number }
 		| undefined;
+	export let safeZoneBoundary: number;
 	import P5 from '../P5.svelte';
 	import mDeer from '$lib/sprites/mDeer.png';
 	import mDeerRed from '$lib/sprites/mDeerRed.png';
@@ -23,6 +24,7 @@
 	$: sortedPlayers = serverData.players
 		? Object.values(serverData.players).sort((a: any, b: any) => a.y - b.y)
 		: [];
+
 	let mapImage: any;
 	let bgImage: any;
 	// Parallax bg
@@ -74,8 +76,8 @@
 				previousX = player.x;
 				previousY = player.y;
 			}
-
 			drawGalaxy(p5, starSet, treeSet, player.x, player.y);
+			drawDangerZone(p5, safeZoneBoundary, player.x, player.y);
 			drawMap(p5, mapImage, player.x, player.y);
 			sortedPlayers.forEach((p: any) => {
 				if (p.isDead) return;
@@ -120,6 +122,77 @@
 			p5.text('loading', p5.width / 2, p5.height / 2);
 			p5.pop();
 		}
+	}
+
+	function drawDangerZone(p5: any, safeZoneBoundary: number, playerX: number, playerY: number) {
+		const { x: x0, y: y0 } = translateCoords({
+			h: p5.height,
+			w: p5.width,
+			px: playerX,
+			py: playerY,
+			x: 1,
+			y: 1
+		});
+
+		const s0 = 159 * 32;
+
+		const x = ((160 - safeZoneBoundary) * 32) / 2;
+		const y = ((160 - safeZoneBoundary) * 32) / 2;
+
+		const { x: x1, y: y1 } = translateCoords({
+			h: p5.height,
+			w: p5.width,
+			px: playerX,
+			py: playerY,
+			x,
+			y
+		});
+
+		const s1 = safeZoneBoundary * 32;
+		const blockCount = s1 / 32;
+
+		p5.push();
+		p5.noStroke();
+		p5.fill(100, 0, 25, 30);
+		p5.beginShape();
+
+		// Outer Rectangle
+		p5.vertex(x0, y0);
+		p5.vertex(x0 + s0, y0);
+		p5.vertex(x0 + s0, y0 + s0);
+		p5.vertex(x0, y0 + s0);
+		p5.vertex(x0, y0);
+
+		// Inner Rectangle
+		p5.vertex(x1, y1);
+		p5.vertex(x1, y1 + s1);
+		p5.vertex(x1 + s1, y1 + s1);
+		p5.vertex(x1 + s1, y1);
+		p5.vertex(x1, y1);
+
+		p5.endShape(p5.CLOSE);
+
+		p5.strokeWeight(8);
+
+		p5.push();
+		p5.translate(x1, y1);
+		for (let i = 0; i < blockCount; i++) {
+			for (let j = 0; j < blockCount; j++) {
+				if (i === 0 || j === 0 || i === blockCount - 1 || j === blockCount - 1) {
+					const noiseValue = p5.noise(i * 0.5, j * 0.5);
+					const black = p5.map(noiseValue, 0, 1, 50, 150);
+					p5.stroke(black, 100);
+					p5.fill(25, black, black, 20);
+					const x = i * 32 + 8;
+					const y = j * 32 + 8;
+					if (x > 0 || y > 0 || x < p5.width || y < p5.height) {
+						p5.rect(x, y, 24, 24, 1);
+					}
+				}
+			}
+		}
+		p5.pop();
+		p5.pop();
 	}
 
 	function drawDeadScreen(p5: any, time: number) {
