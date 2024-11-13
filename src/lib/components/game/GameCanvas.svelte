@@ -153,7 +153,7 @@
 
 		p5.push();
 		p5.noStroke();
-		p5.fill(100, 0, 25, 30);
+		p5.fill(100, 0, 25, 20);
 		p5.beginShape();
 
 		// Outer Rectangle
@@ -175,10 +175,10 @@
 		p5.strokeWeight(8);
 
 		p5.push();
-		p5.translate(x1, y1);
-		for (let i = 0; i < blockCount; i++) {
-			for (let j = 0; j < blockCount; j++) {
-				if (i === 0 || j === 0 || i === blockCount - 1 || j === blockCount - 1) {
+		p5.translate(x1 - 32, y1 - 32);
+		for (let i = 0; i < blockCount + 1; i++) {
+			for (let j = 0; j < blockCount + 1; j++) {
+				if (i === 0 || j === 0 || i === blockCount || j === blockCount) {
 					const noiseValue = p5.noise(i * 0.5, j * 0.5);
 					const black = p5.map(noiseValue, 0, 1, 50, 150);
 					p5.stroke(black, 100);
