@@ -148,9 +148,9 @@
 	}
 
 	function drawPlayerArrow(p5: any, player: any, p: any) {
-		const factor = 6;
 		const dir = p5.atan2(p.y - player.y, p.x - player.x);
 		const decrease = p5.map(p5.dist(p.x, p.y, player.x, player.y), 0, 160 * 32, 0, 15);
+		const radius = p5.min(p5.width, p5.height) / 2;
 
 		p5.push();
 		p5.translate(p5.width / 2, p5.height / 2);
@@ -160,9 +160,9 @@
 		p5.stroke(255);
 		p5.fill(p.color);
 		p5.beginShape();
-		p5.vertex(0, player.radius * factor - decrease);
-		p5.vertex(-8, player.radius * factor - 25);
-		p5.vertex(8, player.radius * factor - 25);
+		p5.vertex(0, radius - decrease);
+		p5.vertex(-8, radius - 25);
+		p5.vertex(8, radius - 25);
 		p5.endShape(p5.CLOSE);
 
 		p5.pop();
