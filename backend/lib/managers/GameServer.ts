@@ -57,7 +57,9 @@ export class GameServer {
 				this.io.to(players[pl].id).emit('kicked_from_room', true);
 			}
 
-			if (this.roomManager.isGameStarted(gameID)) this.roomManager.endGame(gameID);
+			if (this.roomManager.isGameStarted(gameID)) {
+				this.roomManager.endGame(gameID, this.io);
+			}
 		} else {
 			this.playerManager.removePlayer(socket.id);
 			this.roomManager.leaveRoom(gameID);
@@ -110,10 +112,14 @@ export class GameServer {
 		this.io.to(gameID).emit('player_updated', { players: playersInRoom, timestamp: Date.now() });
 	}
 
-	broadcastAllPlayerUpdates() {
+	broadcastAllUpdates() {
 		const rooms = this.roomManager.getRooms();
 		for (const room in rooms) {
 			this.broadcastPlayerUpdates(room);
+
+			if (this.roomManager.getRoom(room)!.isGameStarted) {
+				this.roomManager.updateRoom(room, this.io);
+			}
 		}
 	}
 

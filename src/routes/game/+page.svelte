@@ -28,7 +28,8 @@
 	let ws: Socket | undefined;
 
 	let gameLoaded = false;
-	let gameStarted = false;
+	let gameOngoing = false;
+	let gameFinished = false;
 	let gameStartTime: number = 0;
 	let gameDuration: number = 0;
 	let timeLeftString: string = '';
@@ -90,7 +91,7 @@
 		if (!ws) return;
 		if (data.host) {
 			ws.emit('start_game', { gameID: data.gameID });
-			gameStarted = true;
+			gameOngoing = true;
 		}
 
 		startGameButton.blur();
@@ -143,9 +144,14 @@
 		});
 
 		ws.on('game_started', (dataFromServer) => {
-			gameStarted = dataFromServer.gameStarted;
+			gameOngoing = dataFromServer.gameStarted;
 			gameStartTime = dataFromServer.gameStartTime;
 			gameDuration = dataFromServer.gameDuration;
+		});
+
+		ws.on('game_ended', (dataFromServer) => {
+			gameOngoing = dataFromServer.gameStarted;
+			gameFinished = dataFromServer.gameFinished;
 		});
 
 		window.addEventListener('keydown', (e) => handleKeydown(ws!, e));
@@ -166,7 +172,7 @@
 		gameStartTime,
 		gameDuration;
 
-	$: if (gameStarted && gameStartTime) {
+	$: if (gameOngoing && !gameFinished) {
 		timeLeftString = displayFormatTime(gameStartTime, gameDuration, timestamp);
 	}
 
@@ -178,6 +184,8 @@
 			: undefined;
 </script>
 
+{gameOngoing}
+{gameFinished}
 <!-- TODO: THE CODE LOOKS UGLY I NEED TO REFACTOR THIS 😭😭😭 -->
 <!-- {JSON.stringify(serverData, null, 2)} -->
 <!-- {#if mapData}
@@ -295,12 +303,12 @@
 				</div>
 			</div>
 		{/if}
-		{#if clientPlayer && gameStarted}
-			<div class="absolute top-4 flex w-full justify-center text-4xl text-red-500">
+		{#if clientPlayer && gameOngoing && !gameFinished}
+			<div class="absolute top-2 flex w-full justify-center text-2xl text-red-500">
 				<p>{timeLeftString}</p>
 			</div>
 		{/if}
-		{#if !gameStarted && !gameLoaded && data.host}
+		{#if !gameFinished && !gameOngoing && !gameLoaded && data.host}
 			<div class="absolute bottom-28 flex w-full flex-col items-center gap-4">
 				<div>
 					<button

@@ -16,7 +16,7 @@ export const webSocketServer = {
 		});
 
 		setInterval(() => {
-			gameServer.broadcastAllPlayerUpdates();
+			gameServer.broadcastAllUpdates();
 		}, 1000 / 60);
 	}
 };

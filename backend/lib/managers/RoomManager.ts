@@ -35,13 +35,30 @@ export class RoomManager {
 		this.startInterval(gameID, io);
 	}
 
-	endGame(gameID: string) {
+	endGame(gameID: string, io: Server) {
 		const room = this.rooms[gameID];
 		if (room) {
 			room.isGameStarted = false;
 		}
 
-		if (this.intervals[gameID]) this.stopInterval(this.intervals[gameID]);
+		if (io) {
+			io.to(gameID).emit('game_ended', { gameStarted: false, gameFinished: true });
+		}
+
+		if (this.intervals[gameID]) {
+			this.stopInterval(this.intervals[gameID]);
+		}
+
+		console.log('Room Manager: Game Ended', gameID);
+	}
+
+	updateRoom(gameID: string, io: Server) {
+		if (this.rooms[gameID]) {
+			const now = Date.now();
+			if (now - this.rooms[gameID].gameStartTime > this.gameDuration) {
+				this.endGame(gameID, io);
+			}
+		}
 	}
 
 	private startInterval(gameID: string, io: Server) {
@@ -50,7 +67,10 @@ export class RoomManager {
 			if (safeZoneBoundary <= this.minMapSize) {
 				this.stopInterval(this.intervals[gameID]);
 			}
-			if (io) io.to(gameID).emit('safe_zone_updated', { safeZoneBoundary });
+
+			if (io) {
+				io.to(gameID).emit('safe_zone_updated', { safeZoneBoundary });
+			}
 		}, this.safeZoneDecreaseTime);
 	}
 
