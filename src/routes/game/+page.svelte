@@ -276,11 +276,16 @@
 				<div class="flex gap-4">
 					<div class="flex gap-2 text-lg">
 						<Heart />
-						{clientPlayer.health}
+
+						{#if gameOngoing}
+							{clientPlayer.health}
+						{:else}
+							&infin;
+						{/if}
 					</div>
 					<div class="flex gap-2 text-lg">
 						<Sword />
-						{clientPlayer.attack}
+						{gameOngoing ? clientPlayer.attack : 0}
 					</div>
 					<div class="flex gap-2 text-lg">
 						<Trophy />
