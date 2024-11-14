@@ -152,10 +152,7 @@ export class Player {
 	takeDamage(damage: number, gameStarted: boolean): number {
 		if (gameStarted && !this.invincible) {
 			this.health -= damage;
-			this.invincible = true;
-			this.invincibilityEndTime = Date.now() + 1000;
 		}
-		if (this.health <= 0) this.die();
 		return this.health;
 	}
 
@@ -167,7 +164,6 @@ export class Player {
 		this.x = null;
 		this.y = null;
 		this.action = 'die';
-		console.log(this);
 	}
 
 	addScore() {

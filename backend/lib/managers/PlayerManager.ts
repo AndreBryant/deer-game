@@ -28,8 +28,14 @@ export class PlayerManager {
 			p.update();
 			this.handleMovement(player);
 			this.handleActions(player, gameStarted);
-			if (!this.isInSafeZone(p.x!, p.y!, safeZoneBoundary)) {
-				p.takeDamage(1, gameStarted);
+			if (!p.isDead && !p.invincible && !this.isInSafeZone(p.x!, p.y!, safeZoneBoundary)) {
+				const health = p.takeDamage(1, gameStarted);
+				if (health <= 0) {
+					p.die();
+				}
+
+				p.invincible = true;
+				p.invincibilityEndTime = Date.now() + 1000;
 			}
 		}
 	}
@@ -132,11 +138,15 @@ export class PlayerManager {
 			if (target.id !== player.id && isInAttackRange(player, target) && !target.invincible) {
 				const health = target.takeDamage(player.attack, gameStarted);
 
-				if (target.isDead) {
+				if (health <= 0) {
+					target.die();
 					player.addScore();
 					// Make sure to notify everyone about this haha
 					console.log(target.name + ' was killed by ' + player.name);
 				}
+
+				target.invincible = true;
+				target.invincibilityEndTime = Date.now() + 1000;
 			}
 		}
 	}

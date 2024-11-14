@@ -160,7 +160,7 @@
 {/if} -->
 <!-- {JSON.stringify(connectionState, null, 2)} -->
 <!-- {safeZoneBoundary} -->
-<main class="relative h-screen w-screen select-none text-white">
+<main class="relative h-screen w-screen select-none overflow-hidden text-white">
 	<div class="w-scree h-screenn absolute left-0 top-0 -z-10">
 		{#if mapData && connectionState.isConnected && connectionState.socketId}
 			<GameCanvas {safeZoneBoundary} {serverData} {mapData} socketId={connectionState.socketId} />
