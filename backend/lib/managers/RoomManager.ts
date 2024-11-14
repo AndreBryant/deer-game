@@ -13,6 +13,7 @@ export class RoomManager {
 	private intervals: { [key: string]: NodeJS.Timeout } = {};
 	private safeZoneDecreaseTime: number = 30000;
 	private minMapSize: number = 40;
+	private gameDuration: number = 300000;
 
 	createRoom(gameID: string) {
 		this.rooms[gameID] = {
@@ -24,7 +25,12 @@ export class RoomManager {
 	}
 
 	startGame(gameID: string, io: Server) {
-		if (this.rooms[gameID]) this.rooms[gameID].isGameStarted = true;
+		if (this.rooms[gameID]) {
+			this.rooms[gameID].gameStartTime = Date.now();
+			this.rooms[gameID].isGameStarted = true;
+			// initial decrease in safezone so that players wont take damage before game starts
+			this.rooms[gameID].mapData.decreaseSafeZone();
+		}
 		console.log('Room Manager: Game Started', gameID);
 		this.startInterval(gameID, io);
 	}
@@ -32,8 +38,6 @@ export class RoomManager {
 	endGame(gameID: string) {
 		const room = this.rooms[gameID];
 		if (room) {
-			// set the safeZone boundary to 160 instead of 161
-			room.mapData.safeZoneBoundary = 160;
 			room.isGameStarted = false;
 		}
 
@@ -93,5 +97,16 @@ export class RoomManager {
 	decreaseSafeZone(gameID: string) {
 		console.log('game map safezone decreased', gameID);
 		return this.rooms[gameID].mapData.decreaseSafeZone();
+	}
+
+	getGameDuration() {
+		return this.gameDuration;
+	}
+
+	private broadcastToastNotification(io: Server) {
+		// TODO
+		// Example: x was slain by y
+		// or x stayed too long in the danger zone
+		// you can add random messages here if you want
 	}
 }

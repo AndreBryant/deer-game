@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+import { Server } from 'socket.io';
 import { Player } from '../Player.js';
 import { MAP_HEIGHT as mh, MAP_WIDTH as mw, TILESIZE as tsize } from '../map.js';
 
@@ -118,6 +118,7 @@ export class PlayerManager {
 	}
 
 	getPlayersInRoom(room: string): { [key: string]: Player } {
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		return Object.fromEntries(Object.entries(this.players).filter(([_, p]) => p.room === room));
 	}
 
@@ -155,6 +156,13 @@ export class PlayerManager {
 				target.invincibilityEndTime = Date.now() + 1000;
 			}
 		}
+	}
+
+	private broadcastToastNotification(io: Server) {
+		// TODO
+		// Example: x was slain by y
+		// or x stayed too long in the danger zone
+		// you can add random messages here if you want
 	}
 }
 

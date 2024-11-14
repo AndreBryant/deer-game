@@ -81,7 +81,11 @@ export class GameServer {
 		this.roomManager.startGame(data.gameID, this.io);
 		this.playerManager.randomizePlayersPositions(this.roomManager.getSafeZoneBoundary(data.gameID));
 		this.io.emit('rooms_updated', this.roomManager.getRooms());
-		this.io.to(data.gameID).emit('game_started', { gameStarted: true });
+		this.io.to(data.gameID).emit('game_started', {
+			gameStarted: true,
+			gameStartTime: this.roomManager.getRoom(data.gameID)!.gameStartTime,
+			gameDuration: this.roomManager.getGameDuration()
+		});
 		// }
 	}
 
@@ -103,7 +107,7 @@ export class GameServer {
 			safeZoneBoundary
 		);
 		const playersInRoom = this.playerManager.getPlayersInRoom(gameID);
-		this.io.to(gameID).emit('player_updated', { players: playersInRoom });
+		this.io.to(gameID).emit('player_updated', { players: playersInRoom, timestamp: Date.now() });
 	}
 
 	broadcastAllPlayerUpdates() {

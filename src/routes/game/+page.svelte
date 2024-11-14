@@ -11,7 +11,7 @@
 	let mapData:
 		| { mapData: string; height: number; width: number; tileSize: number; safeZoneBoundary: number }
 		| undefined = undefined;
-	let safeZoneBoundary: number = 159;
+	let safeZoneBoundary: number = 160;
 	let connectionState: { socketId: string | undefined; isConnected: boolean } = {
 		socketId: undefined,
 		isConnected: false
@@ -29,6 +29,10 @@
 
 	let gameLoaded = false;
 	let gameStarted = false;
+	let gameStartTime: number = 0;
+	let gameDuration: number = 0;
+	let timeLeftString: string = '';
+	let timestamp: number = 0;
 
 	function emitKeyInput() {
 		if (!ws) return;
@@ -71,6 +75,14 @@
 	function handleKeyup(ws: Socket, e: KeyboardEvent) {
 		const changed = updateKeyCodes(e.key, false);
 		if (changed) emitKeyInput();
+	}
+
+	function displayFormatTime(startTime: number, duration: number, now: number) {
+		const elapsed = now - startTime;
+		const remaining = duration - elapsed;
+		const minutes = Math.floor(remaining / 60000);
+		const seconds = Math.floor((remaining % 60000) / 1000);
+		return `${minutes}:${seconds < 10 ? `0${seconds}` : seconds}`;
 	}
 
 	let startGameButton: HTMLButtonElement;
@@ -120,8 +132,8 @@
 			mapData = dataFromServer;
 		});
 
-		ws.on('safe_zone_updated', (dataFromServer) => {
-			safeZoneBoundary = dataFromServer.safeZoneBoundary;
+		ws.on('safe_zone_updated', (data) => {
+			safeZoneBoundary = data.safeZoneBoundary;
 		});
 
 		ws.on('kicked_from_room', (kicked) => {
@@ -130,9 +142,10 @@
 			}
 		});
 
-		ws.on('game_started', (data) => {
-			console.log(data, gameStarted);
-			gameStarted = data.gameStarted;
+		ws.on('game_started', (dataFromServer) => {
+			gameStarted = dataFromServer.gameStarted;
+			gameStartTime = dataFromServer.gameStartTime;
+			gameDuration = dataFromServer.gameDuration;
 		});
 
 		window.addEventListener('keydown', (e) => handleKeydown(ws!, e));
@@ -145,7 +158,19 @@
 		};
 	});
 
-	$: serverData, connectionState, mapData, safeZoneBoundary, numOfPlayers;
+	$: serverData,
+		connectionState,
+		mapData,
+		safeZoneBoundary,
+		numOfPlayers,
+		gameStartTime,
+		gameDuration;
+
+	$: if (gameStarted && gameStartTime) {
+		timeLeftString = displayFormatTime(gameStartTime, gameDuration, timestamp);
+	}
+
+	$: timestamp = serverData.timestamp;
 
 	$: clientPlayer =
 		serverData.players && connectionState.isConnected && connectionState.socketId
@@ -270,7 +295,11 @@
 				</div>
 			</div>
 		{/if}
-		<!-- Add if !gameStarted here -->
+		{#if clientPlayer && gameStarted}
+			<div class="absolute top-4 flex w-full justify-center text-4xl text-red-500">
+				<p>{timeLeftString}</p>
+			</div>
+		{/if}
 		{#if !gameStarted && !gameLoaded && data.host}
 			<div class="absolute bottom-28 flex w-full flex-col items-center gap-4">
 				<div>
