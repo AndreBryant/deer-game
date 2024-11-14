@@ -25,7 +25,9 @@ same for the one above but now, you can access the game if connected to the same
 # Building the game for production
 
 separate terminals for server and client
+
 Note: you have to do this everytime you are deploying with a specifc wifi connection. You cannot build this with _UP STUDENT_ wifi and still expect the build to run on _UP AP1_
+
 **Server:**
 
 ```
