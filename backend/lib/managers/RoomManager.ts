@@ -43,6 +43,8 @@ export class RoomManager {
 
 		if (io) {
 			io.to(gameID).emit('game_ended', { gameStarted: false, gameFinished: true });
+			room.mapData.resetSafeZone();
+			io.to(gameID).emit('safe_zone_updated', { safeZoneBoundary: room.mapData.safeZoneBoundary });
 		}
 
 		if (this.intervals[gameID]) {

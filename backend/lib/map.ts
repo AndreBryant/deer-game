@@ -45,4 +45,8 @@ export class Map {
 		this.safeZoneBoundary -= 20;
 		return this.safeZoneBoundary;
 	}
+
+	resetSafeZone() {
+		this.safeZoneBoundary = INITIAL_SAFEZONE_BOUNDARY + 20;
+	}
 }
