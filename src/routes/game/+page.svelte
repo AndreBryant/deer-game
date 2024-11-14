@@ -86,6 +86,10 @@
 		return `${minutes}:${seconds < 10 ? `0${seconds}` : seconds}`;
 	}
 
+	function toast(message: string) {
+		console.log('Game: ', message);
+	}
+
 	let startGameButton: HTMLButtonElement;
 	const startGame = () => {
 		if (!ws) return;
@@ -152,6 +156,10 @@
 		ws.on('game_ended', (dataFromServer) => {
 			gameOngoing = dataFromServer.gameStarted;
 			gameFinished = dataFromServer.gameFinished;
+		});
+
+		ws.on('toast_notification', (dataFromServer) => {
+			toast(dataFromServer.message);
 		});
 
 		window.addEventListener('keydown', (e) => handleKeydown(ws!, e));

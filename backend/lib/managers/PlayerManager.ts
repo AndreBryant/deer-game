@@ -158,11 +158,10 @@ export class PlayerManager {
 		}
 	}
 
-	private broadcastToastNotification(io: Server) {
-		// TODO
-		// Example: x was slain by y
-		// or x stayed too long in the danger zone
-		// you can add random messages here if you want
+	private broadcastToastNotification(io: Server, gameID: string, message: string) {
+		io.to(gameID).emit('toast_notification', {
+			message
+		});
 	}
 }
 
