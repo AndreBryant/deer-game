@@ -184,8 +184,6 @@
 			: undefined;
 </script>
 
-{gameOngoing}
-{gameFinished}
 <!-- TODO: THE CODE LOOKS UGLY I NEED TO REFACTOR THIS 😭😭😭 -->
 <!-- {JSON.stringify(serverData, null, 2)} -->
 <!-- {#if mapData}
