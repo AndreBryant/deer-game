@@ -30,7 +30,13 @@ export class RoomManager {
 	}
 
 	endGame(gameID: string) {
-		if (this.rooms[gameID]) this.rooms[gameID].isGameStarted = false;
+		const room = this.rooms[gameID];
+		if (room) {
+			// set the safeZone boundary to 160 instead of 161
+			room.mapData.safeZoneBoundary = 160;
+			room.isGameStarted = false;
+		}
+
 		if (this.intervals[gameID]) this.stopInterval(this.intervals[gameID]);
 	}
 
@@ -78,6 +84,10 @@ export class RoomManager {
 
 	getRooms(): { [key: string]: Room } {
 		return this.rooms;
+	}
+
+	getSafeZoneBoundary(gameID: string) {
+		return this.rooms[gameID].mapData.safeZoneBoundary;
 	}
 
 	decreaseSafeZone(gameID: string) {

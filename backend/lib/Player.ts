@@ -1,6 +1,6 @@
-import { TILESIZE, MAP_WIDTH, MAP_HEIGHT } from './map.js';
+import { TILESIZE as tsize, MAP_WIDTH as mw, MAP_HEIGHT as mh } from './map.js';
 
-export const PLAYER_HIT_RADIUS = TILESIZE * 2;
+export const PLAYER_HIT_RADIUS = tsize * 2;
 
 const playerSpeedX = 12;
 const playerSpeedXAttack = 6;
@@ -79,20 +79,14 @@ export class Player {
 		this.score = 0;
 	}
 
-	update() {
+	update(safeZoneBoundary: number) {
 		if (this.isDead && this.respawnTime) {
 			if (this.respawnTime <= new Date().getTime()) {
 				this.isDead = false;
 				this.respawnTime = null;
 				this.health = startingHealth;
 
-				const maxX = (MAP_WIDTH - 8) * TILESIZE - PLAYER_HIT_RADIUS;
-				const minX = 8 * TILESIZE + PLAYER_HIT_RADIUS;
-				const maxY = (MAP_HEIGHT - 8) * TILESIZE - PLAYER_HIT_RADIUS;
-				const minY = 8 * TILESIZE + PLAYER_HIT_RADIUS;
-
-				this.x = Math.floor(Math.random() * (maxX - minX) + minX);
-				this.y = Math.floor(Math.random() * (maxY - minY) + minY);
+				this.randomizePosition(safeZoneBoundary);
 			}
 		} else {
 			if (
@@ -125,8 +119,8 @@ export class Player {
 		this.x! += left ? -this.dx : this.dx;
 		this.isFacingLeft = left;
 
-		if (this.x! + this.radius >= w * TILESIZE) {
-			this.x = w * TILESIZE - this.radius;
+		if (this.x! + this.radius >= w * tsize) {
+			this.x = w * tsize - this.radius;
 		} else if (this.x! - this.radius < 0) {
 			this.x = this.radius;
 		}
@@ -140,10 +134,10 @@ export class Player {
 
 		this.y! += up ? -this.dy : this.dy;
 
-		if (this.y! + this.radius >= (h - 1) * TILESIZE) {
-			this.y = (h - 1) * TILESIZE - this.radius;
-		} else if (this.y! - this.radius < -(TILESIZE * 2)) {
-			this.y = this.radius - TILESIZE * 2;
+		if (this.y! + this.radius >= (h - 1) * tsize) {
+			this.y = (h - 1) * tsize - this.radius;
+		} else if (this.y! - this.radius < -(tsize * 2)) {
+			this.y = this.radius - tsize * 2;
 		}
 		// IMPORTANT DO NOT REMOVE (I might use this later)
 		// console.log(Math.floor(this.x / TILESIZE), Math.floor(this.y / TILESIZE));
@@ -168,5 +162,17 @@ export class Player {
 
 	addScore() {
 		this.score += 1000;
+	}
+
+	randomizePosition(safeZoneBoundary: number) {
+		const { minX, maxX, minY, maxY } = {
+			minX: ((mw - safeZoneBoundary) * tsize) / 2,
+			maxX: ((mw - safeZoneBoundary) * tsize) / 2 + safeZoneBoundary * tsize,
+			minY: ((mh - safeZoneBoundary) * tsize) / 2,
+			maxY: ((mh - safeZoneBoundary) * tsize) / 2 + safeZoneBoundary * tsize
+		};
+
+		this.x = Math.floor(Math.random() * (maxX - minX) + minX);
+		this.y = Math.floor(Math.random() * (maxY - minY) + minY);
 	}
 }

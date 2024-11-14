@@ -25,7 +25,7 @@ export class PlayerManager {
 
 		for (const player in playersInRoom) {
 			const p = this.players[player];
-			p.update();
+			p.update(safeZoneBoundary);
 			this.handleMovement(player);
 			this.handleActions(player, gameStarted);
 			if (!p.isDead && !p.invincible && !this.isInSafeZone(p.x!, p.y!, safeZoneBoundary)) {
@@ -51,6 +51,12 @@ export class PlayerManager {
 			y: yRemaining / 2
 		};
 		return px > x && py > y && px < x + safeZone && py < y + safeZone;
+	}
+
+	randomizePlayersPositions(safeZoneBoundary: number) {
+		for (const player in this.players) {
+			this.players[player].randomizePosition(safeZoneBoundary);
+		}
 	}
 
 	handleMovement(playerId: string) {

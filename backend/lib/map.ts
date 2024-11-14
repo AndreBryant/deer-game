@@ -1,6 +1,6 @@
 export const MAP_HEIGHT = 160;
 export const MAP_WIDTH = 160;
-export const INITIAL_SAFEZONE_BOUNDARY = 160;
+export const INITIAL_SAFEZONE_BOUNDARY = 161;
 export const TILESIZE = 32;
 
 export enum MapTile {

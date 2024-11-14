@@ -51,9 +51,8 @@
 	let filteredRooms = {};
 
 	$: {
-		const filtered = Object.entries(rooms).filter(
-			([gameID]) =>
-				gameID.toLowerCase().includes(searchTerm.toLowerCase()) && !rooms[gameID].isGameStarted
+		const filtered = Object.entries(rooms).filter(([gameID]) =>
+			gameID.toLowerCase().includes(searchTerm.toLowerCase())
 		);
 		filteredRooms = Object.fromEntries(filtered);
 	}
@@ -132,7 +131,7 @@
 						class="custom-scrollbar flex h-56 flex-col overflow-y-auto border-y border-black py-1 pr-2"
 					>
 						{#if Object.entries(filteredRooms).length > 0}
-							{#each Object.entries(filteredRooms) as [gameID, { players }]}
+							{#each Object.entries(filteredRooms) as [gameID, { players, isGameStarted }]}
 								<div
 									class="flex w-full justify-between border-t border-black border-opacity-20 px-2 py-4 transition-all duration-75 hover:bg-[#f5f5f5] hover:bg-opacity-20"
 								>
@@ -146,15 +145,20 @@
 										<div class="w-24 text-sm">
 											<Button
 												text="> join game"
-												variant={'primary'}
+												variant={isGameStarted ? 'disabled' : 'primary'}
 												href={`./game?host=false&gameID=${gameID}&username=${username}`}
 											/>
 										</div>
 									</div>
-									<div class="flex flex-col">
+									<div class="flex flex-col justify-between">
 										<div class="flex justify-end gap-2 text-sm">
 											{players}<User size="16" />
 										</div>
+										{#if isGameStarted}
+											<div>
+												<span class="text-sm font-semibold text-green-700">Game Started</span>
+											</div>
+										{/if}
 									</div>
 								</div>
 							{/each}

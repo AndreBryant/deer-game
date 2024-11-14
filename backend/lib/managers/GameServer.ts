@@ -20,8 +20,11 @@ export class GameServer {
 		socket.on('create_room', (data) => this.handleCreateRoom(socket, data));
 		socket.on('join_room', (data) => this.handleJoinRoom(socket, data));
 		socket.on('disconnect', () => this.handleDisconnect(socket));
+
+		// All throughout the game
 		socket.on('player_key_input', (data) => this.handleKeyInput(socket, data));
 
+		// Start Game
 		socket.on('start_game', (data) => this.handleStartGame(socket, data));
 	}
 
@@ -76,6 +79,8 @@ export class GameServer {
 		// 	return;
 		// } else {
 		this.roomManager.startGame(data.gameID, this.io);
+		this.playerManager.randomizePlayersPositions(this.roomManager.getSafeZoneBoundary(data.gameID));
+		this.io.emit('rooms_updated', this.roomManager.getRooms());
 		this.io.to(data.gameID).emit('game_started', { gameStarted: true });
 		// }
 	}

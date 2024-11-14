@@ -65,6 +65,7 @@
 
 	function draw(p5: any) {
 		fpsDisplay = p5.frameRate();
+		p5.background(0);
 		p5.background(bgImage);
 		if (serverData && mapData && serverData.players && serverData.players[socketId]) {
 			let player = serverData.players[socketId];
