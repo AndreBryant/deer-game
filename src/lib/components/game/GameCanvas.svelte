@@ -126,8 +126,8 @@
 	}
 
 	function drawDangerZone(p5: any, safeZoneBoundary: number, playerX: number, playerY: number) {
-		const c1 = p5.color(100, 0, 0, 80);
-		const c2 = p5.color(20, 0, 25, 5);
+		const c1 = p5.color(120, 0, 0, 80);
+		const c2 = p5.color(100, 0, 25, 50);
 		const frames = 120;
 
 		// We need sin for the lerp so that it oscillates from -1 to 1

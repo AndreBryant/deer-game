@@ -75,20 +75,24 @@ export class GameServer {
 	}
 
 	private handleStartGame(socket: Socket, data: { gameID: string }) {
-		// uncomment these
-		// if (this.roomManager.getRoom(data.gameID)!.players < 2) {
-		// 	this.io.to(data.gameID).emit('game_started', { gameStarted: false });
-		// 	return;
-		// } else {
-		this.roomManager.startGame(data.gameID, this.io);
-		this.playerManager.randomizePlayersPositions(this.roomManager.getSafeZoneBoundary(data.gameID));
-		this.io.emit('rooms_updated', this.roomManager.getRooms());
-		this.io.to(data.gameID).emit('game_started', {
-			gameStarted: true,
-			gameStartTime: this.roomManager.getRoom(data.gameID)!.gameStartTime,
-			gameDuration: this.roomManager.getGameDuration()
-		});
-		// }
+		if (this.roomManager.getRoom(data.gameID)!.players < 2) {
+			this.io.to(data.gameID).emit('game_started', { gameStarted: false });
+			this.io
+				.to(data.gameID)
+				.emit('toast_notification', { message: 'Must have at least 2 players to start game...' });
+			return;
+		} else {
+			this.roomManager.startGame(data.gameID, this.io);
+			this.playerManager.randomizePlayersPositions(
+				this.roomManager.getSafeZoneBoundary(data.gameID)
+			);
+			this.io.emit('rooms_updated', this.roomManager.getRooms());
+			this.io.to(data.gameID).emit('game_started', {
+				gameStarted: true,
+				gameStartTime: this.roomManager.getRoom(data.gameID)!.gameStartTime,
+				gameDuration: this.roomManager.getGameDuration()
+			});
+		}
 	}
 
 	private handleKeyInput(
@@ -97,13 +101,19 @@ export class GameServer {
 	) {
 		this.playerManager.updateKeyStates(socket.id, data.gameID, data.keyStates);
 		this.playerManager.handleMovement(socket.id);
-		this.playerManager.handleActions(socket.id, this.roomManager.isGameStarted(data.gameID));
+		this.playerManager.handleActions(
+			this.io,
+			socket.id,
+			this.roomManager.isGameStarted(data.gameID),
+			data.gameID
+		);
 	}
 
 	private broadcastPlayerUpdates(gameID: string) {
 		const room = this.roomManager.getRoom(gameID);
 		const safeZoneBoundary = room!.mapData.safeZoneBoundary;
 		this.playerManager.updatePlayers(
+			this.io,
 			gameID,
 			this.roomManager.isGameStarted(gameID),
 			safeZoneBoundary

@@ -20,18 +20,21 @@ export class PlayerManager {
 		delete this.keyStates[playerId];
 	}
 
-	updatePlayers(roomID: string, gameStarted: boolean, safeZoneBoundary: number) {
+	updatePlayers(io: Server, roomID: string, gameStarted: boolean, safeZoneBoundary: number) {
 		const playersInRoom = this.getPlayersInRoom(roomID);
 
 		for (const player in playersInRoom) {
 			const p = this.players[player];
 			p.update(safeZoneBoundary);
 			this.handleMovement(player);
-			this.handleActions(player, gameStarted);
+			this.handleActions(io, player, gameStarted, roomID);
 			if (!p.isDead && !p.invincible && !this.isInSafeZone(p.x!, p.y!, safeZoneBoundary)) {
 				const health = p.takeDamage(1, gameStarted);
 				if (health <= 0) {
 					p.die();
+					io.to(roomID).emit('toast_notification', {
+						message: p.name + ' stayed too long outside the safe zone.'
+					});
 				}
 
 				p.invincible = true;
@@ -86,7 +89,7 @@ export class PlayerManager {
 		}
 	}
 
-	handleActions(playerId: string, gameStarted: boolean) {
+	handleActions(io: Server, playerId: string, gameStarted: boolean, gameID: string) {
 		const player = this.players[playerId];
 		if (player.isDead) return;
 
@@ -113,7 +116,7 @@ export class PlayerManager {
 				player.actionEndTime = null;
 			}
 
-			if (keys['attack']) this.performAttack(player, gameStarted);
+			if (keys['attack']) this.performAttack(io, player, gameStarted, gameID);
 		}
 	}
 
@@ -133,7 +136,7 @@ export class PlayerManager {
 		};
 	}
 
-	private performAttack(player: Player, gameStarted: boolean) {
+	private performAttack(io: Server, player: Player, gameStarted: boolean, gameID: string) {
 		if (player.isDead) return;
 
 		player.action = 'attack';
@@ -148,8 +151,9 @@ export class PlayerManager {
 				if (health <= 0) {
 					target.die();
 					player.addScore();
-					// Make sure to notify everyone about this haha
-					console.log(target.name + ' was killed by ' + player.name);
+					io.to(gameID).emit('toast_notification', {
+						message: target.name + ' was killed by ' + player.name + '.'
+					});
 				}
 
 				target.invincible = true;
