@@ -6,7 +6,8 @@ const playerSpeedX = 12;
 const playerSpeedXAttack = 6;
 const playerSpeedY = 12;
 const playerSpeedYAttack = 6;
-const startingHealth = 3;
+const startingHealth = 25;
+const startingAttack = 5;
 
 export class Player {
 	id: string;
@@ -25,13 +26,12 @@ export class Player {
 	attack: number;
 	health: number;
 	sex: 'm' | 'f';
-	hasNose: boolean;
 	invincible: boolean;
 	invincibilityEndTime: number | null;
 	isDead: boolean;
 	respawnTime: number | null;
 	score: number;
-	powerUp: boolean;
+	isPoweredUp: boolean;
 	powerUpTime: number | null;
 
 	constructor(
@@ -43,30 +43,40 @@ export class Player {
 		y: number,
 		color: string
 	) {
+		// Player identification
 		this.id = id;
 		this.room = room;
 		this.isHost = isHost;
 		this.name = name;
+
+		// Player positioning and hitbox (yung radius haha)
 		this.x = x;
 		this.y = y;
-		this.radius = PLAYER_HIT_RADIUS;
 		this.dx = playerSpeedX;
 		this.dy = playerSpeedY;
+		this.radius = PLAYER_HIT_RADIUS;
+
+		// Player actions
 		this.action = 'idle';
 		this.actionEndTime = null;
-		this.color = color;
-		this.isFacingLeft = false;
-		this.attack = 1;
-		this.health = startingHealth;
-		this.hasNose = false;
-		this.sex = Math.random() < 0.5 ? 'f' : 'm';
 		this.invincible = false;
 		this.invincibilityEndTime = null;
-		this.isDead = false;
 		this.respawnTime = null;
-		this.score = 0;
-		this.powerUp = false;
 		this.powerUpTime = null;
+
+		// player states
+		this.isPoweredUp = false;
+		this.isFacingLeft = false;
+		this.isDead = false;
+
+		// player diversity
+		this.color = color;
+		this.sex = Math.random() < 0.5 ? 'f' : 'm';
+
+		// player traits
+		this.attack = startingAttack;
+		this.health = startingHealth;
+		this.score = 0;
 	}
 
 	update() {
@@ -121,7 +131,7 @@ export class Player {
 			this.x = this.radius;
 		}
 
-		// IMPORTANT DO NOT REMOVE
+		// IMPORTANT DO NOT REMOVE (I might use this later)
 		// console.log(Math.floor(this.x / TILESIZE), Math.floor(this.y / TILESIZE));
 	}
 
@@ -135,14 +145,17 @@ export class Player {
 		} else if (this.y! - this.radius < -(TILESIZE * 2)) {
 			this.y = this.radius - TILESIZE * 2;
 		}
-		// IMPORTANT DO NOT REMOVE
+		// IMPORTANT DO NOT REMOVE (I might use this later)
 		// console.log(Math.floor(this.x / TILESIZE), Math.floor(this.y / TILESIZE));
 	}
 
 	takeDamage(damage: number, gameStarted: boolean): number {
 		if (gameStarted && !this.invincible) {
 			this.health -= damage;
+			this.invincible = true;
+			this.invincibilityEndTime = Date.now() + 1000;
 		}
+		if (this.health <= 0) this.die();
 		return this.health;
 	}
 
@@ -154,6 +167,7 @@ export class Player {
 		this.x = null;
 		this.y = null;
 		this.action = 'die';
+		console.log(this);
 	}
 
 	addScore() {

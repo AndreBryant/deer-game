@@ -125,6 +125,14 @@
 	}
 
 	function drawDangerZone(p5: any, safeZoneBoundary: number, playerX: number, playerY: number) {
+		const a1 = 80;
+		const a2 = 0;
+		const frames = 120;
+
+		// We need sin for the lerp so that it oscillates from -1 to 1
+		const lerpFactor = (1 + Math.sin(((p5.frameCount % frames) * (Math.PI * 2)) / frames)) / 2;
+		const lerpAlpha = p5.lerp(a1, a2, lerpFactor);
+
 		const { x: x0, y: y0 } = translateCoords({
 			h: p5.height,
 			w: p5.width,
@@ -149,11 +157,10 @@
 		});
 
 		const s1 = safeZoneBoundary * 32;
-		const blockCount = s1 / 32;
 
 		p5.push();
 		p5.noStroke();
-		p5.fill(100, 0, 25, 20);
+		p5.fill(75, 0, 25, lerpAlpha);
 		p5.beginShape();
 
 		// Outer Rectangle
@@ -172,31 +179,11 @@
 
 		p5.endShape(p5.CLOSE);
 
-		p5.strokeWeight(8);
-
-		p5.push();
-		p5.translate(x1 - 32, y1 - 32);
-		for (let i = 0; i < blockCount + 1; i++) {
-			for (let j = 0; j < blockCount + 1; j++) {
-				if (i === 0 || j === 0 || i === blockCount || j === blockCount) {
-					const noiseValue = p5.noise(i * 0.5, j * 0.5);
-					const black = p5.map(noiseValue, 0, 1, 50, 150);
-					p5.stroke(black, 100);
-					p5.fill(25, black, black, 20);
-					const x = i * 32 + 8;
-					const y = j * 32 + 8;
-					if (x > 0 || y > 0 || x < p5.width || y < p5.height) {
-						p5.rect(x, y, 24, 24, 1);
-					}
-				}
-			}
-		}
-		p5.pop();
 		p5.pop();
 	}
 
 	function drawDeadScreen(p5: any, time: number) {
-		const goalColor = p5.color(80, 0, 0, 100);
+		const goalColor = p5.color(80, 0, 0, 80);
 		const startColor = p5.color(0, 0, 0, 10);
 
 		const timeDiff = time - Date.now();

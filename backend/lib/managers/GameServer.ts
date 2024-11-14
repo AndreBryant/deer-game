@@ -70,6 +70,7 @@ export class GameServer {
 	}
 
 	private handleStartGame(socket: Socket, data: { gameID: string }) {
+		// uncomment these
 		// if (this.roomManager.getRoom(data.gameID)!.players < 2) {
 		// 	this.io.to(data.gameID).emit('game_started', { gameStarted: false });
 		// 	return;
@@ -89,7 +90,13 @@ export class GameServer {
 	}
 
 	private broadcastPlayerUpdates(gameID: string) {
-		this.playerManager.updatePlayers(gameID, this.roomManager.isGameStarted(gameID));
+		const room = this.roomManager.getRoom(gameID);
+		const safeZoneBoundary = room!.mapData.safeZoneBoundary;
+		this.playerManager.updatePlayers(
+			gameID,
+			this.roomManager.isGameStarted(gameID),
+			safeZoneBoundary
+		);
 		const playersInRoom = this.playerManager.getPlayersInRoom(gameID);
 		this.io.to(gameID).emit('player_updated', { players: playersInRoom });
 	}

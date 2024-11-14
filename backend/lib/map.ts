@@ -41,14 +41,14 @@ export class Map {
 		return this.tiles;
 	}
 
-	getTile(x: number, y: number) {
-		if (x >= 0 && x <= this.width && y >= 0 && y <= this.height) {
-			return this.tiles[y * this.width + x];
-		} else return null;
-	}
+	// getTile(x: number, y: number) {
+	// 	if (x >= 0 && x <= this.width && y >= 0 && y <= this.height) {
+	// 		return this.tiles[y * this.width + x];
+	// 	} else return null;
+	// }
 
 	decreaseSafeZone(): number {
-		this.safeZoneBoundary -= 2;
+		this.safeZoneBoundary -= 20;
 		return this.safeZoneBoundary;
 	}
 }

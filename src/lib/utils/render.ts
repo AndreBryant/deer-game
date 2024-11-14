@@ -41,7 +41,7 @@ export function drawMapTiles(
 				case '=':
 					{
 						const min = 100;
-						graphics.fill(min * 0.7, min * 0.8, value + min, 40);
+						graphics.fill(min * 0.7, min * 0.8, value + min, 80);
 						graphics.rect(
 							x * mapData.tileSize,
 							y * mapData.tileSize,

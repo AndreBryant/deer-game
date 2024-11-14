@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Player } from '../Player.js';
-import { MAP_HEIGHT as mh, MAP_WIDTH as mw } from '../map.js';
+import { MAP_HEIGHT as mh, MAP_WIDTH as mw, TILESIZE as tsize } from '../map.js';
 
 export class PlayerManager {
 	private players: { [key: string]: Player } = {};
@@ -20,14 +20,31 @@ export class PlayerManager {
 		delete this.keyStates[playerId];
 	}
 
-	updatePlayers(roomID: string, gameStarted: boolean) {
+	updatePlayers(roomID: string, gameStarted: boolean, safeZoneBoundary: number) {
 		const playersInRoom = this.getPlayersInRoom(roomID);
 
 		for (const player in playersInRoom) {
-			this.players[player].update();
+			const p = this.players[player];
+			p.update();
 			this.handleMovement(player);
 			this.handleActions(player, gameStarted);
+			if (!this.isInSafeZone(p.x!, p.y!, safeZoneBoundary)) {
+				p.takeDamage(1, gameStarted);
+			}
 		}
+	}
+
+	private isInSafeZone(px: number, py: number, safeZoneBoundary: number) {
+		const mapWidth = mw * tsize;
+		const mapHeight = mh * tsize;
+		const safeZone = safeZoneBoundary * tsize;
+		const xRemaining = mapWidth - safeZone;
+		const yRemaining = mapHeight - safeZone;
+		const { x, y } = {
+			x: xRemaining / 2,
+			y: yRemaining / 2
+		};
+		return px > x && py > y && px < x + safeZone && py < y + safeZone;
 	}
 
 	handleMovement(playerId: string) {
@@ -115,14 +132,11 @@ export class PlayerManager {
 			if (target.id !== player.id && isInAttackRange(player, target) && !target.invincible) {
 				const health = target.takeDamage(player.attack, gameStarted);
 
-				if (health <= 0) {
-					target.die();
+				if (target.isDead) {
 					player.addScore();
 					// Make sure to notify everyone about this haha
 					console.log(target.name + ' was killed by ' + player.name);
 				}
-				target.invincible = true;
-				target.invincibilityEndTime = Date.now() + 1000;
 			}
 		}
 	}

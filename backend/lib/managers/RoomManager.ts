@@ -11,8 +11,8 @@ interface Room {
 export class RoomManager {
 	private rooms: { [key: string]: Room } = {};
 	private intervals: { [key: string]: NodeJS.Timeout } = {};
-	private safeZoneDecreaseTime: number = 1500;
-	private minMapSize: number = 60;
+	private safeZoneDecreaseTime: number = 30000;
+	private minMapSize: number = 40;
 
 	createRoom(gameID: string) {
 		this.rooms[gameID] = {
