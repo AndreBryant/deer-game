@@ -80,6 +80,7 @@ export class RoomManager {
 
 			if (io) {
 				io.to(gameID).emit('safe_zone_updated', { safeZoneBoundary });
+				io.to(gameID).emit('toast_notification', { message: 'Safe Zone Boundary Decreased!' });
 			}
 		}, this.safeZoneDecreaseTime);
 	}
