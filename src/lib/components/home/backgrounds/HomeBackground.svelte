@@ -1,4 +1,6 @@
 <script lang="ts">
+	// INITIAL HOME BACKGROUND
+	// NOT USED ANYMORE, I changed it to HomeBackground3.svelte
 	import P5 from '$lib/components/P5.svelte';
 	import { palette } from '$lib/utils/palette';
 	import { Ball } from '$lib/utils/ball';
@@ -40,13 +42,6 @@
 
 	function windowResized(p5: any) {
 		p5.resizeCanvas(p5.windowWidth, p5.windowHeight);
-
-		// check if they will be off screen
-		// if ball will be offscreen, lerp to the current screen their x,y position
-		// for (let i = 0; i < qt; i++) {
-		// 	Balls[i].dx = 2;
-		// 	Balls[i].dy = 2;
-		// }
 	}
 </script>
 

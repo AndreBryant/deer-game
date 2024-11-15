@@ -34,12 +34,12 @@
 	let mCCurrGoal = mCNight;
 
 	// Heavenly bodies
-	let sun: { x: number; y: number; r: number };
-	let moon: { x: number; y: number; r: number };
+	let sun: HeavenlyBodyP5BG;
+	let moon: HeavenlyBodyP5BG;
 	let deerHead: any;
 
-	let moonTexture: { x: number; y: number; r: number }[] = [];
-	let sunTexture: { x: number; y: number; r: number }[] = [];
+	let moonTexture: HeavenlyBodyP5BG[] = [];
+	let sunTexture: HeavenlyBodyP5BG[] = [];
 	let planetaryParticles = 20;
 
 	let angle: number = 0;
@@ -49,12 +49,12 @@
 	let centerX: number;
 	let centerY: number;
 
-	let stars: { x: number; y: number; r: number }[] = [];
+	let stars: HeavenlyBodyP5BG[] = [];
 	let starColor = palette.primary.sky_blue;
 	let starCount = 200;
 
 	// Clouds
-	let clouds: { x: number; y: number; dx: number; r1: number[]; r2: number[]; r3: number[] }[] = [];
+	let clouds: CloudP5BG[] = [];
 	let cloudCount = 8;
 
 	function preload(p5: any) {
@@ -85,6 +85,7 @@
 				y: y1,
 				r: p5.random(2, 10)
 			});
+
 			sunTexture.push({
 				x: x2,
 				y: y2,
@@ -99,6 +100,7 @@
 	function draw(p5: any) {
 		currSky = p5.lerpColor(p5.color(currSky), p5.color(currGoal), lerpConstant);
 		drawSky(p5, currSky);
+
 		const moonAngle = (angle + 180) % 360;
 		moon.x = centerX + sunPathWidth * p5.cos(p5.radians(moonAngle));
 		moon.y = centerY + sunPathHeight * p5.sin(p5.radians(moonAngle));

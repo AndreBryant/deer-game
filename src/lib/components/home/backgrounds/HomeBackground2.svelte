@@ -1,10 +1,12 @@
 <script lang="ts">
+	// THIS IS THE BACKGROUND THAT IMPLEMENTS THE 10PRINT ALGORITHM
 	import P5 from '$lib/components/P5.svelte';
-	import { palette, getRandomColor } from '$lib/utils/palette';
+	import { palette } from '$lib/utils/palette';
 
-	let dim = 70;
+	let dim: number = 70;
 	let row: number, col: number;
-	let lines: { line: number[][]; currentColor: any; targetColor: any }[] = [];
+	let lines: LineP5BG[] = [];
+
 	const colors = [
 		palette.primary.darkBrown,
 		palette.primary.brown,
@@ -23,6 +25,7 @@
 	function draw(p5: any) {
 		p5.clear();
 		p5.background(30);
+
 		for (const [index, line] of lines.entries()) {
 			let currentColor = p5.color(line.currentColor);
 			let targetColor = p5.color(line.targetColor);
