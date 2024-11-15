@@ -33,6 +33,7 @@ export class Player {
 	score: number;
 	isPoweredUp: boolean;
 	powerUpTime: number | null;
+	dangerZoneDamageCooldown: number | null;
 
 	constructor(
 		id: string,
@@ -62,6 +63,7 @@ export class Player {
 		this.invincible = false;
 		this.invincibilityEndTime = null;
 		this.respawnTime = null;
+		this.dangerZoneDamageCooldown = null;
 		this.powerUpTime = null;
 
 		// player states
@@ -110,6 +112,9 @@ export class Player {
 				// Remove Invincibility
 				this.invincible = false;
 				this.invincibilityEndTime = null;
+			}
+			if (this.dangerZoneDamageCooldown && this.dangerZoneDamageCooldown <= new Date().getTime()) {
+				this.dangerZoneDamageCooldown = null;
 			}
 		}
 	}

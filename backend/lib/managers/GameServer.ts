@@ -75,24 +75,22 @@ export class GameServer {
 	}
 
 	private handleStartGame(socket: Socket, data: { gameID: string }) {
-		if (this.roomManager.getRoom(data.gameID)!.players < 2) {
-			this.io.to(data.gameID).emit('game_started', { gameStarted: false });
-			this.io
-				.to(data.gameID)
-				.emit('toast_notification', { message: 'Must have at least 2 players to start game...' });
-			return;
-		} else {
-			this.roomManager.startGame(data.gameID, this.io);
-			this.playerManager.randomizePlayersPositions(
-				this.roomManager.getSafeZoneBoundary(data.gameID)
-			);
-			this.io.emit('rooms_updated', this.roomManager.getRooms());
-			this.io.to(data.gameID).emit('game_started', {
-				gameStarted: true,
-				gameStartTime: this.roomManager.getRoom(data.gameID)!.gameStartTime,
-				gameDuration: this.roomManager.getGameDuration()
-			});
-		}
+		// if (this.roomManager.getRoom(data.gameID)!.players < 2) {
+		// 	this.io.to(data.gameID).emit('game_started', { gameStarted: false });
+		// 	this.io
+		// 		.to(data.gameID)
+		// 		.emit('toast_notification', { message: 'Must have at least 2 players to start game...' });
+		// 	return;
+		// } else {
+		this.roomManager.startGame(data.gameID, this.io);
+		this.playerManager.randomizePlayersPositions(this.roomManager.getSafeZoneBoundary(data.gameID));
+		this.io.emit('rooms_updated', this.roomManager.getRooms());
+		this.io.to(data.gameID).emit('game_started', {
+			gameStarted: true,
+			gameStartTime: this.roomManager.getRoom(data.gameID)!.gameStartTime,
+			gameDuration: this.roomManager.getGameDuration()
+		});
+		// }
 	}
 
 	private handleKeyInput(

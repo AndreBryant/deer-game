@@ -67,10 +67,11 @@ export function drawPlayer(p5: any, spriteSheet: any, x: number, y: number, play
 	const actionData = DEER_SPRITE_ANIMATION_DATA[action];
 	const slownessFactor = actionData.slowness_factor;
 	const frame = p5.floor(p5.frameCount / slownessFactor) % actionData.positions.length;
-	const invisible = player.invincible ? p5.frameCount % 20 < 10 : false;
-	if (!invisible) {
+	const blinking =
+		player.dangerZoneDamageCooldown || player.invincible ? p5.frameCount % 20 < 10 : false;
+	if (!blinking) {
 		p5.push();
-		if (player.invincible) {
+		if (player.invincible || player.dangerZoneDamageCooldown) {
 			p5.tint(255, 150, 150, 180);
 		}
 		p5.translate(x, y);

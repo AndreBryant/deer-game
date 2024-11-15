@@ -28,7 +28,12 @@ export class PlayerManager {
 			p.update(safeZoneBoundary);
 			this.handleMovement(player);
 			this.handleActions(io, player, gameStarted, roomID);
-			if (!p.isDead && !p.invincible && !this.isInSafeZone(p.x!, p.y!, safeZoneBoundary)) {
+			if (
+				!p.isDead &&
+				!p.invincible &&
+				!this.isInSafeZone(p.x!, p.y!, safeZoneBoundary) &&
+				p.dangerZoneDamageCooldown === null
+			) {
 				const health = p.takeDamage(1, gameStarted);
 				if (health <= 0) {
 					p.die();
@@ -36,9 +41,9 @@ export class PlayerManager {
 						message: p.name + ' stayed too long outside the safe zone.'
 					});
 				}
-
-				p.invincible = true;
-				p.invincibilityEndTime = Date.now() + 1000;
+				p.dangerZoneDamageCooldown = Date.now() + 2000;
+				// p.invincible = true;
+				// p.invincibilityEndTime = Date.now() + 1000;
 			}
 		}
 	}
@@ -53,7 +58,7 @@ export class PlayerManager {
 			x: xRemaining / 2,
 			y: yRemaining / 2
 		};
-		return px > x && py > y && px < x + safeZone && py < y + safeZone;
+		return px > x && py > y - 32 && px < x + safeZone && py < y + safeZone - 32;
 	}
 
 	randomizePlayersPositions(safeZoneBoundary: number) {
