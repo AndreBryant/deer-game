@@ -1,112 +1,86 @@
 <script lang="ts">
 	export let data: any;
+
 	import { goto } from '$app/navigation';
 	import { io, Socket } from 'socket.io-client';
 	import { onMount } from 'svelte';
 	import GameCanvas from '$lib/components/game/GameCanvas.svelte';
-	import { Square, Activity, Heart, Sword, Trophy, ChevronLeft } from 'lucide-svelte';
+	import GameKeyBinds from '$lib/components/game/GameKeyBinds.svelte';
+	import GameDetails from '$lib/components/game/GameDetails.svelte';
+	import GamePlayerStats from '$lib/components/game/GamePlayerStats.svelte';
+	import GameTimer from '$lib/components/game/GameTimer.svelte';
+	import GameStartButton from '$lib/components/game/GameStartButton.svelte';
+	import BackToHomeButton from '$lib/components/game/BackToHomeButton.svelte';
+	import { gameData, gameState, connectionState, keyStates } from '$lib/stores/socketStore';
 
 	let serverData: any = {};
-	let numOfPlayers: number = 1;
-	let mapData:
-		| { mapData: string; height: number; width: number; tileSize: number; safeZoneBoundary: number }
-		| undefined = undefined;
-	let safeZoneBoundary: number = 160;
-	let connectionState: { socketId: string | undefined; isConnected: boolean } = {
-		socketId: undefined,
-		isConnected: false
-	};
 
-	let keyStates: { [key: string]: boolean } = {
-		up: false,
-		down: false,
-		left: false,
-		right: false,
-		attack: false
-	};
-
+	// Socket Connection Stuff
 	let ws: Socket | undefined;
 
-	let gameLoaded = false;
-	let gameOngoing = false;
-	let gameFinished = false;
-	let gameStartTime: number = 0;
-	let gameDuration: number = 0;
-	let timeLeftString: string = '';
-	let timestamp: number = 0;
+	// Keybinds and Player Key States
+	const keyMapping: Record<string, string> = {
+		W: 'up',
+		S: 'down',
+		A: 'left',
+		D: 'right',
+		' ': 'attack'
+	};
 
-	function emitKeyInput() {
+	// Game Start Trigger Button
+	let startGameButton: HTMLButtonElement;
+	const startGame = () => {
+		if (!ws) return;
+		if (data.host) {
+			ws.emit('start_game', { gameID: data.gameID });
+			$gameState.gameOngoing = true;
+		}
+
+		startGameButton.blur();
+	};
+
+	function emitKeyInput(ws: Socket) {
 		if (!ws) return;
 		ws.emit('player_key_input', {
-			socketId: connectionState.socketId,
+			socketId: $connectionState.socketId,
 			gameID: data.gameID,
-			keyStates
+			keyStates: $keyStates
 		});
 	}
 
-	// TODO: use a better solution
 	function updateKeyCodes(key: string, value: boolean) {
-		let changed = false;
-		if ((key === 'w' || key === 'W') && keyStates.up !== value) {
-			keyStates.up = value;
-			changed = true;
-		} else if ((key === 's' || key === 'S') && keyStates.down !== value) {
-			changed = true;
-			keyStates.down = value;
-		} else if ((key === 'a' || key === 'A') && keyStates.left !== value) {
-			changed = true;
-			keyStates.left = value;
-		} else if ((key === 'd' || key === 'D') && keyStates.right !== value) {
-			changed = true;
-			keyStates.right = value;
-		} else if (key === ' ' && keyStates.attack !== value) {
-			changed = true;
-			keyStates.attack = value;
+		const stateKey = keyMapping[key.toUpperCase()];
+		if (stateKey && $keyStates[stateKey] !== value) {
+			$keyStates[stateKey] = value;
+			return true;
 		}
-		return changed;
+		return false;
 	}
 
 	function handleKeydown(ws: Socket, e: KeyboardEvent) {
 		const changed = updateKeyCodes(e.key, true);
 		if (changed) {
-			emitKeyInput();
+			emitKeyInput(ws);
 		}
 	}
 
 	function handleKeyup(ws: Socket, e: KeyboardEvent) {
 		const changed = updateKeyCodes(e.key, false);
-		if (changed) emitKeyInput();
-	}
-
-	function displayFormatTime(startTime: number, duration: number, now: number) {
-		const elapsed = now - startTime;
-		const remaining = duration - elapsed;
-		const minutes = Math.floor(remaining / 60000);
-		const seconds = Math.floor((remaining % 60000) / 1000);
-		return `${minutes}:${seconds < 10 ? `0${seconds}` : seconds}`;
+		if (changed) emitKeyInput(ws);
 	}
 
 	function toast(message: string) {
 		console.log('Game: ', message);
 	}
 
-	let startGameButton: HTMLButtonElement;
-	const startGame = () => {
-		if (!ws) return;
-		if (data.host) {
-			ws.emit('start_game', { gameID: data.gameID });
-			gameOngoing = true;
-		}
-
-		startGameButton.blur();
-	};
-
 	onMount(() => {
-		ws = io(import.meta.env.MODE === 'development' ? '' : import.meta.env.VITE_SERVER_URL);
+		const dev = import.meta.env.MODE === 'development';
+		const url = dev ? '' : import.meta.env.VITE_SERVER_URL;
+		ws = io(url);
 
 		ws.on('connect', () => {
-			connectionState.socketId = ws!.id;
-			connectionState.isConnected = true;
+			$connectionState.socketId = ws!.id;
+			$connectionState.isConnected = true;
 		});
 
 		if (data.host) {
@@ -126,7 +100,7 @@
 		});
 
 		ws.on('specific_room_updated', (dataFromServer) => {
-			numOfPlayers = dataFromServer.players;
+			$gameData.numOfPlayers = dataFromServer.players;
 		});
 
 		ws.on('player_updated', (dataFromServer) => {
@@ -134,11 +108,11 @@
 		});
 
 		ws.on('map_generated', (dataFromServer) => {
-			mapData = dataFromServer;
+			$gameData.mapData = dataFromServer;
 		});
 
 		ws.on('safe_zone_updated', (data) => {
-			safeZoneBoundary = data.safeZoneBoundary;
+			$gameData.safeZoneBoundary = data.safeZoneBoundary;
 		});
 
 		ws.on('kicked_from_room', (kicked) => {
@@ -148,14 +122,14 @@
 		});
 
 		ws.on('game_started', (dataFromServer) => {
-			gameOngoing = dataFromServer.gameStarted;
-			gameStartTime = dataFromServer.gameStartTime;
-			gameDuration = dataFromServer.gameDuration;
+			$gameState.gameOngoing = dataFromServer.gameStarted;
+			$gameState.gameStartTime = dataFromServer.gameStartTime;
+			$gameState.gameDuration = dataFromServer.gameDuration;
 		});
 
 		ws.on('game_ended', (dataFromServer) => {
-			gameOngoing = dataFromServer.gameStarted;
-			gameFinished = dataFromServer.gameFinished;
+			$gameState.gameOngoing = dataFromServer.gameStarted;
+			$gameState.gameFinished = dataFromServer.gameFinished;
 		});
 
 		ws.on('toast_notification', (dataFromServer) => {
@@ -172,166 +146,58 @@
 		};
 	});
 
-	$: serverData,
-		connectionState,
-		mapData,
-		safeZoneBoundary,
-		numOfPlayers,
-		gameStartTime,
-		gameDuration;
-
-	$: if (gameOngoing && !gameFinished) {
-		timeLeftString = displayFormatTime(gameStartTime, gameDuration, timestamp);
-	}
-
-	$: timestamp = serverData.timestamp;
+	$: serverData;
+	$: $gameState.timestamp = serverData.timestamp;
 
 	$: clientPlayer =
-		serverData.players && connectionState.isConnected && connectionState.socketId
-			? serverData.players[connectionState.socketId]
+		serverData.players && $connectionState.isConnected && $connectionState.socketId
+			? serverData.players[$connectionState.socketId]
 			: undefined;
 </script>
 
-<!-- TODO: THE CODE LOOKS UGLY I NEED TO REFACTOR THIS 😭😭😭 -->
-<!-- {JSON.stringify(serverData, null, 2)} -->
-<!-- {#if mapData}
-	{JSON.stringify(mapData, null, 2)}
-{/if} -->
-<!-- {JSON.stringify(connectionState, null, 2)} -->
-<!-- {safeZoneBoundary} -->
 <main class="relative h-screen w-screen select-none overflow-hidden text-white">
 	<div class="w-scree h-screenn absolute left-0 top-0 -z-10">
-		{#if mapData && connectionState.isConnected && connectionState.socketId}
-			<GameCanvas {safeZoneBoundary} {serverData} {mapData} socketId={connectionState.socketId} />
+		{#if $gameData.mapData && $connectionState.isConnected && $connectionState.socketId}
+			<GameCanvas
+				safeZoneBoundary={$gameData.safeZoneBoundary}
+				socketId={$connectionState.socketId}
+				mapData={$gameData.mapData}
+				{serverData}
+			/>
 		{:else}
 			<p>Connecting...</p>
 		{/if}
 	</div>
 
 	<section>
-		<div class="group absolute flex h-full w-16 items-center transition-all">
-			<a href="/" class="group gap-2 opacity-0 group-hover:opacity-100">
-				<p class=" flex items-center gap-2">
-					<ChevronLeft />
-					<span class="transition-opac opacity-0 group-hover:opacity-100"> back to home </span>
-				</p>
-			</a>
-		</div>
-		<div class="flex flex-col gap-1 text-sm">
-			{#if data.host}
-				<div>
-					<h1 class="text-2xl">Host</h1>
-				</div>
-			{/if}
-			<div class="flex flex-col gap-1">
-				<div>
-					<p>Game ID: {data.gameID}</p>
-				</div>
-				<div class="w-80">
-					<p class="truncate">Username: {data.username}</p>
-				</div>
-				<div class="flex gap-2">
-					<p>
-						Players:
-						{numOfPlayers}
-					</p>
-				</div>
-			</div>
-		</div>
+		<BackToHomeButton />
+		<GameDetails
+			host={data.host}
+			gameID={data.gameID}
+			username={data.username}
+			numOfPlayers={$gameData.numOfPlayers}
+		/>
 		{#if clientPlayer}
-			<div class="absolute bottom-0 left-0 mb-2 flex flex-col gap-2 text-sm opacity-65">
-				<div class="flex gap-1">
-					<div class="flex flex-col">
-						<div class="flex justify-center">
-							<div class="relative" class:opacity-65={keyStates.up}>
-								<Square size="30" />
-								<span class="absolute left-[10px] top-[3px]">W</span>
-							</div>
-						</div>
-						<div class="flex">
-							<div class="relative" class:opacity-65={keyStates.left}>
-								<Square size="30" />
-								<span class="absolute left-[10px] top-[3px]">A</span>
-							</div>
-							<div class="relative" class:opacity-65={keyStates.down}>
-								<Square size="30" />
-								<span class="absolute left-[10px] top-[3px]">S</span>
-							</div>
-							<div class="relative" class:opacity-65={keyStates.right}>
-								<Square size="30" />
-								<span class="absolute left-[10px] top-[3px]">D</span>
-							</div>
-						</div>
-					</div>
-					<div class="flex items-end">
-						<p>- move</p>
-					</div>
-				</div>
-				<div class="flex gap-1">
-					<div class="flex justify-center">
-						<div class="" class:opacity-65={keyStates.attack}>
-							<span class="rounded-md border-4 px-6 py-1 text-xs">Space</span>
-						</div>
-					</div>
-					<div>
-						<p>- attack</p>
-					</div>
-				</div>
-			</div>
+			<GameKeyBinds keyStates={$keyStates} />
+			<GamePlayerStats
+				gameOngoing={$gameState.gameOngoing}
+				attack={clientPlayer.attack}
+				score={clientPlayer.score}
+				health={clientPlayer.health}
+				action={clientPlayer.action}
+				x={clientPlayer.x}
+				y={clientPlayer.y}
+			/>
 		{/if}
-		{#if clientPlayer}
-			<div class="absolute bottom-0 flex w-full flex-col items-center gap-2">
-				<div class="flex gap-4">
-					<div class="flex gap-2 text-lg">
-						<Heart />
-
-						{#if gameOngoing}
-							{clientPlayer.health}
-						{:else}
-							&infin;
-						{/if}
-					</div>
-					<div class="flex gap-2 text-lg">
-						<Sword />
-						{gameOngoing ? clientPlayer.attack : 0}
-					</div>
-					<div class="flex gap-2 text-lg">
-						<Trophy />
-						{clientPlayer.score}
-					</div>
-				</div>
-				<div class="flex gap-4">
-					<div>
-						<p>x: {Math.floor(clientPlayer.x / 32) - 2}</p>
-					</div>
-					<div>
-						<p>y: {Math.floor(clientPlayer.y / 32)}</p>
-					</div>
-				</div>
-				<div class="flex gap-2">
-					<Activity />
-					{clientPlayer.action.replace('_', ' ').replace('grass', 'glass')}
-				</div>
-			</div>
+		{#if clientPlayer && $gameState.gameOngoing && !$gameState.gameFinished}
+			<GameTimer
+				gameStartTime={$gameState.gameStartTime}
+				gameDuration={$gameState.gameDuration}
+				timestamp={$gameState.timestamp}
+			/>
 		{/if}
-		{#if clientPlayer && gameOngoing && !gameFinished}
-			<div class="absolute top-2 flex w-full justify-center text-2xl text-red-500">
-				<p>{timeLeftString}</p>
-			</div>
-		{/if}
-		{#if !gameFinished && !gameOngoing && !gameLoaded && data.host}
-			<div class="absolute bottom-28 flex w-full flex-col items-center gap-4">
-				<div>
-					<button
-						class="group animate-pulse rounded-lg border-2 px-4 py-2 backdrop-blur-lg transition-all hover:animate-none hover:text-xl"
-						on:click={startGame}
-						bind:this={startGameButton}
-					>
-						<span class="inline group-hover:hidden">Start Game</span>
-						<span class="hidden group-hover:inline">Start Game?</span>
-					</button>
-				</div>
-			</div>
+		{#if !$gameState.gameFinished && !$gameState.gameOngoing && !$gameState.gameLoaded && data.host}
+			<GameStartButton {startGame} {startGameButton} />
 		{/if}
 	</section>
 </main>
