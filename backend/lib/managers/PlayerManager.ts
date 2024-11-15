@@ -1,6 +1,6 @@
 import { Server } from 'socket.io';
 import { Player } from '../Player.js';
-import { MAP_HEIGHT as mh, MAP_WIDTH as mw, TILESIZE as tsize } from '../map.js';
+import { MAP_HEIGHT as mh, MAP_WIDTH as mw, TILESIZE as tsize } from '../Map.js';
 
 export class PlayerManager {
 	private players: { [key: string]: Player } = {};
@@ -42,23 +42,8 @@ export class PlayerManager {
 					});
 				}
 				p.dangerZoneDamageCooldown = Date.now() + 2000;
-				// p.invincible = true;
-				// p.invincibilityEndTime = Date.now() + 1000;
 			}
 		}
-	}
-
-	private isInSafeZone(px: number, py: number, safeZoneBoundary: number) {
-		const mapWidth = mw * tsize;
-		const mapHeight = mh * tsize;
-		const safeZone = safeZoneBoundary * tsize;
-		const xRemaining = mapWidth - safeZone;
-		const yRemaining = mapHeight - safeZone;
-		const { x, y } = {
-			x: xRemaining / 2,
-			y: yRemaining / 2
-		};
-		return px > x && py > y - 32 && px < x + safeZone && py < y + safeZone - 32;
 	}
 
 	randomizePlayersPositions(safeZoneBoundary: number) {
@@ -167,10 +152,17 @@ export class PlayerManager {
 		}
 	}
 
-	private broadcastToastNotification(io: Server, gameID: string, message: string) {
-		io.to(gameID).emit('toast_notification', {
-			message
-		});
+	private isInSafeZone(px: number, py: number, safeZoneBoundary: number) {
+		const mapWidth = mw * tsize;
+		const mapHeight = mh * tsize;
+		const safeZone = safeZoneBoundary * tsize;
+		const xRemaining = mapWidth - safeZone;
+		const yRemaining = mapHeight - safeZone;
+		const { x, y } = {
+			x: xRemaining / 2,
+			y: yRemaining / 2
+		};
+		return px > x && py > y - 32 && px < x + safeZone && py < y + safeZone - 32;
 	}
 }
 

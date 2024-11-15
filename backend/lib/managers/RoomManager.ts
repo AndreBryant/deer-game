@@ -1,5 +1,5 @@
 import { Server } from 'socket.io';
-import { Map } from '../map.js';
+import { Map } from '../Map.js';
 
 interface Room {
 	players: number;
@@ -71,24 +71,6 @@ export class RoomManager {
 		}
 	}
 
-	private startInterval(gameID: string, io: Server) {
-		this.intervals[gameID] = setInterval(() => {
-			const safeZoneBoundary = this.decreaseSafeZone(gameID);
-			if (safeZoneBoundary <= this.minMapSize) {
-				this.stopInterval(this.intervals[gameID]);
-			}
-
-			if (io) {
-				io.to(gameID).emit('safe_zone_updated', { safeZoneBoundary });
-				io.to(gameID).emit('toast_notification', { message: 'Safe Zone Boundary Decreased!' });
-			}
-		}, this.safeZoneDecreaseTime);
-	}
-
-	private stopInterval(interval: NodeJS.Timeout) {
-		clearInterval(interval);
-	}
-
 	isGameStarted(gameID: string): boolean {
 		return this.rooms[gameID].isGameStarted;
 	}
@@ -132,5 +114,23 @@ export class RoomManager {
 
 	getGameDuration() {
 		return this.gameDuration;
+	}
+
+	private startInterval(gameID: string, io: Server) {
+		this.intervals[gameID] = setInterval(() => {
+			const safeZoneBoundary = this.decreaseSafeZone(gameID);
+			if (safeZoneBoundary <= this.minMapSize) {
+				this.stopInterval(this.intervals[gameID]);
+			}
+
+			if (io) {
+				io.to(gameID).emit('safe_zone_updated', { safeZoneBoundary });
+				io.to(gameID).emit('toast_notification', { message: 'Safe Zone Boundary Decreased!' });
+			}
+		}, this.safeZoneDecreaseTime);
+	}
+
+	private stopInterval(interval: NodeJS.Timeout) {
+		clearInterval(interval);
 	}
 }

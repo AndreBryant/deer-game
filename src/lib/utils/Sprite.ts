@@ -1,6 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-export const FRAME_SIZE = 32;
-export const DEER_SPRITE_ANIMATION_DATA = {
+export const FRAME_SIZE: number = 32;
+export const DEER_SPRITE_ANIMATION_DATA: {
+	[key: string]: { slowness_factor: number; positions: { x: number; y: number }[] };
+} = {
 	idle: {
 		slowness_factor: 20,
 		// TopLeft Corners
@@ -62,13 +63,15 @@ export function drawPlayer(p5: any, spriteSheet: any, x: number, y: number, play
 	);
 
 	// Add this to player class
-	const isFacingLeft = player.isFacingLeft;
-	const action = player.action;
-	const actionData = DEER_SPRITE_ANIMATION_DATA[action];
-	const slownessFactor = actionData.slowness_factor;
-	const frame = p5.floor(p5.frameCount / slownessFactor) % actionData.positions.length;
-	const blinking =
+	const isFacingLeft: boolean = player.isFacingLeft;
+	const action: string = player.action;
+	const actionData: { slowness_factor: number; positions: { x: number; y: number }[] } =
+		DEER_SPRITE_ANIMATION_DATA[action];
+	const slownessFactor: number = actionData.slowness_factor;
+	const frame: number = p5.floor(p5.frameCount / slownessFactor) % actionData.positions.length;
+	const blinking: boolean =
 		player.dangerZoneDamageCooldown || player.invincible ? p5.frameCount % 20 < 10 : false;
+
 	if (!blinking) {
 		p5.push();
 		if (player.invincible || player.dangerZoneDamageCooldown) {

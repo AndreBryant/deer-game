@@ -3,7 +3,7 @@ import { PlayerManager } from './PlayerManager.js';
 import { RoomManager } from './RoomManager.js';
 import { Player, PLAYER_HIT_RADIUS } from '../Player.js';
 import { getRandomColor } from '../palette.js';
-import { MAP_HEIGHT, MAP_WIDTH, TILESIZE } from '../map.js';
+import { MAP_HEIGHT, MAP_WIDTH, TILESIZE } from '../Map.js';
 
 export class GameServer {
 	private io: Server;
@@ -26,6 +26,17 @@ export class GameServer {
 
 		// Start Game
 		socket.on('start_game', (data) => this.handleStartGame(socket, data));
+	}
+
+	broadcastAllUpdates() {
+		const rooms = this.roomManager.getRooms();
+		for (const room in rooms) {
+			this.broadcastPlayerUpdates(room);
+
+			if (this.roomManager.getRoom(room)!.isGameStarted) {
+				this.roomManager.updateRoom(room, this.io);
+			}
+		}
 	}
 
 	private handleCreateRoom(socket: Socket, data: { gameID: string; username: string }) {
@@ -75,22 +86,24 @@ export class GameServer {
 	}
 
 	private handleStartGame(socket: Socket, data: { gameID: string }) {
-		// if (this.roomManager.getRoom(data.gameID)!.players < 2) {
-		// 	this.io.to(data.gameID).emit('game_started', { gameStarted: false });
-		// 	this.io
-		// 		.to(data.gameID)
-		// 		.emit('toast_notification', { message: 'Must have at least 2 players to start game...' });
-		// 	return;
-		// } else {
-		this.roomManager.startGame(data.gameID, this.io);
-		this.playerManager.randomizePlayersPositions(this.roomManager.getSafeZoneBoundary(data.gameID));
-		this.io.emit('rooms_updated', this.roomManager.getRooms());
-		this.io.to(data.gameID).emit('game_started', {
-			gameStarted: true,
-			gameStartTime: this.roomManager.getRoom(data.gameID)!.gameStartTime,
-			gameDuration: this.roomManager.getGameDuration()
-		});
-		// }
+		if (this.roomManager.getRoom(data.gameID)!.players < 2) {
+			this.io.to(data.gameID).emit('game_started', { gameStarted: false });
+			this.io
+				.to(data.gameID)
+				.emit('toast_notification', { message: 'Must have at least 2 players to start game...' });
+			return;
+		} else {
+			this.roomManager.startGame(data.gameID, this.io);
+			this.playerManager.randomizePlayersPositions(
+				this.roomManager.getSafeZoneBoundary(data.gameID)
+			);
+			this.io.emit('rooms_updated', this.roomManager.getRooms());
+			this.io.to(data.gameID).emit('game_started', {
+				gameStarted: true,
+				gameStartTime: this.roomManager.getRoom(data.gameID)!.gameStartTime,
+				gameDuration: this.roomManager.getGameDuration()
+			});
+		}
 	}
 
 	private handleKeyInput(
@@ -118,17 +131,6 @@ export class GameServer {
 		);
 		const playersInRoom = this.playerManager.getPlayersInRoom(gameID);
 		this.io.to(gameID).emit('player_updated', { players: playersInRoom, timestamp: Date.now() });
-	}
-
-	broadcastAllUpdates() {
-		const rooms = this.roomManager.getRooms();
-		for (const room in rooms) {
-			this.broadcastPlayerUpdates(room);
-
-			if (this.roomManager.getRoom(room)!.isGameStarted) {
-				this.roomManager.updateRoom(room, this.io);
-			}
-		}
 	}
 
 	private joinRoom(socket: Socket, gameID: string, isHost = false, username?: string) {
