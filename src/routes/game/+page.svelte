@@ -58,6 +58,8 @@
 				socketId={$connectionState.socketId}
 				mapData={$gameData.mapData}
 				serverData={$serverData}
+				gameOngoing={$gameState.gameOngoing}
+				timestamp={$gameState.timestamp}
 			/>
 		{:else}
 			<p>Connecting...</p>

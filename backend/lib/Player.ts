@@ -65,10 +65,10 @@ export class Player {
 		this.invincibilityEndTime = null;
 		this.respawnTime = null;
 		this.dangerZoneDamageCooldown = null;
-		this.powerUpTime = null;
 
 		// player states
 		this.isPoweredUp = false;
+		this.powerUpTime = null;
 		this.isFacingLeft = false;
 		this.isDead = false;
 

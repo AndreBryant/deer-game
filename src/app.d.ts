@@ -11,7 +11,7 @@ declare global {
 
 	// Home/+page.svelte
 	type ClientSideRoom = { players: number; isGameStarted: boolean };
-	type ClientSideRooms = { [key: string]: room };
+	type ClientSideRooms = Record<string, room>;
 
 	// Home Background Object Types
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -23,31 +23,30 @@ declare global {
 	type KeyStates = Record<string, boolean>;
 	type ConnectionState = { socketId: string | undefined; isConnected: boolean; kickedOut: boolean };
 	type ClientSideMapData = {
+		safeZoneBoundary: number;
+		tileSize: number;
 		mapData: string;
 		height: number;
 		width: number;
-		tileSize: number;
-		safeZoneBoundary: number;
 	};
-
-	// Client Side Game Data
 	type GameData = {
 		numOfPlayers: number;
 		mapData: ClientSideMapData | undefined;
 		safeZoneBoundary: number;
 	};
-
-	// Client Side Game State
 	type GameState = {
+		timestamp: number;
 		gameLoaded: boolean;
 		gameOngoing: boolean;
-		gameFinished: boolean;
 		gameStartTime: number;
+		gameFinished: boolean;
 		gameDuration: number;
-		timestamp: number;
 	};
-
 	type RandomPlayerOffsets = Record<string, number>;
+
+	// Types used in GameCanvas
+	type Star = { x: number; y: number; z: number };
+	type Tree = { x: number; y: number; z: number; angle: number };
 }
 
 export {};
