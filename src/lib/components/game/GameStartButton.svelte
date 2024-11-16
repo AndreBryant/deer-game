@@ -1,6 +1,22 @@
 <script lang="ts">
-	export let startGame: () => void;
-	export let startGameButton: HTMLButtonElement;
+	import { Socket } from 'socket.io-client';
+	import { gameState } from '$lib/stores/socketStore';
+	export let ws: Socket | undefined = undefined;
+	export let host: boolean;
+	export let gameID: string;
+
+	let startGameButton: HTMLButtonElement;
+	const startGame = () => {
+		if (!ws) return;
+		if (host) {
+			ws.emit('start_game', { gameID });
+			$gameState.gameOngoing = true;
+		}
+
+		startGameButton.blur();
+	};
+
+	$: ws;
 </script>
 
 <div class="absolute bottom-28 flex w-full flex-col items-center gap-4">

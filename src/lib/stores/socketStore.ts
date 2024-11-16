@@ -1,14 +1,13 @@
-import { writable } from 'svelte/store';
+import { writable, get } from 'svelte/store';
 import { io, Socket } from 'socket.io-client';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const serverData = writable<any>({});
 
-export const ws = writable<Socket | undefined>(undefined);
-
 export const connectionState = writable<ConnectionState>({
 	socketId: undefined,
-	isConnected: false
+	isConnected: false,
+	kickedOut: false
 });
 
 export const gameData = writable<GameData>({
@@ -36,10 +35,8 @@ export const keyStates = writable<KeyStates>({
 export const initSocket = (url: string, gameID: string, username: string, host: boolean) => {
 	const socket: Socket = io(url);
 
-	ws.set(socket);
-
 	socket.on('connect', () => {
-		connectionState.set({ socketId: socket.id, isConnected: true });
+		connectionState.set({ socketId: socket.id, isConnected: true, kickedOut: false });
 	});
 
 	socket.on('player_connected', (data) => {
@@ -48,6 +45,39 @@ export const initSocket = (url: string, gameID: string, username: string, host: 
 
 	socket.on('player_updated', (data) => {
 		serverData.set(data);
+	});
+
+	socket.on('specific_room_updated', (data) => {
+		gameData.set({ ...get(gameData), numOfPlayers: data.players });
+	});
+
+	socket.on('map_generated', (data) => {
+		gameData.set({ ...get(gameData), mapData: data });
+	});
+
+	socket.on('safe_zone_updated', (data) => {
+		gameData.set({ ...get(gameData), safeZoneBoundary: data.safeZoneBoundary });
+	});
+
+	socket.on('kicked_from_room', (kicked) => {
+		connectionState.set({ ...get(connectionState), kickedOut: kicked });
+	});
+
+	socket.on('game_started', (data) => {
+		gameState.set({
+			...get(gameState),
+			gameOngoing: data.gameStarted,
+			gameStartTime: data.gameStartTime,
+			gameDuration: data.gameDuration
+		});
+	});
+
+	socket.on('game_ended', (data) => {
+		gameState.set({
+			...get(gameState),
+			gameFinished: data.gameFinished,
+			gameOngoing: data.gameStarted
+		});
 	});
 
 	socket.on('toast_notification', (data) => {

@@ -1,9 +1,7 @@
 <script lang="ts">
 	export let serverData: any;
 	export let socketId: string;
-	export let mapData:
-		| { mapData: string; height: number; width: number; tileSize: number }
-		| undefined;
+	export let mapData: ClientSideMapData | undefined;
 	export let safeZoneBoundary: number;
 	import P5 from '../P5.svelte';
 	import mDeer from '$lib/sprites/mDeer.png';
@@ -21,6 +19,7 @@
 	} from '$lib/utils/render';
 
 	$: serverData;
+	$: mapData;
 	$: sortedPlayers = serverData.players
 		? Object.values(serverData.players).sort((a: any, b: any) => a.y - b.y)
 		: [];
@@ -51,19 +50,29 @@
 	}
 
 	function setup(p5: any) {
+		console.log('setup1');
 		p5.createCanvas(p5.windowWidth, p5.windowHeight);
+		console.log('setup2');
 		p5.frameRate(fps);
+		console.log('setup3');
 		p5.noSmooth();
-
+		console.log('setup4');
+		console.log(mapData);
 		mapImage = setupMap(p5, mapData);
+		console.log('setup5');
 		bgImage = setupBGGradientGraphics(p5);
+		console.log('setup6');
 
 		let { stars, trees } = setupGalaxy(p5, starCount, treeCount);
+		console.log('setup7');
 		starSet = stars;
+		console.log('setup8');
 		treeSet = trees;
+		console.log('setup9');
 	}
 
 	function draw(p5: any) {
+		console.log('draw');
 		fpsDisplay = p5.frameRate();
 		p5.background(0);
 		p5.background(bgImage);

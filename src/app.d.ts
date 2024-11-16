@@ -21,7 +21,7 @@ declare global {
 
 	// Game/+page.svelte
 	type KeyStates = Record<string, boolean>;
-	type ConnectionState = { socketId: string | undefined; isConnected: boolean };
+	type ConnectionState = { socketId: string | undefined; isConnected: boolean; kickedOut: boolean };
 	type ClientSideMapData = {
 		mapData: string;
 		height: number;
