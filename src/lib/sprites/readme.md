@@ -8,7 +8,7 @@ This project includes assets and resources from Calciumtrice. We gratefully ackn
   - License: Creative Commons Attribution 3.0 (CC BY 3.0)  
   - Creator: [Calciumtrice](https://opengameart.org/users/calciumtrice)
 
-  The sprite was modified/adapted for this project (if applicable).
+  The sprite was modified/adapted for this project.
 
 ---
 
