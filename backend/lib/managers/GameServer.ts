@@ -45,7 +45,10 @@ export class GameServer {
 	}
 
 	private handleJoinRoom(socket: Socket, data: { username?: string; gameID: string }) {
-		if (!this.roomManager.roomExists(data.gameID)) {
+		if (
+			!this.roomManager.roomExists(data.gameID) ||
+			this.roomManager.getRoom(data.gameID)?.isGameStarted
+		) {
 			socket.emit('kicked_from_room', true);
 			return;
 		}

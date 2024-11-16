@@ -89,6 +89,9 @@
 				x={clientPlayer.x}
 				y={clientPlayer.y}
 			/>
+			{#if data.host && !$gameState.gameFinished && !$gameState.gameOngoing && !$gameState.gameLoaded}
+				<GameStartButton {ws} host={data.host} gameID={data.gameID} />
+			{/if}
 		{/if}
 		{#if clientPlayer && $gameState.gameOngoing && !$gameState.gameFinished}
 			<GameTimer
@@ -96,9 +99,6 @@
 				gameDuration={$gameState.gameDuration}
 				timestamp={$gameState.timestamp}
 			/>
-		{/if}
-		{#if !$gameState.gameFinished && !$gameState.gameOngoing && !$gameState.gameLoaded && data.host}
-			<GameStartButton {ws} host={data.host} gameID={data.gameID} />
 		{/if}
 	</section>
 </main>

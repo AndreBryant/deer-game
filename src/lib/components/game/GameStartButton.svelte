@@ -10,7 +10,7 @@
 		if (!ws) return;
 		if (host) {
 			ws.emit('start_game', { gameID });
-			$gameState.gameOngoing = true;
+			// $gameState.gameOngoing = true;
 		}
 
 		startGameButton.blur();

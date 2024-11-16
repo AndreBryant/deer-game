@@ -94,7 +94,7 @@ export const initSocket = (url: string, gameID: string, username: string, host: 
 	});
 
 	socket.on('toast_notification', (data) => {
-		console.log('Game:', data);
+		console.log('Game:', data.message);
 	});
 
 	if (host) socket.emit('create_room', { gameID, username });
