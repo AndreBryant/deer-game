@@ -82,6 +82,10 @@
 				score={clientPlayer.score}
 				health={clientPlayer.health}
 				action={clientPlayer.action}
+				takingDamage={!clientPlayer.isDead &&
+					(clientPlayer.invincible || clientPlayer.dangerZoneDamageCooldown)}
+				attacking={clientPlayer.action === 'attack'}
+				isPoweredUp={clientPlayer.isPoweredUp}
 				x={clientPlayer.x}
 				y={clientPlayer.y}
 			/>
