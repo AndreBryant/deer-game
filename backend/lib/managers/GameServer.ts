@@ -38,6 +38,7 @@ export class GameServer {
 	private handleCreateRoom(socket: Socket, data: { gameID: string; username: string }) {
 		this.roomManager.createRoom(data.gameID);
 		this.joinRoom(socket, data.gameID, true, data.username);
+		this.io.to(data.gameID).emit('specific_room_updated', this.roomManager.getRoom(data.gameID));
 	}
 
 	private handleJoinRoom(socket: Socket, data: { username?: string; gameID: string }) {

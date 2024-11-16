@@ -50,6 +50,13 @@
 			: undefined;
 </script>
 
+<svelte:head>
+	<title>
+		{data.gameID} | {$gameData.numOfPlayers} player{$gameData.numOfPlayers === 1 ? '' : 's'}
+		{$gameState.gameOngoing ? '(started)' : ''}
+	</title>
+</svelte:head>
+
 <main class="relative h-screen w-screen select-none overflow-hidden text-white">
 	<div class="w-screem h-screenn absolute left-0 top-0 -z-10">
 		{#if $gameData.mapData && $connectionState.isConnected && $connectionState.socketId}
