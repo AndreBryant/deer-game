@@ -1,9 +1,9 @@
 # Credits
 
-This project includes assets and resources from various creators. We gratefully acknowledge their contributions:
+This project includes assets and resources from Calciumtrice. We gratefully acknowledge their contributions:
 
 ## Sprites
-- **Deer Sprite**  
+- **Deer Spritesheets**  
   - Source: [OpenGameArt.org](https://opengameart.org/content/deer)  
   - License: Creative Commons Attribution 3.0 (CC BY 3.0)  
   - Creator: [Calciumtrice](https://opengameart.org/users/calciumtrice)
