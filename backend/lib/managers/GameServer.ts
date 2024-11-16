@@ -165,6 +165,9 @@ export class GameServer {
 			tileSize: this.roomManager.getRoom(gameID)?.mapData.tileSize
 		});
 
+		const playersInRoom = this.playerManager.getPlayersInRoom(gameID);
+		const playerIDs = Object.keys(playersInRoom);
+		this.io.to(gameID).emit('player_joined', { playerIDs });
 		this.broadcastPlayerUpdates(gameID);
 	}
 }

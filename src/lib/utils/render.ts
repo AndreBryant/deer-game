@@ -114,7 +114,6 @@ export function setupBGGradientGraphics(p5: any) {
 }
 
 export function setupMap(p5: any, mapData: any) {
-	console.log('setupMap', mapData.height, mapData.width);
 	const graphics = p5.createGraphics(
 		mapData?.width * mapData.tileSize,
 		mapData?.height * mapData.tileSize

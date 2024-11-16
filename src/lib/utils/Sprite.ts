@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export const FRAME_SIZE: number = 32;
 export const DEER_SPRITE_ANIMATION_DATA: {
 	[key: string]: { slowness_factor: number; positions: { x: number; y: number }[] };
@@ -49,7 +50,14 @@ export const DEER_SPRITE_ANIMATION_DATA: {
 	}
 };
 
-export function drawPlayer(p5: any, spriteSheet: any, x: number, y: number, player: any) {
+export function drawPlayer(
+	p5: any,
+	spriteSheet: any,
+	x: number,
+	y: number,
+	player: any,
+	playerOffset: number
+) {
 	// Player username tag
 	p5.textFont('monospace');
 	p5.textSize(24);
@@ -68,7 +76,8 @@ export function drawPlayer(p5: any, spriteSheet: any, x: number, y: number, play
 	const actionData: { slowness_factor: number; positions: { x: number; y: number }[] } =
 		DEER_SPRITE_ANIMATION_DATA[action];
 	const slownessFactor: number = actionData.slowness_factor;
-	const frame: number = p5.floor(p5.frameCount / slownessFactor) % actionData.positions.length;
+	const frame: number =
+		p5.floor((p5.frameCount + playerOffset) / slownessFactor) % actionData.positions.length;
 	const blinking: boolean =
 		player.dangerZoneDamageCooldown || player.invincible ? p5.frameCount % 20 < 10 : false;
 

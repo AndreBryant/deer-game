@@ -46,6 +46,8 @@ declare global {
 		gameDuration: number;
 		timestamp: number;
 	};
+
+	type RandomPlayerOffsets = Record<string, number>;
 }
 
 export {};

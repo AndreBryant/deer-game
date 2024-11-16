@@ -32,6 +32,8 @@ export const keyStates = writable<KeyStates>({
 	right: false
 });
 
+export const randomPlayerOffsets = writable<RandomPlayerOffsets>({});
+
 export const initSocket = (url: string, gameID: string, username: string, host: boolean) => {
 	const socket: Socket = io(url);
 
@@ -41,6 +43,17 @@ export const initSocket = (url: string, gameID: string, username: string, host: 
 
 	socket.on('player_connected', (data) => {
 		serverData.set(data);
+	});
+
+	socket.on('player_joined', (data) => {
+		for (const player of data.playerIDs) {
+			if (!get(randomPlayerOffsets)[player]) {
+				randomPlayerOffsets.set({
+					...get(randomPlayerOffsets),
+					[player]: Math.floor(Math.random() * 100)
+				});
+			}
+		}
 	});
 
 	socket.on('player_updated', (data) => {

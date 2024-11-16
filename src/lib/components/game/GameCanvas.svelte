@@ -8,7 +8,7 @@
 	import mDeerRed from '$lib/sprites/mDeerRed.png';
 	import fDeer from '$lib/sprites/fDeer.png';
 	import fDeerRed from '$lib/sprites/fDeerRed.png';
-	import { drawPlayer } from '$lib/utils/Sprite';
+	import { drawPlayer } from '$lib/utils/sprite';
 	import {
 		drawMap,
 		translateCoords,
@@ -17,6 +17,7 @@
 		setupBGGradientGraphics,
 		drawGalaxy
 	} from '$lib/utils/render';
+	import { randomPlayerOffsets } from '$lib/stores/socketStore';
 
 	$: serverData;
 	$: mapData;
@@ -50,29 +51,18 @@
 	}
 
 	function setup(p5: any) {
-		console.log('setup1');
 		p5.createCanvas(p5.windowWidth, p5.windowHeight);
-		console.log('setup2');
 		p5.frameRate(fps);
-		console.log('setup3');
 		p5.noSmooth();
-		console.log('setup4');
-		console.log(mapData);
 		mapImage = setupMap(p5, mapData);
-		console.log('setup5');
 		bgImage = setupBGGradientGraphics(p5);
-		console.log('setup6');
 
 		let { stars, trees } = setupGalaxy(p5, starCount, treeCount);
-		console.log('setup7');
 		starSet = stars;
-		console.log('setup8');
 		treeSet = trees;
-		console.log('setup9');
 	}
 
 	function draw(p5: any) {
-		console.log('draw');
 		fpsDisplay = p5.frameRate();
 		p5.background(0);
 		p5.background(bgImage);
@@ -98,9 +88,15 @@
 					: p.sex === 'm'
 						? hornDeerSpriteSheet
 						: deerSpriteSheet;
-
 				if (p.id === socketId && !p.isDead) {
-					drawPlayer(p5, spriteSheet, p5.width / 2, p5.height / 2, p);
+					drawPlayer(
+						p5,
+						spriteSheet,
+						p5.width / 2,
+						p5.height / 2,
+						p,
+						$randomPlayerOffsets[socketId]
+					);
 					return;
 				}
 
@@ -117,7 +113,7 @@
 						x: p.x,
 						y: p.y
 					});
-					drawPlayer(p5, spriteSheet, pCoords.x, pCoords.y, p);
+					drawPlayer(p5, spriteSheet, pCoords.x, pCoords.y, p, $randomPlayerOffsets[p.id]);
 				} else {
 					drawPlayerArrow(p5, player, p);
 				}

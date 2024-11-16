@@ -26,5 +26,5 @@ io.on('connection', (socket) => {
 });
 
 setInterval(() => {
-	gameServer.broadcastAllPlayerUpdates();
+	gameServer.broadcastAllUpdates();
 }, 1000 / 60);
