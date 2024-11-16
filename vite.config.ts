@@ -3,8 +3,13 @@ import { defineConfig } from 'vite';
 import os from 'os';
 import { webSocketServer } from './backend/socket';
 
-function getLocalIPAddress() {
-	const interfaces = os.networkInterfaces();
+// I saw this on stack overflow
+// https://stackoverflow.com/a/67522718/25684936
+
+function getLocalIPAddress(): string {
+	// VSCode said that `typeof interfaces` === `NodeJS.Dict<os.NetworkInterfaceInfo[]>`.
+	// Pls remove if something goes wrong
+	const interfaces: NodeJS.Dict<os.NetworkInterfaceInfo[]> = os.networkInterfaces();
 	for (const name of Object.keys(interfaces)) {
 		if (interfaces[name]) {
 			for (const iface of interfaces[name]) {
@@ -17,9 +22,9 @@ function getLocalIPAddress() {
 	return 'localhost';
 }
 
-const machineIP = getLocalIPAddress();
-const port = process.env.PORT || 3000;
-const serverUrl = `ws://${machineIP}:${port}`;
+const machineIP: string = getLocalIPAddress();
+const port: string = process.env.PORT || '3000';
+const serverUrl: string = `ws://${machineIP}:${port}`;
 
 export default defineConfig({
 	plugins: [sveltekit(), webSocketServer],
