@@ -3,6 +3,7 @@
 	import Button from '$lib/components/ui/Button.svelte';
 	import { onMount } from 'svelte';
 	import { ChevronLeft } from 'lucide-svelte';
+	import { serverData } from '$lib/stores/socketStore';
 
 	export let data: { gameID: string | null };
 	onMount(() => {
@@ -25,3 +26,6 @@
 <div>
 	<Button text="Back" variant="link" iconLeft={ChevronLeft} onclick={() => goto('/')} />
 </div>
+<pre>
+{JSON.stringify($serverData, null, 2)}
+</pre>

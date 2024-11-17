@@ -14,7 +14,7 @@ export class RoomManager {
 	private intervals: { [key: string]: NodeJS.Timeout } = {};
 	private safeZoneDecreaseTime: number = 30000;
 	private minMapSize: number = 40;
-	private gameDuration: number = 300000;
+	private gameDuration: number = 3000;
 	private showingResultsDuration: number = 10000;
 
 	createRoom(gameID: string) {
