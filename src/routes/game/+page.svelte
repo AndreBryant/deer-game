@@ -10,6 +10,7 @@
 	import GamePlayerStats from '$lib/components/game/GamePlayerStats.svelte';
 	import GameTimer from '$lib/components/game/GameTimer.svelte';
 	import GameStartButton from '$lib/components/game/GameStartButton.svelte';
+	import GameResults from '$lib/components/game/GameResults.svelte';
 	import BackToHomeButton from '$lib/components/game/BackToHomeButton.svelte';
 	import {
 		serverData,
@@ -21,6 +22,25 @@
 	} from '$lib/stores/socketStore';
 	import { handleKeyup, handleKeydown } from '$lib/components/game/util';
 
+	function getRank(serverData: any) {
+		if (!serverData) return 0;
+
+		const socketID = $connectionState.socketId;
+		if (!socketID) return 0;
+
+		const player = serverData.players[socketID];
+		if (!player) return 0;
+
+		const players: any[] = Object.values(serverData.players).sort(
+			(a: any, b: any) => b.score - a.score
+		);
+
+		for (let i = 0; i < players.length; i++) {
+			if (players[i].id === $connectionState.socketId) {
+				return i + 1;
+			}
+		}
+	}
 	// Socket Connection Stuff
 	let ws: Socket | undefined;
 	onMount(() => {
@@ -42,6 +62,10 @@
 		goto('/');
 	}
 
+	$: if ($gameState.gameShowingResultsFinished) {
+		goto(`/results?gameID=${data.gameID}&socketId=${$connectionState.socketId}`);
+	}
+
 	$: $gameState.timestamp = $serverData.timestamp;
 
 	$: clientPlayer =
@@ -56,7 +80,6 @@
 		{$gameState.gameOngoing ? '(started)' : ''}
 	</title>
 </svelte:head>
-
 <main class="relative h-screen w-screen select-none overflow-hidden text-white">
 	<div class="w-screem h-screenn absolute left-0 top-0 -z-10">
 		{#if $gameData.mapData && $connectionState.isConnected && $connectionState.socketId}
@@ -105,6 +128,13 @@
 				gameStartTime={$gameState.gameStartTime}
 				gameDuration={$gameState.gameDuration}
 				timestamp={$gameState.timestamp}
+			/>
+		{/if}
+		{#if $gameState.gameShowingResults && $gameState.gameFinished}
+			<GameResults
+				rank={getRank($serverData)}
+				numOfPlayers={$gameData.numOfPlayers}
+				score={clientPlayer.score}
 			/>
 		{/if}
 	</section>

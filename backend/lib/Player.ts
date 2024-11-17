@@ -175,12 +175,14 @@ export class Player {
 	}
 
 	randomizePosition(safeZoneBoundary: number) {
+		// idk good variable name haha
+		const insurance = 1 * T_SIZE;
 		// Randomizes player position within the safe zone boundaries
 		const { minX, maxX, minY, maxY }: { [key: string]: number } = {
-			minX: ((MW - safeZoneBoundary) * T_SIZE) / 2,
-			maxX: ((MW - safeZoneBoundary) * T_SIZE) / 2 + safeZoneBoundary * T_SIZE,
-			minY: ((MH - safeZoneBoundary) * T_SIZE) / 2,
-			maxY: ((MH - safeZoneBoundary) * T_SIZE) / 2 + safeZoneBoundary * T_SIZE
+			minX: ((MW - safeZoneBoundary + insurance) * T_SIZE) / 2,
+			maxX: ((MW - safeZoneBoundary - insurance) * T_SIZE) / 2 + safeZoneBoundary * T_SIZE,
+			minY: ((MH - safeZoneBoundary + insurance) * T_SIZE) / 2,
+			maxY: ((MH - safeZoneBoundary - insurance) * T_SIZE) / 2 + safeZoneBoundary * T_SIZE
 		};
 
 		this.x = Math.floor(Math.random() * (maxX - minX) + minX);

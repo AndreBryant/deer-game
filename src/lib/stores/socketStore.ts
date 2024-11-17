@@ -20,6 +20,8 @@ export const gameState = writable<GameState>({
 	gameLoaded: false,
 	gameOngoing: false,
 	gameFinished: false,
+	gameShowingResults: false,
+	gameShowingResultsFinished: false,
 	gameStartTime: 0,
 	gameDuration: 0,
 	timestamp: 0
@@ -90,6 +92,21 @@ export const initSocket = (url: string, gameID: string, username: string, host: 
 			...get(gameState),
 			gameFinished: data.gameFinished,
 			gameOngoing: data.gameStarted
+		});
+	});
+
+	socket.on('start_show_results', (data) => {
+		gameState.set({
+			...get(gameState),
+			gameShowingResults: data.gameShowingResults
+		});
+	});
+
+	socket.on('end_show_results', (data) => {
+		gameState.set({
+			...get(gameState),
+			gameShowingResults: data.gameShowingResults,
+			gameShowingResultsFinished: true
 		});
 	});
 

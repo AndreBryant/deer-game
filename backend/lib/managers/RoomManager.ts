@@ -6,6 +6,7 @@ interface Room {
 	mapData: Map;
 	isGameStarted: boolean;
 	gameStartTime: number;
+	isShowingResults: boolean;
 }
 
 export class RoomManager {
@@ -14,13 +15,15 @@ export class RoomManager {
 	private safeZoneDecreaseTime: number = 30000;
 	private minMapSize: number = 40;
 	private gameDuration: number = 300000;
+	private showingResultsDuration: number = 10000;
 
 	createRoom(gameID: string) {
 		this.rooms[gameID] = {
 			players: 0,
 			mapData: new Map(),
 			isGameStarted: false,
-			gameStartTime: 0
+			gameStartTime: 0,
+			isShowingResults: false
 		};
 	}
 
@@ -37,7 +40,19 @@ export class RoomManager {
 			}
 		}
 		console.log('Room Manager: Game Started', gameID);
-		this.startInterval(gameID, io);
+
+		const gameIntervalFn = () => {
+			const safeZoneBoundary = this.decreaseSafeZone(gameID);
+			if (safeZoneBoundary <= this.minMapSize) {
+				this.stopInterval(this.intervals[gameID]);
+			}
+
+			if (io) {
+				io.to(gameID).emit('safe_zone_updated', { safeZoneBoundary });
+				io.to(gameID).emit('toast_notification', { message: 'Safe Zone Boundary Decreased!' });
+			}
+		};
+		this.startInterval(gameID, io, gameIntervalFn, this.safeZoneDecreaseTime);
 	}
 
 	endGame(gameID: string, io: Server) {
@@ -60,6 +75,38 @@ export class RoomManager {
 		}
 
 		console.log('Room Manager: Game Ended', gameID);
+		// Show Results
+		this.startShowResults(gameID, io);
+	}
+
+	startShowResults(gameID: string, io: Server) {
+		const room = this.rooms[gameID];
+		if (room) {
+			room.isShowingResults = true;
+		}
+
+		if (io) {
+			console.log('Room: ', gameID, ' showing results');
+
+			io.to(gameID).emit('start_show_results', {
+				gameShowingResults: true
+			});
+			io.to(gameID).emit('toast_notification', {
+				message: 'Showing Results!'
+			});
+
+			// No need for a set Interval as we are not sending more data into the client
+			// Just delay the end_show_results event
+			setTimeout(() => {
+				io.to(gameID).emit('end_show_results', {
+					gameShowingResults: false
+				});
+				if (room) {
+					room.isShowingResults = false;
+				}
+				console.log('Room: ', gameID, ' finished showing results');
+			}, this.showingResultsDuration);
+		}
 	}
 
 	updateRoom(gameID: string, io: Server) {
@@ -116,18 +163,8 @@ export class RoomManager {
 		return this.gameDuration;
 	}
 
-	private startInterval(gameID: string, io: Server) {
-		this.intervals[gameID] = setInterval(() => {
-			const safeZoneBoundary = this.decreaseSafeZone(gameID);
-			if (safeZoneBoundary <= this.minMapSize) {
-				this.stopInterval(this.intervals[gameID]);
-			}
-
-			if (io) {
-				io.to(gameID).emit('safe_zone_updated', { safeZoneBoundary });
-				io.to(gameID).emit('toast_notification', { message: 'Safe Zone Boundary Decreased!' });
-			}
-		}, this.safeZoneDecreaseTime);
+	private startInterval(gameID: string, io: Server, fn: () => void, timeInterval: number) {
+		this.intervals[gameID] = setInterval(fn, timeInterval);
 	}
 
 	private stopInterval(interval: NodeJS.Timeout) {

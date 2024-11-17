@@ -41,6 +41,8 @@ declare global {
 		gameStartTime: number;
 		gameFinished: boolean;
 		gameDuration: number;
+		gameShowingResults: boolean;
+		gameShowingResultsFinished: boolean;
 	};
 	type RandomPlayerOffsets = Record<string, number>;
 
