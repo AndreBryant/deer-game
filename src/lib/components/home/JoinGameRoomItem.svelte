@@ -33,6 +33,10 @@
 			<div>
 				<span class="text-sm font-semibold text-green-700">Game Started</span>
 			</div>
+		{:else if room.isShowingResults}
+			<div>
+				<span class="text-sm font-semibold text-green-700">Showing Results</span>
+			</div>
 		{/if}
 	</div>
 </div>

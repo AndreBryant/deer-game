@@ -47,3 +47,29 @@ function emitKeyInput(ws: Socket, gameID: string) {
 		gameID: gameID
 	});
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function getRank(serverData: any) {
+	// PLS fix this, multiple players that have the same score should have the same ranks.
+	if (!serverData) return 0;
+
+	const socketID = get(connectionState).socketId;
+	if (!socketID) return 0;
+
+	const player = serverData.players[socketID];
+	if (!player) return 0;
+
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const players: any[] = Object.values(serverData.players).sort(
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		(a: any, b: any) => b.score - a.score
+	);
+
+	for (let i = 0; i < players.length; i++) {
+		if (players[i].id === get(connectionState).socketId) {
+			return i + 1;
+		}
+	}
+
+	return NaN;
+}

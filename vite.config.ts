@@ -29,6 +29,7 @@ const serverUrl: string = `ws://${machineIP}:${port}`;
 export default defineConfig({
 	plugins: [sveltekit(), webSocketServer],
 	define: {
-		'import.meta.env.VITE_SERVER_URL': JSON.stringify(serverUrl)
+		'import.meta.env.VITE_SERVER_URL': JSON.stringify(serverUrl),
+		'import.meta.env.FPS': JSON.stringify(30)
 	}
 });

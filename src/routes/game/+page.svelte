@@ -20,27 +20,8 @@
 		keyStates,
 		initSocket
 	} from '$lib/stores/socketStore';
-	import { handleKeyup, handleKeydown } from '$lib/components/game/util';
+	import { handleKeyup, handleKeydown, getRank } from '$lib/components/game/util';
 
-	function getRank(serverData: any) {
-		if (!serverData) return 0;
-
-		const socketID = $connectionState.socketId;
-		if (!socketID) return 0;
-
-		const player = serverData.players[socketID];
-		if (!player) return 0;
-
-		const players: any[] = Object.values(serverData.players).sort(
-			(a: any, b: any) => b.score - a.score
-		);
-
-		for (let i = 0; i < players.length; i++) {
-			if (players[i].id === $connectionState.socketId) {
-				return i + 1;
-			}
-		}
-	}
 	// Socket Connection Stuff
 	let ws: Socket | undefined;
 	onMount(() => {
@@ -58,13 +39,10 @@
 		};
 	});
 
-	$: if ($connectionState.kickedOut) {
-		goto('/');
-	}
+	$: if ($connectionState.kickedOut) goto('/');
 
-	$: if ($gameState.gameShowingResultsFinished) {
+	$: if ($gameState.gameShowingResultsFinished)
 		goto(`/results?gameID=${data.gameID}&socketId=${$connectionState.socketId}`);
-	}
 
 	$: $gameState.timestamp = $serverData.timestamp;
 

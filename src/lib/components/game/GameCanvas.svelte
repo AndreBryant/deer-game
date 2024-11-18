@@ -45,7 +45,7 @@
 	let redDeerSpriteSheet: any;
 	let redHornDeerSpriteSheet: any;
 
-	let fps = 60;
+	let fps = import.meta.env.FPS;
 	let fpsDisplay = fps;
 	let previousX = 0;
 	let previousY = 0;
@@ -61,6 +61,7 @@
 	function setup(p5: any) {
 		p5.createCanvas(p5.windowWidth, p5.windowHeight);
 		p5.frameRate(fps);
+		p5.pixelDensity(1);
 		p5.noSmooth();
 
 		// Setup Galaxy

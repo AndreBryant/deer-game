@@ -14,7 +14,7 @@ export class RoomManager {
 	private intervals: { [key: string]: NodeJS.Timeout } = {};
 	private safeZoneDecreaseTime: number = 30000;
 	private minMapSize: number = 40;
-	private gameDuration: number = 3000;
+	private gameDuration: number = 300000;
 	private showingResultsDuration: number = 10000;
 
 	createRoom(gameID: string) {
@@ -91,6 +91,7 @@ export class RoomManager {
 			io.to(gameID).emit('start_show_results', {
 				gameShowingResults: true
 			});
+			io.emit('rooms_updated', this.getRooms());
 			io.to(gameID).emit('toast_notification', {
 				message: 'Showing Results!'
 			});

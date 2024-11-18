@@ -10,7 +10,7 @@ declare global {
 	}
 
 	// Home/+page.svelte
-	type ClientSideRoom = { players: number; isGameStarted: boolean };
+	type ClientSideRoom = { players: number; isGameStarted: boolean; isShowingResults: boolean };
 	type ClientSideRooms = Record<string, room>;
 
 	// Home Background Object Types
