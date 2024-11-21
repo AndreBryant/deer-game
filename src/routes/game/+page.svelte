@@ -6,13 +6,12 @@
 	import { onMount } from 'svelte';
 	import GameCanvas from '$lib/components/game/GameCanvas.svelte';
 	import GameKeyBinds from '$lib/components/game/GameKeyBinds.svelte';
-	import GameDetails from '$lib/components/game/GameDetails.svelte';
 	import GamePlayerStats from '$lib/components/game/GamePlayerStats.svelte';
 	import GameTimer from '$lib/components/game/GameTimer.svelte';
 	import GameStartButton from '$lib/components/game/GameStartButton.svelte';
 	import GameResults from '$lib/components/game/GameResults.svelte';
 	import BackToHomeButton from '$lib/components/game/BackToHomeButton.svelte';
-	import GameSideBar from '$lib/components/game/GameSideBar.svelte';
+	import GameTabPopUp from '$lib/components/game/GameTabPopUp.svelte';
 	import GameLeaderBoards from '$lib/components/game/GameLeaderBoard.svelte';
 	import {
 		serverData,
@@ -101,6 +100,7 @@
 				timestamp={$gameState.timestamp}
 			/>
 		{/if}
+		<GameTabPopUp />
 		{#if $gameState.gameShowingResults && $gameState.gameFinished}
 			<GameResults
 				rank={getRank($serverData)}

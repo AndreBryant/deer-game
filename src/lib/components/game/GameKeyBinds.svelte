@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { Square } from 'lucide-svelte';
 	import GameKey from './GameKey.svelte';
 	export let keyStates: KeyStates;
 </script>
@@ -11,7 +10,7 @@
 		<div class="flex justify-center">
 			<GameKey isPressed={keyStates.up} char="W" />
 		</div>
-		<div class="flex justify-between">
+		<div class="flex justify-center">
 			<GameKey isPressed={keyStates.left} char="A" />
 			<GameKey isPressed={keyStates.down} char="S" />
 			<GameKey isPressed={keyStates.right} char="D" />
