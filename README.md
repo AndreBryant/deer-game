@@ -1,4 +1,3 @@
-# How to start development
 
 go to root of the project, then
 
@@ -6,7 +5,9 @@ go to root of the project, then
 npm i
 ```
 
-once finished,
+once finished, follow these
+
+# How to start development
 
 ```
 npm run dev
