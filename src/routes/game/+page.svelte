@@ -105,7 +105,7 @@
 				timestamp={$gameState.timestamp}
 			/>
 		{/if}
-		<GameTabPopUp />
+		<GameTabPopUp gameOngoing={$gameState.gameOngoing} />
 		{#if $gameState.gameShowingResults && $gameState.gameFinished}
 			<GameResults
 				rank={getRank($serverData)}
