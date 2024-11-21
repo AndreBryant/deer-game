@@ -12,6 +12,8 @@
 	import GameStartButton from '$lib/components/game/GameStartButton.svelte';
 	import GameResults from '$lib/components/game/GameResults.svelte';
 	import BackToHomeButton from '$lib/components/game/BackToHomeButton.svelte';
+	import GameSideBar from '$lib/components/game/GameSideBar.svelte';
+	import GameLeaderBoards from '$lib/components/game/GameLeaderBoard.svelte';
 	import {
 		serverData,
 		gameData,
@@ -76,24 +78,15 @@
 
 	<section>
 		<BackToHomeButton />
-		<GameDetails
-			host={data.host}
-			gameID={data.gameID}
-			username={data.username}
-			numOfPlayers={$gameData.numOfPlayers}
-		/>
 		{#if clientPlayer}
 			<GameKeyBinds keyStates={$keyStates} />
 			<GamePlayerStats
-				gameOngoing={$gameState.gameOngoing}
 				attack={clientPlayer.attack}
 				score={clientPlayer.score}
 				health={clientPlayer.health}
-				action={clientPlayer.action}
 				takingDamage={!clientPlayer.isDead &&
 					(clientPlayer.invincible || clientPlayer.dangerZoneDamageCooldown)}
 				attacking={clientPlayer.action === 'attack'}
-				isPoweredUp={clientPlayer.isPoweredUp}
 				x={clientPlayer.x}
 				y={clientPlayer.y}
 			/>

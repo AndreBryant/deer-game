@@ -1,56 +1,52 @@
 <script lang="ts">
 	import { Heart, Sword, Trophy, Activity } from 'lucide-svelte';
-	export let gameOngoing: boolean = false;
 	export let attack: number = 0;
 	export let score: number = 0;
 	export let health: number = 0;
-	export let action: string = '';
 	export let takingDamage: boolean = true;
 	export let attacking: boolean = false;
-	export let isPoweredUp: boolean = false;
 	export let x: number = 0;
 	export let y: number = 0;
 </script>
 
-<div class="absolute bottom-0 flex w-full flex-col items-center gap-2">
-	<div class="flex gap-4">
-		<div class="flex gap-2 text-lg" class:animate-[pulse_1s_infinite]={takingDamage}>
-			<Heart class={takingDamage ? 'fill-red-900 text-red-900' : ''} />
-			{#if gameOngoing}
-				{health}
-			{:else}
-				&infin;
-			{/if}
+<div class="absolute left-0 top-0 opacity-80 transition-all hover:opacity-100">
+	<div
+		class="flex flex-col gap-4 rounded-lg rounded-b-none border border-b-0 bg-slate-950 bg-opacity-60 px-4 py-4"
+	>
+		<div class="flex items-center gap-2 text-xl" class:animate-[pulse_1s_infinite]={takingDamage}>
+			<Heart class="fill-red-500 text-red-800" />
+			<progress
+				class="[&::-moz-progress-bar]:bg-violet-40 [&::-webkit-progress-bar]:rounded-lg [&::-webkit-progress-bar]:bg-slate-700 [&::-webkit-progress-value]:rounded-lg [&::-webkit-progress-value]:bg-red-700"
+				value={health}
+				max="25"
+			></progress>
+			<p class="absolute right-6 top-5 text-sm text-red-300">{health}</p>
 		</div>
-		<div class="flex gap-2 text-lg">
+		<div class="relative flex gap-2 text-xl">
 			<Sword
-				class={(attacking ? 'animate-[ping_0.5s_infinite] fill-slate-500 text-slate-500' : '') +
-					' ' +
-					(isPoweredUp ? 'fill-yellow-500 text-yellow-500' : '')}
+				class={'fill-slate-300 text-slate-500' + (attacking ? 'fill-slate-400 text-slate-600' : '')}
 			/>
-			<span
-				class:animate-[pulse_1s_infinite]={attacking}
-				class:text-xl={isPoweredUp}
-				class:text-lg={!isPoweredUp}
-			>
-				{gameOngoing ? attack : 0}
-			</span>
+			<progress
+				class="[&::-moz-progress-bar]:bg-violet-40 [&::-webkit-progress-bar]:rounded-lg [&::-webkit-progress-bar]:bg-slate-700 [&::-webkit-progress-value]:rounded-lg [&::-webkit-progress-value]:bg-yellow-300"
+				value={attack}
+				max="5"
+			/>
 		</div>
-		<div class="flex gap-2 text-lg">
-			<Trophy />
-			{score}
+		<div class="flex w-full items-center gap-2 text-xl">
+			<Trophy class="fill-slate-950 text-slate-50" />
+			<p class="flex-grow truncate">{score}</p>
 		</div>
 	</div>
-	<div class="flex gap-4">
-		<div>
-			<p>x: {Math.floor(x / 32) - 2}</p>
+	<div class="flex w-full justify-center">
+		<div
+			class="flex w-full gap-8 rounded-lg rounded-t-none border bg-slate-950 bg-opacity-60 px-4 py-2"
+		>
+			<div>
+				<p>x: {Math.floor(x / 32) - 2}</p>
+			</div>
+			<div>
+				<p>y: {Math.floor(y / 32)}</p>
+			</div>
 		</div>
-		<div>
-			<p>y: {Math.floor(y / 32)}</p>
-		</div>
-	</div>
-	<div class="flex gap-2">
-		<Activity />
-		{action.replace('_', ' ').replace('grass', 'glass')}
 	</div>
 </div>

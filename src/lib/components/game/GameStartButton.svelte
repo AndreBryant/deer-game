@@ -19,10 +19,10 @@
 	$: ws;
 </script>
 
-<div class="absolute bottom-28 flex w-full flex-col items-center gap-4">
+<div class="absolute bottom-8 flex w-full flex-col items-center gap-4">
 	<div>
 		<button
-			class="group animate-pulse rounded-lg border-2 px-4 py-2 backdrop-blur-lg transition-all hover:animate-none hover:text-xl"
+			class="group animate-pulse rounded-lg border border-opacity-60 bg-slate-950 bg-opacity-30 px-4 py-2 backdrop-blur-lg transition-all hover:animate-none hover:text-xl"
 			on:click={startGame}
 			bind:this={startGameButton}
 		>

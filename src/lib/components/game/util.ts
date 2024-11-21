@@ -28,6 +28,10 @@ function updateKeyCodes(key: string, value: boolean) {
 }
 
 export function handleKeydown(ws: Socket, gameID: string, e: KeyboardEvent) {
+	if (e.key === 'Alt' || e.key === 'Tab') {
+		e.preventDefault();
+		return;
+	}
 	const changed = updateKeyCodes(e.key, true);
 	if (changed) {
 		emitKeyInput(ws, gameID);
