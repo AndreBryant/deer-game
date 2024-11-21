@@ -4,7 +4,7 @@
 </script>
 
 <div
-	class="space-r-4 absolute bottom-0 left-0 grid w-40 grid-cols-4 gap-2 rounded-lg border bg-slate-950 bg-opacity-60 p-1 text-sm opacity-65"
+	class="space-r-4 absolute bottom-0 left-0 grid w-40 grid-cols-4 gap-2 rounded-lg border bg-slate-950 bg-opacity-60 p-1 text-sm opacity-65 backdrop-blur-sm"
 >
 	<div class="col-span-2 flex flex-col">
 		<div class="flex justify-center">

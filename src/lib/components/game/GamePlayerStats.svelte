@@ -9,10 +9,10 @@
 	export let y: number = 0;
 </script>
 
-<div class="absolute left-0 top-0 opacity-80 transition-all hover:opacity-100">
-	<div
-		class="flex flex-col gap-4 rounded-lg rounded-b-none border border-b-0 bg-slate-950 bg-opacity-60 px-4 py-4"
-	>
+<div
+	class="absolute left-0 top-0 bg-slate-950 bg-opacity-60 opacity-80 backdrop-blur-sm transition-all hover:opacity-100"
+>
+	<div class="flex flex-col gap-4 rounded-lg rounded-b-none border border-b-0 px-4 py-4">
 		<div class="flex items-center gap-2 text-xl" class:animate-[pulse_1s_infinite]={takingDamage}>
 			<Heart class="fill-red-500 text-red-800" />
 			<progress
@@ -31,6 +31,7 @@
 				value={attack}
 				max="5"
 			/>
+			<p class="absolute right-2 text-sm text-yellow-800">{attack}</p>
 		</div>
 		<div class="flex w-full items-center gap-2 text-xl">
 			<Trophy class="fill-slate-950 text-slate-50" />
@@ -38,9 +39,7 @@
 		</div>
 	</div>
 	<div class="flex w-full justify-center">
-		<div
-			class="flex w-full gap-8 rounded-lg rounded-t-none border bg-slate-950 bg-opacity-60 px-4 py-2"
-		>
+		<div class="flex w-full gap-8 rounded-lg rounded-t-none border px-4 py-2">
 			<div>
 				<p>x: {Math.floor(x / 32) - 2}</p>
 			</div>

@@ -25,13 +25,14 @@
 	});
 </script>
 
-<div
-	class="absolute left-0 top-0 flex h-screen w-screen items-center justify-center bg-opacity-50"
-	class:bg-slate-950={isShown}
->
-	{#if !gameOngoing && isShown}
-		<GameParticipants participants={['dog']} />
-	{:else if gameOngoing && !isShown}
-		<GameLeaderBoard participants={[{ username: 'dog', score: 3 }]} />
-	{/if}
-</div>
+{#if isShown}
+	<div
+		class="absolute left-0 top-0 z-10 flex h-screen w-screen items-center justify-center bg-slate-950 bg-opacity-80"
+	>
+		{#if !gameOngoing && isShown}
+			<GameParticipants participants={['dog']} />
+		{:else if gameOngoing && !isShown}
+			<GameLeaderBoard participants={[{ username: 'dog', score: 3 }]} />
+		{/if}
+	</div>
+{/if}

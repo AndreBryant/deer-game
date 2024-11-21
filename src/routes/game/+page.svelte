@@ -12,7 +12,7 @@
 	import GameResults from '$lib/components/game/GameResults.svelte';
 	import BackToHomeButton from '$lib/components/game/BackToHomeButton.svelte';
 	import GameTabPopUp from '$lib/components/game/GameTabPopUp.svelte';
-	import GameLeaderBoards from '$lib/components/game/GameLeaderBoard.svelte';
+	import RequestFullScreenButton from '$lib/components/RequestFullScreenButton.svelte';
 	import {
 		serverData,
 		gameData,
@@ -77,6 +77,7 @@
 
 	<section>
 		<BackToHomeButton />
+		<RequestFullScreenButton />
 		{#if clientPlayer}
 			<GameKeyBinds keyStates={$keyStates} />
 			<GamePlayerStats
@@ -91,6 +92,10 @@
 			/>
 			{#if data.host && !$gameState.gameFinished && !$gameState.gameOngoing && !$gameState.gameLoaded}
 				<GameStartButton {ws} host={data.host} gameID={data.gameID} />
+			{:else if !data.host && !$gameState.gameFinished && !$gameState.gameOngoing && !$gameState.gameLoaded}
+				<div class="absolute bottom-0 flex w-full animate-pulse justify-center">
+					<p>Waiting for host to start the game...</p>
+				</div>
 			{/if}
 		{/if}
 		{#if clientPlayer && $gameState.gameOngoing && !$gameState.gameFinished}

@@ -144,7 +144,6 @@ export function drawPlayer(
 		x,
 		y - player.radius * 1.5
 	);
-
 	// Add this to player class
 	const isFacingLeft: boolean = player.isFacingLeft;
 	const action: string = player.action;
@@ -160,6 +159,19 @@ export function drawPlayer(
 		p5.push();
 		if (player.invincible || player.dangerZoneDamageCooldown) {
 			p5.tint(255, 150, 150, 180);
+
+			// Draw Health bar visible to other players
+			const healthHeight = p5.map(player.health, 0, 25, 0, player.radius * 2);
+			const redColorHealth = p5.color(255, 0, 0, 80);
+			const greenColorHealth = p5.color(0, 255, 0, 80);
+			const currentColorHealth = p5.lerpColor(redColorHealth, greenColorHealth, player.health / 25);
+			p5.push();
+			p5.noStroke();
+			p5.fill(30, 80);
+			p5.rect(x - player.radius * 1.5, y - player.radius, 6, player.radius * 2);
+			p5.fill(currentColorHealth);
+			p5.rect(x - player.radius * 1.5, y + player.radius - healthHeight, 6, healthHeight);
+			p5.pop();
 		}
 		p5.translate(x, y);
 		if (isFacingLeft) {
@@ -183,6 +195,7 @@ export function drawPlayer(
 			FRAME_SIZE,
 			FRAME_SIZE
 		);
+
 		p5.pop();
 	}
 }
@@ -190,7 +203,7 @@ export function drawPlayer(
 export function drawPlayerArrow(p5: any, player: any, p: any) {
 	const dir = p5.atan2(p.y - player.y, p.x - player.x);
 	const decrease = p5.map(p5.dist(p.x, p.y, player.x, player.y), 0, 160 * 32, 0, 15);
-	const radius = p5.min(p5.width, p5.height) / 2;
+	const radius = p5.min(p5.width * 0.75, p5.height * 0.75) / 2;
 
 	p5.push();
 	p5.translate(p5.width / 2, p5.height / 2);
