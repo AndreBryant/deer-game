@@ -125,6 +125,9 @@ export class PlayerManager {
 				case 'die':
 					if (!player.isDead) {
 						player.action = 'idle';
+						player.respawnTime = null;
+						player.actionStartTime = null;
+						player.actionEndTime = null;
 					}
 			}
 

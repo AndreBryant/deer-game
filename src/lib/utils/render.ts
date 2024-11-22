@@ -152,8 +152,8 @@ export function drawPlayer(
 	const slownessFactor: number = actionData.slowness_factor;
 	let frame: number;
 
-	if (action === 'attack' && player.actionStartTime && player.actionEndTime) {
-		console.log(player);
+	if (player.actionStartTime && player.actionEndTime) {
+		console.log(player.action);
 		const actionEndTime = player.actionEndTime;
 		const actionStartTime = player.actionStartTime;
 		const elapsed = Date.now() - actionStartTime;

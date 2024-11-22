@@ -47,8 +47,6 @@
 
 	let fps = import.meta.env.FPS;
 	let fpsDisplay = fps;
-	let previousX = 0;
-	let previousY = 0;
 
 	function preload(p5: any) {
 		// Preload these images.
@@ -84,19 +82,7 @@
 		if (serverData && mapData && serverData.players && serverData.players[socketId]) {
 			const player = serverData.players[socketId];
 
-			// Sacrilegious but i think this works
-			if (player.isDead) {
-				// Death Screen Should stay where the player died
-				player.x = previousX;
-				player.y = previousY;
-			} else {
-				// Store "soon to be" previous position
-				previousX = player.x;
-				previousY = player.y;
-			}
-
 			// Generate the on-screen non-player stuff
-			// TODO: verify these function if they really render on-screen objects
 			drawGalaxy(p5, starSet, treeSet, player.x, player.y);
 			drawMap(p5, mapImage, player.x, player.y);
 			if (gameOngoing) {
@@ -105,9 +91,6 @@
 
 			// Draw the on-screen players
 			sortedPlayers.forEach((p: any) => {
-				// If player is dead, don't draw (still playing the death screen)
-				if (p.isDead) return;
-
 				// Choose Correct the Sprite
 				const spriteSheet = p.isPoweredUp
 					? p.sex === 'm'
@@ -118,7 +101,7 @@
 						: deerSpriteSheet;
 
 				// Draw your player (the client) they should be at the center of the canvas.
-				if (p.id === socketId && !p.isDead) {
+				if (p.id === socketId) {
 					drawPlayer(
 						p5,
 						spriteSheet,

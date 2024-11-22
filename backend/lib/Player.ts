@@ -94,7 +94,7 @@ export class Player {
 	update(safeZoneBoundary: number) {
 		// Mainly checks for player actionEndTimes and any other states such as respawn, attack action, etc.
 		if (this.isDead && this.respawnTime) {
-			if (this.respawnTime <= new Date().getTime()) {
+			if (this.respawnTime <= Date.now()) {
 				this.isDead = false;
 				this.respawnTime = null;
 				this.health = STARTING_HEALTH;
@@ -114,16 +114,12 @@ export class Player {
 				this.dy = PLAYER_SPEED_Y;
 				this.attack = STARTING_ATTACK;
 			}
-			if (
-				this.invincible &&
-				this.invincibilityEndTime &&
-				this.invincibilityEndTime <= new Date().getTime()
-			) {
+			if (this.invincible && this.invincibilityEndTime && this.invincibilityEndTime <= Date.now()) {
 				// Remove Invincibility
 				this.invincible = false;
 				this.invincibilityEndTime = null;
 			}
-			if (this.dangerZoneDamageCooldown && this.dangerZoneDamageCooldown <= new Date().getTime()) {
+			if (this.dangerZoneDamageCooldown && this.dangerZoneDamageCooldown <= Date.now()) {
 				this.dangerZoneDamageCooldown = null;
 			}
 		}
@@ -167,15 +163,17 @@ export class Player {
 	die() {
 		// Method for player death
 		this.isDead = true;
-		this.respawnTime = new Date().getTime() + 5000;
 		this.action = 'die';
+		this.respawnTime = Date.now() + 5000;
+		this.actionStartTime = Date.now();
+		this.actionEndTime = Date.now() + 5000;
 
 		// Reduce player score but make sure it is rounded to at most 3 decimal places
 		this.score /= 2;
 		this.score = Math.round(this.score * 1000) / 1000;
 
-		this.x = null;
-		this.y = null;
+		// this.x = null;
+		// this.y = null;
 	}
 
 	addScore() {
