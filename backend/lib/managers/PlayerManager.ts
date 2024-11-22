@@ -106,7 +106,15 @@ export class PlayerManager {
 				player.actionEndTime = null;
 			}
 
-			if (keys['attack']) this.performAttack(io, player, gameStarted, gameID);
+			if (keys['attack']) {
+				this.charge(io, player);
+			} else {
+				if (player.isCharging && player.chargeEnd && player.chargeEnd + 1000 >= Date.now()) {
+					this.performAttack(io, player, gameStarted, gameID);
+					player.isCharging = false;
+					player.chargeEnd = null;
+				}
+			}
 		}
 	}
 
@@ -124,6 +132,14 @@ export class PlayerManager {
 			right: false,
 			attack: false
 		};
+	}
+
+	private charge(io: Server, player: Player) {
+		if (player.isDead) return;
+
+		player.isCharging = true;
+		player.action = 'charge';
+		player.chargeEnd = Date.now();
 	}
 
 	private performAttack(io: Server, player: Player, gameStarted: boolean, gameID: string) {

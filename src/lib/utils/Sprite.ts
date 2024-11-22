@@ -49,5 +49,9 @@ export const DEER_SPRITE_ANIMATION_DATA: {
 	die: {
 		slowness_factor: fps === 30 ? 2 : 4,
 		positions: []
+	},
+	charge: {
+		slowness_factor: fps === 30 ? 1 : 2,
+		positions: [{ x: 1 * FRAME_SIZE, y: 5 * FRAME_SIZE }]
 	}
 };

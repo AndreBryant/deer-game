@@ -8,7 +8,9 @@ const PLAYER_SPEED_X_ATTACK: number = 6;
 const PLAYER_SPEED_Y: number = 12;
 const PLAYER_SPEED_Y_ATTACK: number = 6;
 const STARTING_HEALTH: number = 25;
-const STARTING_ATTACK: number = 5;
+const STARTING_ATTACK: number = 0;
+const MAX_ATTACK: number = 8;
+const D_ATTACK: number = 0.1;
 
 export class Player {
 	id: string;
@@ -32,6 +34,8 @@ export class Player {
 	isDead: boolean;
 	respawnTime: number | null;
 	score: number;
+	isCharging: boolean;
+	chargeEnd: number | null;
 	isPoweredUp: boolean;
 	powerUpTime: number | null;
 	dangerZoneDamageCooldown: number | null;
@@ -67,6 +71,8 @@ export class Player {
 		this.dangerZoneDamageCooldown = null;
 
 		// player states
+		this.isCharging = false;
+		this.chargeEnd = null;
 		this.isPoweredUp = false;
 		this.powerUpTime = null;
 		this.isFacingLeft = false;
@@ -93,18 +99,17 @@ export class Player {
 				this.randomizePosition(safeZoneBoundary);
 			}
 		} else {
-			if (
-				this.action === 'attack' &&
-				this.actionEndTime &&
-				this.actionEndTime > new Date().getTime()
-			) {
-				// Slows down player speed while attacking
+			if (this.isCharging) {
+				// Slows down player speed while charging
 				this.dx = PLAYER_SPEED_X_ATTACK;
 				this.dy = PLAYER_SPEED_Y_ATTACK;
+				this.attack += this.attack < MAX_ATTACK ? D_ATTACK : 0;
+				this.attack = Math.round(this.attack * 1000) / 1000;
 			} else {
 				// Normal Player speed
 				this.dx = PLAYER_SPEED_X;
 				this.dy = PLAYER_SPEED_Y;
+				this.attack = STARTING_ATTACK;
 			}
 			if (
 				this.invincible &&
@@ -151,6 +156,7 @@ export class Player {
 		// Method for taking damage
 		if (gameStarted && !this.invincible) {
 			this.health -= damage;
+			this.health = Math.round(this.health * 1000) / 1000;
 		}
 		return this.health;
 	}

@@ -79,6 +79,7 @@
 		<BackToHomeButton />
 		<RequestFullScreenButton />
 		{#if clientPlayer}
+			<div class="absolute flex w-full justify-center">{clientPlayer.action}</div>
 			<GameKeyBinds keyStates={$keyStates} />
 			<GamePlayerStats
 				attack={clientPlayer.attack}
