@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Heart, Sword, Trophy, Activity } from 'lucide-svelte';
+	import { Heart, Sword, Trophy } from 'lucide-svelte';
 	export let attack: number = 0;
 	export let score: number = 0;
 	export let health: number = 0;
@@ -20,7 +20,7 @@
 				value={health}
 				max="25"
 			></progress>
-			<p class="absolute right-6 top-5 text-sm text-red-300">{health}</p>
+			<p class="absolute right-6 top-5 text-sm text-red-300">{((health / 25) * 100).toFixed(0)}%</p>
 		</div>
 		<div class="relative flex gap-2 text-xl">
 			<Sword

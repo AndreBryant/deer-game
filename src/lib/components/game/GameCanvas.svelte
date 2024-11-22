@@ -11,7 +11,7 @@
 	import mDeerRed from '$lib/sprites/mDeerRed.png';
 	import fDeer from '$lib/sprites/fDeer.png';
 	import fDeerRed from '$lib/sprites/fDeerRed.png';
-	import { randomPlayerOffsets } from '$lib/stores/socketStore';
+	import { randomPlayerOffsets, gameState } from '$lib/stores/socketStore';
 	import GameFPS from './GameFPS.svelte';
 	import {
 		setupGalaxy,

@@ -25,6 +25,7 @@ export class Player {
 	dx: number;
 	isFacingLeft: boolean;
 	action: string;
+	actionStartTime: number | null;
 	actionEndTime: number | null;
 	attack: number;
 	health: number;
@@ -36,6 +37,7 @@ export class Player {
 	score: number;
 	isCharging: boolean;
 	chargeEnd: number | null;
+
 	isPoweredUp: boolean;
 	powerUpTime: number | null;
 	dangerZoneDamageCooldown: number | null;
@@ -64,6 +66,7 @@ export class Player {
 
 		// Player actions
 		this.action = 'idle';
+		this.actionStartTime = null;
 		this.actionEndTime = null;
 		this.invincible = false;
 		this.invincibilityEndTime = null;
@@ -155,8 +158,8 @@ export class Player {
 	takeDamage(damage: number, gameStarted: boolean): number {
 		// Method for taking damage
 		if (gameStarted && !this.invincible) {
-			this.health -= damage;
-			this.health = Math.round(this.health * 1000) / 1000;
+			this.health = Math.round((this.health - damage) * 1000) / 1000;
+			this.health = this.health < 0 ? 0 : this.health;
 		}
 		return this.health;
 	}

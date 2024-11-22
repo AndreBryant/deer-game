@@ -87,7 +87,7 @@ export class PlayerManager {
 			const keys = this.keyStates[player.room][playerId];
 			const isMoving = Object.values(keys).some((state) => state);
 			const action = player.action;
-			const actionendTime = player.actionEndTime;
+			const actionEndTime = player.actionEndTime;
 
 			switch (action) {
 				case 'idle':
@@ -96,6 +96,7 @@ export class PlayerManager {
 					} else {
 						if (Math.random() < 0.001) {
 							player.action = 'eat_grass';
+							player.actionStartTime = Date.now();
 							player.actionEndTime = Date.now() + 1000;
 						} else {
 							player.action = 'idle';
@@ -108,14 +109,16 @@ export class PlayerManager {
 					}
 					break;
 				case 'eat_grass':
-					if (isMoving || (actionendTime && actionendTime <= Date.now())) {
+					if (isMoving || (actionEndTime && actionEndTime <= Date.now())) {
 						player.action = 'idle';
+						player.actionStartTime = null;
 						player.actionEndTime = null;
 					}
 					break;
 				case 'attack':
-					if (actionendTime && actionendTime <= Date.now()) {
+					if (actionEndTime && actionEndTime <= Date.now()) {
 						player.action = 'idle';
+						player.actionStartTime = null;
 						player.actionEndTime = null;
 					}
 					break;
@@ -165,7 +168,8 @@ export class PlayerManager {
 		if (player.isDead) return;
 
 		player.action = 'attack';
-		player.actionEndTime = Date.now() + 250;
+		player.actionStartTime = Date.now();
+		player.actionEndTime = Date.now() + 25;
 		const targets = this.getPlayersInRoom(player.room);
 		for (const target of Object.values(targets)) {
 			if (target.isDead) continue;

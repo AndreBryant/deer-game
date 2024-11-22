@@ -150,8 +150,19 @@ export function drawPlayer(
 	const actionData: { slowness_factor: number; positions: { x: number; y: number }[] } =
 		DEER_SPRITE_ANIMATION_DATA[action];
 	const slownessFactor: number = actionData.slowness_factor;
-	const frame: number =
-		p5.floor((p5.frameCount + playerOffset) / slownessFactor) % actionData.positions.length;
+	let frame: number;
+
+	if (action === 'attack' && player.actionStartTime && player.actionEndTime) {
+		console.log(player);
+		const actionEndTime = player.actionEndTime;
+		const actionStartTime = player.actionStartTime;
+		const elapsed = Date.now() - actionStartTime;
+		const duration = actionEndTime - actionStartTime;
+		frame = p5.floor(elapsed / duration / slownessFactor) % actionData.positions.length;
+	} else {
+		frame = p5.floor((p5.frameCount + playerOffset) / slownessFactor) % actionData.positions.length;
+	}
+
 	const blinking: boolean =
 		player.dangerZoneDamageCooldown || player.invincible ? p5.frameCount % 20 < 10 : false;
 
