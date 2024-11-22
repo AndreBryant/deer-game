@@ -4,7 +4,7 @@
 	export let score: number = 0;
 	export let health: number = 0;
 	export let takingDamage: boolean = true;
-	export let attacking: boolean = false;
+	export let charging: boolean = false;
 	export let x: number = 0;
 	export let y: number = 0;
 </script>
@@ -24,14 +24,14 @@
 		</div>
 		<div class="relative flex gap-2 text-xl">
 			<Sword
-				class={'fill-slate-300 text-slate-500' + (attacking ? 'fill-slate-400 text-slate-600' : '')}
+				class={'fill-slate-300 text-slate-500' + (charging ? 'fill-slate-400 text-slate-600' : '')}
 			/>
 			<progress
 				class="[&::-moz-progress-bar]:bg-violet-40 [&::-webkit-progress-bar]:rounded-lg [&::-webkit-progress-bar]:bg-slate-700 [&::-webkit-progress-value]:rounded-lg [&::-webkit-progress-value]:bg-yellow-300"
 				value={attack}
-				max="5"
+				max="8"
 			/>
-			<p class="absolute right-2 text-sm text-yellow-800">{attack}</p>
+			<p class="absolute right-2 text-sm text-yellow-600">{((attack / 8) * 100).toFixed(0)}%</p>
 		</div>
 		<div class="flex w-full items-center gap-2 text-xl">
 			<Trophy class="fill-slate-950 text-slate-50" />

@@ -4,13 +4,13 @@ export const PLAYER_HIT_RADIUS: number = T_SIZE * 2;
 
 // Constant Variables
 const PLAYER_SPEED_X: number = 12;
-const PLAYER_SPEED_X_ATTACK: number = 6;
+const PLAYER_SPEED_X_CHARGE: number = 9;
 const PLAYER_SPEED_Y: number = 12;
-const PLAYER_SPEED_Y_ATTACK: number = 6;
+const PLAYER_SPEED_Y_CHARGE: number = 9;
 const STARTING_HEALTH: number = 25;
 const STARTING_ATTACK: number = 0;
 const MAX_ATTACK: number = 8;
-const D_ATTACK: number = 0.1;
+const D_ATTACK: number = 0.25;
 
 export class Player {
 	id: string;
@@ -101,8 +101,8 @@ export class Player {
 		} else {
 			if (this.isCharging) {
 				// Slows down player speed while charging
-				this.dx = PLAYER_SPEED_X_ATTACK;
-				this.dy = PLAYER_SPEED_Y_ATTACK;
+				this.dx = PLAYER_SPEED_X_CHARGE;
+				this.dy = PLAYER_SPEED_Y_CHARGE;
 				this.attack += this.attack < MAX_ATTACK ? D_ATTACK : 0;
 				this.attack = Math.round(this.attack * 1000) / 1000;
 			} else {

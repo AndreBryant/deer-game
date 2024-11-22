@@ -79,7 +79,6 @@
 		<BackToHomeButton />
 		<RequestFullScreenButton />
 		{#if clientPlayer}
-			<div class="absolute flex w-full justify-center">{clientPlayer.action}</div>
 			<GameKeyBinds keyStates={$keyStates} />
 			<GamePlayerStats
 				attack={clientPlayer.attack}
@@ -87,7 +86,7 @@
 				health={clientPlayer.health}
 				takingDamage={!clientPlayer.isDead &&
 					(clientPlayer.invincible || clientPlayer.dangerZoneDamageCooldown)}
-				attacking={clientPlayer.action === 'attack'}
+				charging={clientPlayer.isCharging}
 				x={clientPlayer.x}
 				y={clientPlayer.y}
 			/>

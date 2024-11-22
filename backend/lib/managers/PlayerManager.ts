@@ -86,28 +86,47 @@ export class PlayerManager {
 		if (player && this.keyStates[player.room] && this.keyStates[player.room][playerId]) {
 			const keys = this.keyStates[player.room][playerId];
 			const isMoving = Object.values(keys).some((state) => state);
+			const action = player.action;
+			const actionendTime = player.actionEndTime;
 
-			// If stationary, has a chance to eat grass (afk animation)
-			if (!isMoving) {
-				if (
-					player.action !== 'eat_grass' ||
-					!player.actionEndTime ||
-					player.actionEndTime <= Date.now()
-				) {
-					if (Math.random() < 0.001) {
-						player.action = 'eat_grass';
-						player.actionEndTime = Date.now() + 1000;
+			switch (action) {
+				case 'idle':
+					if (isMoving) {
+						player.action = 'walk';
 					} else {
+						if (Math.random() < 0.001) {
+							player.action = 'eat_grass';
+							player.actionEndTime = Date.now() + 1000;
+						} else {
+							player.action = 'idle';
+						}
+					}
+					break;
+				case 'walk':
+					if (!isMoving) {
 						player.action = 'idle';
 					}
-				}
-			} else {
-				player.action = 'walk';
-				player.actionEndTime = null;
+					break;
+				case 'eat_grass':
+					if (isMoving || (actionendTime && actionendTime <= Date.now())) {
+						player.action = 'idle';
+						player.actionEndTime = null;
+					}
+					break;
+				case 'attack':
+					if (actionendTime && actionendTime <= Date.now()) {
+						player.action = 'idle';
+						player.actionEndTime = null;
+					}
+					break;
+				case 'die':
+					if (!player.isDead) {
+						player.action = 'idle';
+					}
 			}
 
 			if (keys['attack']) {
-				this.charge(io, player);
+				this.charge(player);
 			} else {
 				if (player.isCharging && player.chargeEnd && player.chargeEnd + 1000 >= Date.now()) {
 					this.performAttack(io, player, gameStarted, gameID);
@@ -134,7 +153,7 @@ export class PlayerManager {
 		};
 	}
 
-	private charge(io: Server, player: Player) {
+	private charge(player: Player) {
 		if (player.isDead) return;
 
 		player.isCharging = true;
@@ -146,7 +165,7 @@ export class PlayerManager {
 		if (player.isDead) return;
 
 		player.action = 'attack';
-		player.actionEndTime = Date.now() + 5000;
+		player.actionEndTime = Date.now() + 250;
 		const targets = this.getPlayersInRoom(player.room);
 		for (const target of Object.values(targets)) {
 			if (target.isDead) continue;
