@@ -153,7 +153,6 @@ export function drawPlayer(
 	let frame: number;
 
 	if (player.actionStartTime && player.actionEndTime) {
-		console.log(player.action);
 		const actionEndTime = player.actionEndTime;
 		const actionStartTime = player.actionStartTime;
 		const elapsed = Date.now() - actionStartTime;

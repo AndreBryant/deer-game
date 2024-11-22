@@ -186,10 +186,10 @@ export class PlayerManager {
 					io.to(gameID).emit('toast_notification', {
 						message: target.name + ' was killed by ' + player.name + '.'
 					});
+				} else {
+					target.invincible = true;
+					target.invincibilityEndTime = Date.now() + 1000;
 				}
-
-				target.invincible = true;
-				target.invincibilityEndTime = Date.now() + 1000;
 			}
 		}
 	}

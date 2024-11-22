@@ -1,7 +1,6 @@
 <script lang="ts">
 	export let participants: { username: string; score: number }[] = [];
-
-	let isCollapsed = true;
+	$: participants.sort((a, b) => b.score - a.score);
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
