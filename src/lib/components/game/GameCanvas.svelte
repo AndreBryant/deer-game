@@ -35,8 +35,8 @@
 	let mapImage: any;
 	let bgImage: any;
 	// Parallax bg
-	let starCount = 350;
-	let treeCount = 100;
+	let starCount = 500;
+	let treeCount = 80;
 	let starSet: Star[] = [];
 	let treeSet: Tree[] = [];
 

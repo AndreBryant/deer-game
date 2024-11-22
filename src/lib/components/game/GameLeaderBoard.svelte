@@ -1,5 +1,5 @@
 <script lang="ts">
-	export let participants: string[];
+	export let participants: { username: string; score: number }[] = [];
 
 	let isCollapsed = true;
 </script>

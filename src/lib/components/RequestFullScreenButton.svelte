@@ -39,16 +39,15 @@
 	});
 </script>
 
-<div
-	class="absolute bottom-24 z-10 w-40 rounded-lg border bg-slate-950 bg-opacity-60 p-2 opacity-50 backdrop-blur-sm hover:opacity-100"
+<button
+	on:click={toggleFullscreen}
+	class="absolute bottom-24 z-10 flex w-40 items-center gap-2 rounded-lg border bg-slate-950 bg-opacity-60 p-2 opacity-50 backdrop-blur-sm hover:opacity-100"
 >
-	<button on:click={toggleFullscreen} class="flex items-center gap-2">
-		{#if fullscreen}
-			<Minimize />
-			<span class="text-sm">- windowed</span>
-		{:else}
-			<Maximize />
-			<span class="text-sm">- fullscreen</span>
-		{/if}
-	</button>
-</div>
+	{#if fullscreen}
+		<Minimize />
+		<span class="text-sm">- windowed</span>
+	{:else}
+		<Maximize />
+		<span class="text-sm">- fullscreen</span>
+	{/if}
+</button>

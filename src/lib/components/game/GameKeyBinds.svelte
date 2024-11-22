@@ -20,9 +20,13 @@
 		<p>- move</p>
 	</div>
 	<div class="col-span-2 flex w-full justify-center">
-		<GameKey isPressed={keyStates.attack} char={'Space'} isSquare={false} />
+		<GameKey
+			isPressed={keyStates.attack}
+			char={keyStates.attack ? 'Release' : 'Space'}
+			isSquare={false}
+		/>
 	</div>
 	<div class="col-span-2">
-		<p>- attack</p>
+		<p>- {keyStates.attack ? 'attack' : 'charge'}</p>
 	</div>
 </div>
