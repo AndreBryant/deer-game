@@ -8,9 +8,9 @@
 
 	import P5 from '$lib/components/P5.svelte';
 	import mDeer from '$lib/sprites/mDeer.png';
-	import mDeerRed from '$lib/sprites/mDeerRed.png';
+	// import mDeerRed from '$lib/sprites/mDeerRed.png';
 	import fDeer from '$lib/sprites/fDeer.png';
-	import fDeerRed from '$lib/sprites/fDeerRed.png';
+	// import fDeerRed from '$lib/sprites/fDeerRed.png';
 	import { randomPlayerOffsets, gameState } from '$lib/stores/socketStore';
 	import GameFPS from './GameFPS.svelte';
 	import {
@@ -52,8 +52,8 @@
 		// Preload these images.
 		deerSpriteSheet = p5.loadImage(fDeer);
 		hornDeerSpriteSheet = p5.loadImage(mDeer);
-		redDeerSpriteSheet = p5.loadImage(fDeerRed);
-		redHornDeerSpriteSheet = p5.loadImage(mDeerRed);
+		// redDeerSpriteSheet = p5.loadImage(fDeerRed);
+		// redHornDeerSpriteSheet = p5.loadImage(mDeerRed);
 	}
 
 	function setup(p5: any) {
@@ -92,13 +92,7 @@
 			// Draw the on-screen players
 			sortedPlayers.forEach((p: any) => {
 				// Choose Correct the Sprite
-				const spriteSheet = p.isPoweredUp
-					? p.sex === 'm'
-						? redHornDeerSpriteSheet
-						: redDeerSpriteSheet
-					: p.sex === 'm'
-						? hornDeerSpriteSheet
-						: deerSpriteSheet;
+				const spriteSheet = p.sex === 'm' ? hornDeerSpriteSheet : deerSpriteSheet;
 
 				// Draw your player (the client) they should be at the center of the canvas.
 				if (p.id === socketId) {
