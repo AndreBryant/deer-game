@@ -57,6 +57,10 @@ export class GameServer {
 		const player = this.playerManager.getPlayer(socket.id);
 		if (!player) return;
 
+		this.io
+			.to(player.room)
+			.emit('toast_notification', { type: 'info', message: player.name + ' left the game.' });
+
 		const gameID = player.room;
 
 		if (player.isHost) {
@@ -88,12 +92,10 @@ export class GameServer {
 	private handleStartGame(socket: Socket, data: { gameID: string }) {
 		if (this.roomManager.getRoom(data.gameID)!.players < 2) {
 			this.io.to(data.gameID).emit('game_started', { gameStarted: false });
-			this.io
-				.to(data.gameID)
-				.emit('toast_notification', {
-					type: 'info',
-					message: 'Must have at least 2 players to start game...'
-				});
+			this.io.to(data.gameID).emit('toast_notification', {
+				type: 'info',
+				message: 'Must have at least 2 players to start game...'
+			});
 			return;
 		} else {
 			this.roomManager.startGame(data.gameID, this.io);
@@ -158,7 +160,9 @@ export class GameServer {
 		this.playerManager.addPlayer(player);
 		this.roomManager.joinRoom(gameID);
 		socket.join(gameID);
-
+		this.io
+			.to(gameID)
+			.emit('toast_notification', { type: 'info', message: username + ' joined the game.' });
 		this.io.emit('rooms_updated', this.roomManager.getRooms());
 		this.io.to(gameID).emit('player_connected', this.roomManager.getRoom(gameID));
 		this.io.to(gameID).emit('map_generated', {
