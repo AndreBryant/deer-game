@@ -153,11 +153,11 @@ export function drawPlayer(
 	let frame: number;
 
 	if (player.actionStartTime && player.actionEndTime) {
-		const actionEndTime = player.actionEndTime;
 		const actionStartTime = player.actionStartTime;
-		const elapsed = Date.now() - actionStartTime;
-		const duration = actionEndTime - actionStartTime;
-		frame = p5.floor(elapsed / duration / slownessFactor) % actionData.positions.length;
+		const actionEndTime = player.actionEndTime;
+		frame =
+			p5.floor(p5.map(Date.now(), actionStartTime, actionEndTime, 0, actionData.positions.length)) %
+			actionData.positions.length;
 	} else {
 		frame = p5.floor((p5.frameCount + playerOffset) / slownessFactor) % actionData.positions.length;
 	}

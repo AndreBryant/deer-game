@@ -35,16 +35,6 @@ export const DEER_SPRITE_ANIMATION_DATA: {
 			{ x: 4 * FRAME_SIZE, y: 2 * FRAME_SIZE }
 		]
 	},
-	attack: {
-		slowness_factor: fps === 30 ? 3 : 6,
-		positions: [
-			{ x: 0 * FRAME_SIZE, y: 4 * FRAME_SIZE },
-			{ x: 1 * FRAME_SIZE, y: 4 * FRAME_SIZE },
-			{ x: 2 * FRAME_SIZE, y: 4 * FRAME_SIZE },
-			{ x: 3 * FRAME_SIZE, y: 4 * FRAME_SIZE },
-			{ x: 4 * FRAME_SIZE, y: 4 * FRAME_SIZE }
-		]
-	},
 	charge: {
 		slowness_factor: fps === 30 ? 1 : 2,
 		positions: [
@@ -53,6 +43,16 @@ export const DEER_SPRITE_ANIMATION_DATA: {
 			{ x: 2 * FRAME_SIZE, y: 3 * FRAME_SIZE },
 			{ x: 3 * FRAME_SIZE, y: 3 * FRAME_SIZE },
 			{ x: 4 * FRAME_SIZE, y: 3 * FRAME_SIZE }
+		]
+	},
+	attack: {
+		slowness_factor: fps === 30 ? 3 : 6,
+		positions: [
+			{ x: 0 * FRAME_SIZE, y: 4 * FRAME_SIZE },
+			{ x: 1 * FRAME_SIZE, y: 4 * FRAME_SIZE },
+			{ x: 2 * FRAME_SIZE, y: 4 * FRAME_SIZE },
+			{ x: 3 * FRAME_SIZE, y: 4 * FRAME_SIZE },
+			{ x: 4 * FRAME_SIZE, y: 4 * FRAME_SIZE }
 		]
 	},
 	die: {

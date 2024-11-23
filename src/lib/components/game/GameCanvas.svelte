@@ -50,7 +50,8 @@
 
 	function preload(p5: any) {
 		// Preload these images.
-		deerSpriteSheet = p5.loadImage(fDeer);
+		// deerSpriteSheet = p5.loadImage(fDeer); //uncomment this if  may fDeer animation na
+		deerSpriteSheet = p5.loadImage(mDeer);
 		hornDeerSpriteSheet = p5.loadImage(mDeer);
 		// redDeerSpriteSheet = p5.loadImage(fDeerRed);
 		// redHornDeerSpriteSheet = p5.loadImage(mDeerRed);
