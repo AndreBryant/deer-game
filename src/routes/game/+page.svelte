@@ -85,8 +85,8 @@
 	{/if}
 
 	<section>
-		<RequestFullScreenButton />
 		{#if clientPlayer}
+			<RequestFullScreenButton />
 			<GameKeyBinds keyStates={$keyStates} />
 			<GamePlayerStats
 				attack={clientPlayer.attack}

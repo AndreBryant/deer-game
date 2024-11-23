@@ -31,7 +31,7 @@
 	</div>
 	<div class="col-span-2 flex flex-col">
 		<div class="flex justify-center">
-			<GameKey isPressed={keyStates.attack} char="Tab" isSquare={false} />
+			<GameKey isPressed={false} char="Tab" isSquare={false} />
 		</div>
 	</div>
 	<div class="col-span-2 flex items-end">
