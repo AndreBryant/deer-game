@@ -5,7 +5,7 @@
 
 	let toaster: HTMLDivElement;
 
-	// Scroll to the bottom when new toasts are added
+	// scroll to the bottom when new toasts are added
 	afterUpdate(() => {
 		if (toaster) {
 			toaster.scrollTop = toaster.scrollHeight;

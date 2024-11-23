@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { palette } from './palette';
-import { DEER_SPRITE_ANIMATION_DATA, FRAME_SIZE } from './sprite';
+import { DEER_SPRITE_ANIMATION_DATA, FRAME_SIZE } from './Sprite';
 
 export function setupGalaxy(p5: any, starCount: number, treeCount: number) {
 	const mapSize = 160 * 32;

@@ -7,7 +7,5 @@ export async function load({ url }) {
 }
 
 function generateRandomGameId() {
-	// return Math.random().toString(36).substring(2, 6) + Math.random().toString(36).substring(2, 6);
-	// return 'debug';
 	return Math.random().toString().substring(2, 6);
 }

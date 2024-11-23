@@ -33,6 +33,11 @@
 				{/if}
 			{/each}
 		</ol>
+		<div class="flex items-center gap-4 text-xs opacity-30">
+			<div class="h-[1px] flex-grow bg-slate-50 bg-opacity-50"></div>
+			<div>Nothing Follows</div>
+			<div class="h-[1px] flex-grow bg-slate-50 bg-opacity-50"></div>
+		</div>
 	</div>
 </div>
 

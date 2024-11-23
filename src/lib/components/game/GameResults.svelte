@@ -7,15 +7,15 @@
 </script>
 
 <div
-	class="absolute right-0 top-0 flex h-full w-full flex-col items-center justify-center gap-4 bg-black bg-opacity-70 text-slate-200 backdrop-blur-sm transition-opacity"
+	class="absolute right-0 top-0 z-10 flex h-full w-full flex-col items-center justify-center gap-4 bg-slate-950 bg-opacity-10 text-slate-200 backdrop-blur-sm transition-opacity"
 >
 	<div class="w-full text-center">
 		<h2 class=" mb-2 bg-slate-800 bg-opacity-25 text-4xl">
-			<span class="text-8xl">{rank}</span>{ones === 1
+			<span class="text-8xl">{rank}</span>{ones === 1 && rank !== 11
 				? 'st'
-				: ones === 2
+				: ones === 2 && rank !== 12
 					? 'nd'
-					: ones === 3
+					: ones === 3 && rank !== 13
 						? 'rd'
 						: 'th'}
 			/ {numOfPlayers}

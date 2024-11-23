@@ -9,7 +9,12 @@
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div class="flex h-full min-h-0 w-full basis-7/12 flex-col">
 	<div class="flex w-full flex-col gap-4">
-		<h3 class="">Participants</h3>
+		<div class="flex justify-between">
+			<div>Participants:</div>
+			<div class="opacity-70">
+				{participants.length} player{participants.length === 1 ? '' : 's'}
+			</div>
+		</div>
 		<hr class="border border-slate-50 border-opacity-30" />
 	</div>
 	<div class="custom-scrollbar min-h-0 flex-shrink-0 flex-grow basis-9/12 overflow-y-auto">
@@ -22,6 +27,11 @@
 				{/if}
 			{/each}
 		</ul>
+		<div class="flex items-center gap-4 text-xs opacity-30">
+			<div class="h-[1px] flex-grow bg-slate-50 bg-opacity-50"></div>
+			<div>Nothing Follows</div>
+			<div class="h-[1px] flex-grow bg-slate-50 bg-opacity-50"></div>
+		</div>
 	</div>
 </div>
 

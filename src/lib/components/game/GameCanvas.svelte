@@ -126,7 +126,7 @@
 					drawPlayer(p5, spriteSheet, pCoords.x, pCoords.y, p, $randomPlayerOffsets[p.id]);
 				} else {
 					// they are off-screen
-					drawPlayerArrow(p5, player, p);
+					if (!p.isDead) drawPlayerArrow(p5, player, p);
 				}
 			});
 			if (player.isDead) {

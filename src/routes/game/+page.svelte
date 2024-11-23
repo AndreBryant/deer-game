@@ -87,9 +87,6 @@
 	<section>
 		<RequestFullScreenButton />
 		{#if clientPlayer}
-			<!-- <div class="absolute flex h-screen w-screen items-center justify-center">
-				{clientPlayer.action}
-			</div> -->
 			<GameKeyBinds keyStates={$keyStates} />
 			<GamePlayerStats
 				attack={clientPlayer.attack}

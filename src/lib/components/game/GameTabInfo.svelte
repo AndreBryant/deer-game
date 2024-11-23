@@ -21,13 +21,13 @@
 		<div class="flex gap-2">
 			<Tag class="scale-x-[-1]" />:
 			<p>
-				{playerName}
+				{playerName.length > 12 ? playerName.substring(0, 12) + '...' : playerName}
 			</p>
 		</div>
 	</div>
 	<div>
 		<p>Room ID: {roomId}</p>
-		<p>Host: {hostName}</p>
+		<p>Host: {hostName.length > 12 ? hostName.substring(0, 12) + '...' : hostName}</p>
 	</div>
 	<div>
 		<p class="text-sm opacity-50">{import.meta.env.VERSION}</p>

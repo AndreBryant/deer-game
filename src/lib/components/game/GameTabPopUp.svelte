@@ -53,7 +53,7 @@
 	class="absolute left-0 top-0 z-20 flex h-screen w-screen flex-col items-center justify-center bg-slate-950 bg-opacity-50 text-slate-300 backdrop-blur-sm"
 	class:hidden={!isShown}
 >
-	<Button text="Exit Game" variant="link" iconLeft={ChevronLeft} href="/" />
+	<Button text="Exit to Main Menu" variant="link" iconLeft={ChevronLeft} href="/" />
 	<div>
 		<div
 			class="items flex h-[560px] w-[650px] gap-4 rounded-lg border border-slate-50 border-opacity-30 bg-slate-950 bg-opacity-60 px-8 py-6"
