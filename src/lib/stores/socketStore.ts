@@ -1,4 +1,5 @@
 import { writable, get } from 'svelte/store';
+import { addToast } from './toastStore';
 import { io, Socket } from 'socket.io-client';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -111,7 +112,7 @@ export const initSocket = (url: string, gameID: string, username: string, host: 
 	});
 
 	socket.on('toast_notification', (data) => {
-		console.log('Game:', data.message);
+		addToast(data.message, data.type);
 	});
 
 	if (host) socket.emit('create_room', { gameID, username });

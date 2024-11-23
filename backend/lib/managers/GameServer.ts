@@ -90,7 +90,10 @@ export class GameServer {
 			this.io.to(data.gameID).emit('game_started', { gameStarted: false });
 			this.io
 				.to(data.gameID)
-				.emit('toast_notification', { message: 'Must have at least 2 players to start game...' });
+				.emit('toast_notification', {
+					type: 'info',
+					message: 'Must have at least 2 players to start game...'
+				});
 			return;
 		} else {
 			this.roomManager.startGame(data.gameID, this.io);

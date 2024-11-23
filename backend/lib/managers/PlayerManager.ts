@@ -38,6 +38,7 @@ export class PlayerManager {
 				if (health <= 0) {
 					p.die();
 					io.to(roomID).emit('toast_notification', {
+						type: 'danger',
 						message: p.name + ' stayed too long outside the safe zone.'
 					});
 				}
@@ -184,6 +185,7 @@ export class PlayerManager {
 					target.die();
 					player.addScore();
 					io.to(gameID).emit('toast_notification', {
+						type: 'pvp',
 						message: target.name + ' was killed by ' + player.name + '.'
 					});
 				} else {

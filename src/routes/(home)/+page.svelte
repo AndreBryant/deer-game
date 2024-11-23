@@ -1,20 +1,22 @@
 <script lang="ts">
 	import { io, Socket } from 'socket.io-client';
-	import { onDestroy } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 	import HomeBackground3 from '$lib/components/home/backgrounds/HomeBackground3.svelte';
 	import StartMenuContainer from '$lib/components/home/StartMenuContainer.svelte';
 
-	const dev: boolean = import.meta.env.MODE === 'development';
-	const url: string = dev ? '' : import.meta.env.VITE_SERVER_URL;
-	const ws: Socket = io(url);
-
+	let ws: Socket;
 	let rooms: ClientSideRooms = {};
+	onMount(() => {
+		const dev: boolean = import.meta.env.MODE === 'development';
+		const url: string = dev ? '' : import.meta.env.VITE_SERVER_URL;
+		ws = io(url);
 
-	ws.on('rooms_updated', (dataFromServer) => {
-		rooms = dataFromServer;
-	});
-	ws.on('connection', (dataFromServer) => {
-		rooms = dataFromServer;
+		ws.on('rooms_updated', (dataFromServer) => {
+			rooms = dataFromServer;
+		});
+		ws.on('connection', (dataFromServer) => {
+			rooms = dataFromServer;
+		});
 	});
 	$: rooms;
 

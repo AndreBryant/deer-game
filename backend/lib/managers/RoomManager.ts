@@ -36,7 +36,7 @@ export class RoomManager {
 			this.rooms[gameID].isGameStarted = true;
 
 			if (io) {
-				io.to(gameID).emit('toast_notification', { message: 'Game Started!' });
+				io.to(gameID).emit('toast_notification', { type: 'info', message: 'Game Started!' });
 			}
 		}
 		console.log('Room Manager: Game Started', gameID);
@@ -49,7 +49,10 @@ export class RoomManager {
 
 			if (io) {
 				io.to(gameID).emit('safe_zone_updated', { safeZoneBoundary });
-				io.to(gameID).emit('toast_notification', { message: 'Safe Zone Boundary Decreased!' });
+				io.to(gameID).emit('toast_notification', {
+					type: 'warning',
+					message: 'Safe Zone Boundary Decreased!'
+				});
 			}
 		};
 		this.startInterval(gameID, io, gameIntervalFn, this.safeZoneDecreaseTime);
@@ -64,7 +67,7 @@ export class RoomManager {
 		if (io) {
 			io.to(gameID).emit('game_ended', { gameStarted: false, gameFinished: true });
 
-			io.to(gameID).emit('toast_notification', { message: 'Game Ended!' });
+			io.to(gameID).emit('toast_notification', { type: 'info', message: 'Game Ended!' });
 
 			room.mapData.resetSafeZone();
 			io.to(gameID).emit('safe_zone_updated', { safeZoneBoundary: room.mapData.safeZoneBoundary });
@@ -92,9 +95,7 @@ export class RoomManager {
 				gameShowingResults: true
 			});
 			io.emit('rooms_updated', this.getRooms());
-			io.to(gameID).emit('toast_notification', {
-				message: 'Showing Results!'
-			});
+			io.to(gameID).emit('toast_notification', { type: 'info', message: 'Showing Results!' });
 
 			// No need for a set Interval as we are not sending more data into the client
 			// Just delay the end_show_results event

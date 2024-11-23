@@ -54,14 +54,17 @@
 	class:hidden={!isShown}
 >
 	<Button text="Exit Game" variant="link" iconLeft={ChevronLeft} href="/" />
-	<div
-		class="items flex h-[560px] w-[650px] gap-4 rounded-lg border border-slate-50 border-opacity-30 bg-slate-950 bg-opacity-60 px-8 py-6"
-	>
-		<GameTabInfo {playerId} {playerName} {roomId} {hostName} />
-		{#if !gameOngoing}
-			<GameParticipants participants={gameParticipants} yourSocketID={playerId} />
-		{:else}
-			<GameLeaderboard participants={gameLeaderboard} yourSocketID={playerId} />
-		{/if}
+	<div>
+		<div
+			class="items flex h-[560px] w-[650px] gap-4 rounded-lg border border-slate-50 border-opacity-30 bg-slate-950 bg-opacity-60 px-8 py-6"
+		>
+			<GameTabInfo {playerId} {playerName} {roomId} {hostName} />
+			{#if !gameOngoing}
+				<GameParticipants participants={gameParticipants} yourSocketID={playerId} />
+			{:else}
+				<GameLeaderboard participants={gameLeaderboard} yourSocketID={playerId} />
+			{/if}
+		</div>
+		<span class="animate-pulse">press tab to close</span>
 	</div>
 </div>
