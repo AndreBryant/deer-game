@@ -173,7 +173,7 @@ export class PlayerManager {
 
 		player.action = 'attack';
 		player.actionStartTime = Date.now();
-		player.actionEndTime = Date.now() + 250;
+		player.actionEndTime = Date.now() + 500;
 		const targets = this.getPlayersInRoom(player.room);
 		for (const target of Object.values(targets)) {
 			if (target.isDead) continue;
