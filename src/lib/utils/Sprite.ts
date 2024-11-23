@@ -36,7 +36,7 @@ export const DEER_SPRITE_ANIMATION_DATA: {
 		]
 	},
 	charge: {
-		slowness_factor: fps === 30 ? 1 : 2,
+		slowness_factor: fps === 30 ? 4 : 8,
 		positions: [
 			{ x: 0 * FRAME_SIZE, y: 3 * FRAME_SIZE },
 			{ x: 1 * FRAME_SIZE, y: 3 * FRAME_SIZE },
@@ -46,7 +46,7 @@ export const DEER_SPRITE_ANIMATION_DATA: {
 		]
 	},
 	attack: {
-		slowness_factor: fps === 30 ? 3 : 6,
+		slowness_factor: fps === 30 ? 2 : 4,
 		positions: [
 			{ x: 0 * FRAME_SIZE, y: 4 * FRAME_SIZE },
 			{ x: 1 * FRAME_SIZE, y: 4 * FRAME_SIZE },
