@@ -4,6 +4,7 @@
 	import { onMount } from 'svelte';
 
 	let fullscreen = false;
+	let fullScreenButton: HTMLButtonElement;
 
 	function toggleFullscreen() {
 		if (!browser) return;
@@ -17,6 +18,8 @@
 				console.error('Error attempting to exit fullscreen:', err.message);
 			});
 		}
+
+		fullScreenButton.blur();
 	}
 
 	function updateFullscreenState() {
@@ -25,6 +28,7 @@
 
 	onMount(() => {
 		if (browser) {
+			fullScreenButton = document.querySelector('#fullscreen-button') as HTMLButtonElement;
 			document.addEventListener('fullscreenchange', updateFullscreenState);
 
 			window.addEventListener('resize', updateFullscreenState);
@@ -41,7 +45,8 @@
 
 <button
 	on:click={toggleFullscreen}
-	class="absolute bottom-24 z-10 flex w-40 items-center gap-2 rounded-lg border bg-slate-950 bg-opacity-60 p-2 opacity-50 backdrop-blur-sm hover:opacity-100"
+	class="absolute bottom-32 z-10 flex w-40 items-center gap-2 rounded-lg border bg-slate-950 bg-opacity-60 p-2 opacity-50 backdrop-blur-sm hover:opacity-100"
+	id="fullscreen-button"
 >
 	{#if fullscreen}
 		<Minimize />

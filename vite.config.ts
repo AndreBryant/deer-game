@@ -30,6 +30,7 @@ export default defineConfig({
 	plugins: [sveltekit(), webSocketServer],
 	define: {
 		'import.meta.env.VITE_SERVER_URL': JSON.stringify(serverUrl),
-		'import.meta.env.FPS': JSON.stringify(60)
+		'import.meta.env.FPS': JSON.stringify(60),
+		'import.meta.env.VERSION': JSON.stringify('Version 0.0.1')
 	}
 });

@@ -10,7 +10,6 @@
 	import GameTimer from '$lib/components/game/GameTimer.svelte';
 	import GameStartButton from '$lib/components/game/GameStartButton.svelte';
 	import GameResults from '$lib/components/game/GameResults.svelte';
-	import BackToHomeButton from '$lib/components/game/BackToHomeButton.svelte';
 	import GameTabPopUp from '$lib/components/game/GameTabPopUp.svelte';
 	import RequestFullScreenButton from '$lib/components/RequestFullScreenButton.svelte';
 	import {
@@ -74,9 +73,15 @@
 			<p>Connecting...</p>
 		{/if}
 	</div>
+	{#if $gameData.mapData && $connectionState.isConnected && $connectionState.socketId}
+		<GameTabPopUp
+			gameOngoing={$gameState.gameOngoing}
+			participants={$serverData.players}
+			roomId={data.gameID}
+		/>
+	{/if}
 
 	<section>
-		<BackToHomeButton />
 		<RequestFullScreenButton />
 		{#if clientPlayer}
 			<GameKeyBinds keyStates={$keyStates} />
@@ -105,7 +110,6 @@
 				timestamp={$gameState.timestamp}
 			/>
 		{/if}
-		<GameTabPopUp gameOngoing={$gameState.gameOngoing} participants={$serverData.players} />
 		{#if $gameState.gameShowingResults && $gameState.gameFinished}
 			<GameResults
 				rank={getRank($serverData)}
