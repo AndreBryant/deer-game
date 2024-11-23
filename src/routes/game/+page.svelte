@@ -12,6 +12,7 @@
 	import GameResults from '$lib/components/game/GameResults.svelte';
 	import GameTabPopUp from '$lib/components/game/GameTabPopUp.svelte';
 	import RequestFullScreenButton from '$lib/components/RequestFullScreenButton.svelte';
+	import GameToaster from '$lib/components/game/GameToaster.svelte';
 	import {
 		serverData,
 		gameData,
@@ -58,8 +59,9 @@
 		{$gameState.gameOngoing ? '(started)' : ''}
 	</title>
 </svelte:head>
+
 <main class="relative h-screen w-screen select-none overflow-hidden text-white">
-	<div class="w-screem h-screenn absolute left-0 top-0 -z-10">
+	<div class="absolute left-0 top-0 -z-10 h-screen w-screen">
 		{#if $gameData.mapData && $connectionState.isConnected && $connectionState.socketId}
 			<GameCanvas
 				safeZoneBoundary={$gameData.safeZoneBoundary}
@@ -74,6 +76,7 @@
 		{/if}
 	</div>
 	{#if $gameData.mapData && $connectionState.isConnected && $connectionState.socketId}
+		<GameToaster />
 		<GameTabPopUp
 			gameOngoing={$gameState.gameOngoing}
 			participants={$serverData.players}

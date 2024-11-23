@@ -35,6 +35,6 @@
 		</div>
 	</div>
 	<div class="col-span-2 flex items-end">
-		<p>- Info</p>
+		<p>- info</p>
 	</div>
 </div>
