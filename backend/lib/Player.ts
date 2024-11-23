@@ -1,4 +1,4 @@
-import { TILESIZE as T_SIZE, MAP_WIDTH as MW, MAP_HEIGHT as MH } from './Map.js';
+import { TILESIZE as T_SIZE, MAP_WIDTH as MW, MAP_HEIGHT as MH } from './map.js';
 
 export const PLAYER_HIT_RADIUS: number = T_SIZE * 2;
 

@@ -1,9 +1,9 @@
 import { Server, Socket } from 'socket.io';
 import { PlayerManager } from './PlayerManager.js';
 import { RoomManager } from './RoomManager.js';
-import { Player, PLAYER_HIT_RADIUS } from '../Player.js';
+import { Player, PLAYER_HIT_RADIUS } from '../player.js';
 import { getRandomColor } from '../palette.js';
-import { MAP_HEIGHT, MAP_WIDTH, TILESIZE } from '../Map.js';
+import { MAP_HEIGHT, MAP_WIDTH, TILESIZE } from '../map.js';
 
 export class GameServer {
 	private io: Server;

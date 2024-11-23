@@ -1,6 +1,6 @@
 import { Server } from 'socket.io';
-import { Player } from '../Player.js';
-import { MAP_HEIGHT as mh, MAP_WIDTH as mw, TILESIZE as tsize } from '../Map.js';
+import { Player } from '../player.js';
+import { MAP_HEIGHT as mh, MAP_WIDTH as mw, TILESIZE as tsize } from '../map.js';
 
 export class PlayerManager {
 	private players: { [key: string]: Player } = {};

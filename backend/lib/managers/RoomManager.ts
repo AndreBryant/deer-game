@@ -1,5 +1,5 @@
 import { Server } from 'socket.io';
-import { Map } from '../Map.js';
+import { Map } from '../map.js';
 
 interface Room {
 	players: number;
