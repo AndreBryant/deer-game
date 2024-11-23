@@ -162,6 +162,9 @@ export class PlayerManager {
 
 	private charge(player: Player) {
 		if (player.isDead) return;
+		// make sure no action is ongoing
+		player.actionStartTime = null;
+		player.actionEndTime = null;
 
 		player.isCharging = true;
 		player.action = 'charge';
