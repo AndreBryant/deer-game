@@ -4,28 +4,46 @@
 	import { onMount } from 'svelte';
 	import { ChevronLeft } from 'lucide-svelte';
 	import { serverData } from '$lib/stores/socketStore';
+	import HomeBackground2 from '$lib/components/home/backgrounds/HomeBackground3.svelte';
+	const data = $serverData.players ?? {
+		a: { name: 'joea', score: 3 },
+		b: { name: 'joeb', score: 5 },
+		c: { name: 'joec', score: 1 }
+	};
 
-	export let data: { gameID: string | null };
+	const ranking = Object.values(data).sort((a: any, b: any) => b.score - a.score);
+
 	onMount(() => {
-		// Check if room is not avaliable or if null
-		if (!data.gameID) {
-			goto('/');
-		}
+		if (!data) goto('/');
 	});
-
-	// connect to io so that io can discard the room on disconnect
 </script>
 
 <svelte:head>
-	<title>
-		{data.gameID} | Results
-	</title>
+	<title>Results</title>
 </svelte:head>
 
-<p>TODO: RESULTS PAGE haha {data.gameID}</p>
-<div>
-	<Button text="Back" variant="link" iconLeft={ChevronLeft} onclick={() => goto('/')} />
-</div>
-<pre>
-{JSON.stringify($serverData, null, 2)}
-</pre>
+{#if data}
+	<div class="absolute -z-10">
+		<HomeBackground2 />
+	</div>
+	<main class="flex h-screen w-screen flex-col items-center justify-center overflow-hidden">
+		<div class="text-slate-50">
+			<Button text="Back" variant="link" iconLeft={ChevronLeft} onclick={() => goto('/')} />
+		</div>
+		<div
+			class="flex flex-col gap-4 rounded-lg border border-slate-50 border-opacity-50 bg-slate-950 bg-opacity-50 px-4 py-2 text-slate-50 backdrop-blur-sm"
+		>
+			<div>
+				<h3 class="text-3xl">Final Results</h3>
+				<hr class="border border-slate-50 border-opacity-50" />
+			</div>
+			<ul class="">
+				{#each ranking as rank, i}
+					<div>
+						{i + 1}: {rank.name} - {rank.score}
+					</div>
+				{/each}
+			</ul>
+		</div>
+	</main>
+{/if}
