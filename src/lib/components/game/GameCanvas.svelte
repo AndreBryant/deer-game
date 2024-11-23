@@ -7,8 +7,8 @@
 	export let safeZoneBoundary: number;
 
 	import P5 from '$lib/components/P5.svelte';
-	import mDeer from '$lib/sprites/mDeer.png';
-	// import mDeerRed from '$lib/sprites/mDeerRed.png';
+	import mDeer from '$lib/sprites/mDeer - Copy.png';
+	// import mDeer from '$lib/sprites/mDeer - Copy.png';
 	import fDeer from '$lib/sprites/fDeer.png';
 	// import fDeerRed from '$lib/sprites/fDeerRed.png';
 	import { randomPlayerOffsets, gameState } from '$lib/stores/socketStore';
