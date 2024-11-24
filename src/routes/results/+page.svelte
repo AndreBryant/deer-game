@@ -1,20 +1,33 @@
-<script lang="ts">
+<script>
+	export let data;
 	import { goto } from '$app/navigation';
 	import Button from '$lib/components/ui/Button.svelte';
 	import { onMount } from 'svelte';
 	import { ChevronLeft } from 'lucide-svelte';
 	import { serverData } from '$lib/stores/socketStore';
 	import HomeBackground2 from '$lib/components/home/backgrounds/HomeBackground3.svelte';
-	const data = $serverData.players ?? {
-		a: { name: 'joea', score: 3 },
-		b: { name: 'joeb', score: 5 },
-		c: { name: 'joec', score: 1 }
-	};
+	import GameLeaderboard from '$lib/components/game/GameLeaderboard.svelte';
+	import GameTabInfo from '$lib/components/game/GameTabInfo.svelte';
 
-	const ranking = Object.values(data).sort((a: any, b: any) => b.score - a.score);
-
+	const ranking = $serverData.players ?? {};
+	const participants = (() => {
+		const gameLeaderboard = [];
+		for (const player in ranking) {
+			const p = ranking[player];
+			gameLeaderboard.push({
+				id: p.id,
+				username: p.name,
+				score: p.score
+			});
+		}
+		return gameLeaderboard;
+	})();
+	const playerId = data.socketID || '';
+	const roomId = data.gameID || '';
+	const player = Object.values(ranking).filter((p) => p.id === playerId)[0];
+	const host = Object.values(ranking).filter((p) => p.isHost)[0];
 	onMount(() => {
-		if (!data) goto('/');
+		if (!$serverData || !$serverData.players || !data.gameID || !data.socketID) goto('/');
 	});
 </script>
 
@@ -22,28 +35,26 @@
 	<title>Results</title>
 </svelte:head>
 
-{#if data}
+{#if ranking}
 	<div class="absolute -z-10">
 		<HomeBackground2 />
 	</div>
-	<main class="flex h-screen w-screen flex-col items-center justify-center overflow-hidden">
-		<div class="text-slate-50">
-			<Button text="Back" variant="link" iconLeft={ChevronLeft} onclick={() => goto('/')} />
-		</div>
-		<div
-			class="flex flex-col gap-4 rounded-lg border border-slate-50 border-opacity-50 bg-slate-950 bg-opacity-50 px-4 py-2 text-slate-50 backdrop-blur-sm"
-		>
-			<div>
-				<h3 class="text-3xl">Final Results</h3>
-				<hr class="border border-slate-50 border-opacity-50" />
+	<main
+		class="absolute left-0 top-0 z-20 flex h-screen w-screen flex-col items-center justify-center bg-slate-950 bg-opacity-50 text-slate-300 backdrop-blur-sm"
+	>
+		<Button text="Exit to Main Menu" variant="link" iconLeft={ChevronLeft} href="/" />
+		<div>
+			<div
+				class="items flex h-[560px] w-[650px] gap-4 rounded-lg border border-slate-50 border-opacity-30 bg-slate-950 bg-opacity-60 px-8 py-6"
+			>
+				<GameTabInfo
+					{playerId}
+					playerName={player?.name || ''}
+					{roomId}
+					hostName={host?.name || ''}
+				/>
+				<GameLeaderboard {participants} yourSocketID={playerId} />
 			</div>
-			<ul class="">
-				{#each ranking as rank, i}
-					<div>
-						{i + 1}: {rank.name} - {rank.score}
-					</div>
-				{/each}
-			</ul>
 		</div>
 	</main>
 {/if}
