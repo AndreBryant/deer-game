@@ -28,7 +28,7 @@
 			</span>
 		</p>
 		<p>
-			{username}
+			{username.length > 15 ? username.slice(0, 15) + '...' : username}
 			<span class="text-xs opacity-80">
 				{you ? ' (you)' : ''}
 			</span>

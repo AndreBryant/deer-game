@@ -28,7 +28,9 @@
 	<title>Deer Game</title>
 </svelte:head>
 
-<main class="relative flex h-screen w-screen select-none flex-col items-center justify-center">
+<main
+	class="relative left-0 top-0 flex h-screen w-screen select-none flex-col items-center justify-center overflow-hidden"
+>
 	<div class="absolute left-0 top-0">
 		<HomeBackground3 />
 	</div>

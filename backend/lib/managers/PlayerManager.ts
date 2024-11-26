@@ -74,10 +74,14 @@ export class PlayerManager {
 		}
 	}
 
-	updateKeyStates(playerId: string, roomID: string, keyStates: { [key: string]: boolean }) {
-		if (this.keyStates[roomID] && this.keyStates[roomID][playerId]) {
-			this.keyStates[roomID][playerId] = keyStates;
+	updateKeyStates(playerID: string, roomID: string, keyStates: { [key: string]: boolean }) {
+		if (this.keyStates[roomID] && this.keyStates[roomID][playerID]) {
+			this.keyStates[roomID][playerID] = keyStates;
 		}
+	}
+
+	hasKeyStates(playerID: string, roomID: string) {
+		return this.keyStates[roomID] && this.keyStates[roomID][playerID];
 	}
 
 	handleActions(io: Server, playerId: string, gameStarted: boolean, gameID: string) {
@@ -216,7 +220,7 @@ export class PlayerManager {
 function isInAttackRange(attacker: Player, target: Player) {
 	if (attacker.isDead || target.isDead) return false;
 
-	const attackRange = attacker.radius * 1.5;
+	const attackRange = attacker.radius * 2;
 	const distance = Math.sqrt(
 		Math.pow(attacker.x! - target.x!, 2) + Math.pow(attacker.y! - target.y!, 2)
 	);

@@ -115,14 +115,16 @@ export class GameServer {
 		socket: Socket,
 		data: { gameID: string; keyStates: { [key: string]: boolean } }
 	) {
-		this.playerManager.updateKeyStates(socket.id, data.gameID, data.keyStates);
-		this.playerManager.handleMovement(socket.id);
-		this.playerManager.handleActions(
-			this.io,
-			socket.id,
-			this.roomManager.isGameStarted(data.gameID),
-			data.gameID
-		);
+		if (this.playerManager.hasKeyStates(socket.id, data.gameID)) {
+			this.playerManager.updateKeyStates(socket.id, data.gameID, data.keyStates);
+			this.playerManager.handleMovement(socket.id);
+			this.playerManager.handleActions(
+				this.io,
+				socket.id,
+				this.roomManager.isGameStarted(data.gameID),
+				data.gameID
+			);
+		}
 	}
 
 	private broadcastPlayerUpdates(gameID: string) {
