@@ -32,7 +32,7 @@
 		{
 			icon: Gamepad2,
 			active: false,
-			text: 'Controls'
+			text: 'Key Bindings'
 		}
 	];
 </script>
@@ -62,7 +62,6 @@
 					{/each}
 				</ul>
 			</div>
-			<!-- <div class="w-[1px] border-l border-slate-50 border-opacity-40"></div> -->
 		</div>
 		<div>
 			<p class="text-slate-100">Deer Game</p>

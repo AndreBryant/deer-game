@@ -3,7 +3,7 @@
 	import Content from './HowToPlayContent.svelte';
 </script>
 
-<div class="flex flex-col gap-4">
+<div class="flex flex-col gap-4 overflow-hidden">
 	<Title>Joining a Game</Title>
 	<Content>
 		<ul class="list-inside list-decimal space-y-8 opacity-80">

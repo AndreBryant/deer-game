@@ -1,3 +1,4 @@
+import { version } from './package.json';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
 import os from 'os';
@@ -31,6 +32,6 @@ export default defineConfig({
 	define: {
 		'import.meta.env.VITE_SERVER_URL': JSON.stringify(serverUrl),
 		'import.meta.env.FPS': JSON.stringify(60),
-		'import.meta.env.VERSION': JSON.stringify('Version 0.0.1')
+		'import.meta.env.VERSION': JSON.stringify('Version ' + version)
 	}
 });
