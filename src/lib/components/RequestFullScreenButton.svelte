@@ -45,7 +45,7 @@
 
 <button
 	on:click={toggleFullscreen}
-	class="absolute bottom-32 z-10 flex w-40 items-center gap-2 rounded-lg border bg-slate-950 bg-opacity-60 p-2 opacity-50 backdrop-blur-sm hover:opacity-100"
+	class="absolute bottom-32 z-10 flex w-40 items-center gap-2 rounded-lg border bg-slate-950 bg-opacity-60 p-2 opacity-70 backdrop-blur-sm hover:opacity-90"
 	id="fullscreen-button"
 >
 	{#if fullscreen}

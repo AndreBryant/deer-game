@@ -1,8 +1,8 @@
 <div
 	class="custom-animation group absolute -left-8 top-2 -rotate-[20deg] rounded-md bg-red-900 px-4 py-2 hover:bg-red-800"
-	title="our excuse if we fail the game physics"
+	title="CMSC 135 Semestral Project"
 >
-	<h2 class="text-xs text-white group-hover:text-slate-50">Physics engine not included!</h2>
+	<h2 class="text-xs text-white group-hover:text-slate-50">CMSC 135 Semestral Project</h2>
 </div>
 
 <style>

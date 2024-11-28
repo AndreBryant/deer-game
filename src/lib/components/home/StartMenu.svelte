@@ -28,7 +28,7 @@
 				href={`./game?host=true&username=${username}`}
 			/>
 		</div>
-		<div class="ml-12 flex w-[1px] flex-col">
+		<div class="ml-8 flex w-[1px] flex-col">
 			<div class="w-full flex-grow bg-black"></div>
 			<div class="-ml-[6px] text-xs">OR</div>
 			<div class="w-full flex-grow bg-black"></div>

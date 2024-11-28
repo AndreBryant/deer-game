@@ -6,6 +6,7 @@ export default {
 		fontFamily: {
 			sans: ['Inter', 'sans-serif'],
 			mono: [
+				'DM Mono',
 				'ui-monospace',
 				'SFMono-Regular',
 				'Menlo',
