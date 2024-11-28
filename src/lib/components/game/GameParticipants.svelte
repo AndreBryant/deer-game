@@ -49,6 +49,6 @@
 	}
 
 	.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-		background: red;
+		background: rgba(0, 0, 0, 0.6);
 	}
 </style>

@@ -1,13 +1,26 @@
-<div class="flex flex-col gap-4">
-	<div>
-		<h3 class="mb-2 pr-4 text-lg text-slate-50 text-opacity-90">About Game</h3>
-		<hr class="opacity-40" />
-	</div>
-	<div class="font-thin text-slate-50 text-opacity-70">
-		<p>
-			Deer game is a semestral project for the course CMSC 135 Computer Networking. m m m m m m m m
-			m m m In order to show the networking concepts, we made use of Websockets with the help of
-			Socket.io.
+<script lang="ts">
+	import Title from './HowToPlayTitle.svelte';
+	import Content from './HowToPlayContent.svelte';
+</script>
+
+<div class="flex flex-col gap-4 overflow-hidden">
+	<Title>About Deer Game</Title>
+	<Content>
+		<p class="opacity-60">
+			Deer game is a semestral project for our course, CMSC 135 Computer Networking. In order to
+			show the networking concepts, we made use of Websockets with the help of Socket.io library.
 		</p>
-	</div>
+		<div>
+			<p class="mb-2">Developers:</p>
+			<ul class="ml-4 list-inside list-decimal space-y-2">
+				<li class="opacity-60">Andre Bryant N. Bagalso</li>
+				<li class="opacity-60">
+					Please add your name (If you worked on this project) here via git commit & push
+				</li>
+			</ul>
+		</div>
+		<div>
+			<p class="mb-2">Build Date: <span class="opacity-60">December 2024</span></p>
+		</div>
+	</Content>
 </div>

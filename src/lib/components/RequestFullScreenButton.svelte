@@ -28,6 +28,7 @@
 
 	onMount(() => {
 		if (browser) {
+			fullscreen = !!document.fullscreenElement || window.innerHeight === screen.height;
 			fullScreenButton = document.querySelector('#fullscreen-button') as HTMLButtonElement;
 			document.addEventListener('fullscreenchange', updateFullscreenState);
 

@@ -1,3 +1,8 @@
+<script lang="ts">
+	import Title from './HowToPlayTitle.svelte';
+	import Content from './HowToPlayContent.svelte';
+</script>
+
 <div>
-	<h3 class="mb-2 pr-4 text-lg">Controls</h3>
+	<Title>Controls</Title>
 </div>

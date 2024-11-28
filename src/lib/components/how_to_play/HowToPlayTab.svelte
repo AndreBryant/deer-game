@@ -2,6 +2,7 @@
 	import HowToPlayAboutGame from './HowToPlayAboutGame.svelte';
 	import HowToPlayControls from './HowToPlayControls.svelte';
 	import HowToPlayCreateGame from './HowToPlayCreateGame.svelte';
+	import HowToPlayGameMechanics from './HowToPlayGameMechanics.svelte';
 	import HowToPlayJoinGame from './HowToPlayJoinGame.svelte';
 	import HowToPlayTabButton from './HowToPlayTabButton.svelte';
 	import { Swords, SquarePlus, Gamepad2, Info, ServerCog } from 'lucide-svelte';
@@ -37,11 +38,12 @@
 </script>
 
 <div
-	class="flex h-[75vh] w-[100vw] rounded-lg border border-slate-50 border-opacity-50 bg-slate-950 bg-opacity-60 text-white md:w-[80vw] lg:w-[65vw]"
+	class="flex h-[75vh] w-[100vw] rounded-lg border border-slate-50 border-opacity-50 bg-slate-950 bg-opacity-60 text-white md:w-[85vw] lg:w-[70vw]"
 >
 	<div class="flex basis-3/12 flex-col border-r border-r-slate-50 border-opacity-40 p-4 pr-0">
 		<div>
-			<h2 class="mb-2 pr-4 text-lg">How to Play</h2>
+			<h2 class="mb-2 hidden pr-4 text-lg sm:block">How to Play</h2>
+			<h2 class="mb-2 block pr-4 text-lg sm:hidden">How2Pl-A</h2>
 			<hr class="opacity-40" />
 		</div>
 		<div class="flex flex-grow justify-end">
@@ -67,7 +69,9 @@
 			<p class="text-slate-50 text-opacity-50">{import.meta.env.VERSION}</p>
 		</div>
 	</div>
-	<div class="flex basis-9/12 flex-col rounded-lg rounded-l-none bg-slate-950 bg-opacity-30 p-4">
+	<div
+		class="flex basis-9/12 flex-col gap-4 overflow-hidden rounded-lg rounded-l-none bg-slate-950 bg-opacity-30 p-4"
+	>
 		{#if currentActive === 0}
 			<HowToPlayAboutGame />
 		{:else if currentActive === 1}
@@ -75,6 +79,8 @@
 		{:else if currentActive === 2}
 			<HowToPlayJoinGame />
 		{:else if currentActive === 3}
+			<HowToPlayGameMechanics />
+		{:else if currentActive === 4}
 			<HowToPlayControls />
 		{/if}
 	</div>
