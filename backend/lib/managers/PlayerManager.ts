@@ -55,7 +55,7 @@ export class PlayerManager {
 
 	handleMovement(playerId: string) {
 		const player = this.players[playerId];
-		if (player.isDead) return;
+		if (!player || player.isDead) return;
 
 		if (player && this.keyStates[player.room] && this.keyStates[player.room][playerId]) {
 			const keys = this.keyStates[player.room][playerId];
@@ -86,7 +86,7 @@ export class PlayerManager {
 
 	handleActions(io: Server, playerId: string, gameStarted: boolean, gameID: string) {
 		const player = this.players[playerId];
-		if (player.isDead) return;
+		if (!player || player.isDead) return;
 
 		if (player && this.keyStates[player.room] && this.keyStates[player.room][playerId]) {
 			const keys = this.keyStates[player.room][playerId];
