@@ -9,7 +9,7 @@
 	import P5 from '$lib/components/P5.svelte';
 	import mDeer from '$lib/sprites/mDeer - Copy.png';
 	// import mDeer from '$lib/sprites/mDeer - Copy.png';
-	import fDeer from '$lib/sprites/fDeer.png';
+	import fDeer from '$lib/sprites/fDeer - Copy.png';
 	// import fDeerRed from '$lib/sprites/fDeerRed.png';
 	import { randomPlayerOffsets, gameState } from '$lib/stores/socketStore';
 	import GameFPS from './GameFPS.svelte';
@@ -50,8 +50,8 @@
 
 	function preload(p5: any) {
 		// Preload these images.
-		// deerSpriteSheet = p5.loadImage(fDeer); //uncomment this if  may fDeer animation na
-		deerSpriteSheet = p5.loadImage(mDeer);
+		deerSpriteSheet = p5.loadImage(fDeer); //uncomment this if  may fDeer animation na
+		//deerSpriteSheet = p5.loadImage(mDeer);
 		hornDeerSpriteSheet = p5.loadImage(mDeer);
 		// redDeerSpriteSheet = p5.loadImage(fDeerRed);
 		// redHornDeerSpriteSheet = p5.loadImage(mDeerRed);
