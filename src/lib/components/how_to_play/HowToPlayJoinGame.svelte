@@ -20,8 +20,8 @@
 			started yet.
 		</p>
 		<div class="flex w-full items-center justify-center gap-2">
-			<img src={join_game_3a} alt="join_game_3a" class="w-96" />
-			<img src={join_game_3b} alt="join_game_3b" class="w-96" />
+			<img src={join_game_3a} alt="join_game_3a" class="w-64" />
+			<img src={join_game_3b} alt="join_game_3b" class="w-64" />
 		</div>
 		<p class="opacity-80">Wait for the host to start the game.</p>
 		<img src={join_game_4} alt="join_game_4" class="mx-auto block w-96" />

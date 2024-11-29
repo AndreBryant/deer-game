@@ -14,8 +14,8 @@
 		<p class="opacity-80">Click the "Create Game" button.</p>
 		<img src={create_game_2} alt="create_game_2" class="mx-auto block w-96" />
 		<p class="opacity-80">
-			Wait for other players to join. You can start the game if at least 2 players have joined by
-			pressing the "Start Game" Button.
+			Wait for other players to join. You can start the game by pressing the "Start Game" Button, if
+			at least 2 players have joined.
 		</p>
 		<img src={create_game_3} alt="create_game_3" class=" mx-auto block w-96" />
 	</Content>
