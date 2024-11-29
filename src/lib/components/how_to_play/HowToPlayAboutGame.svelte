@@ -10,6 +10,13 @@
 			Deer game is a semestral project for our course, CMSC 135 Computer Networking. In order to
 			show the networking concepts, we made use of Websockets with the help of Socket.io library.
 		</p>
+
+		<p class="opacity-60">
+			This game is inspired by the "You Deer" scene on the opening of the anime "My Dear Friend,
+			Nokotan."
+		</p>
+		<img src="" alt="about_game_1" class="mx-auto block" />
+
 		<div>
 			<p class="mb-2">Developers:</p>
 			<ul class="ml-4 list-inside list-decimal space-y-2">

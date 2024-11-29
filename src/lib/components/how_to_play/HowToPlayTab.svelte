@@ -1,11 +1,11 @@
 <script lang="ts">
-	import HowToPlayAboutGame from './HowToPlayAboutGame.svelte';
-	import HowToPlayControls from './HowToPlayControls.svelte';
-	import HowToPlayCreateGame from './HowToPlayCreateGame.svelte';
-	import HowToPlayGameMechanics from './HowToPlayGameMechanics.svelte';
-	import HowToPlayJoinGame from './HowToPlayJoinGame.svelte';
-	import HowToPlayTabButton from './HowToPlayTabButton.svelte';
 	import { Swords, SquarePlus, Gamepad2, Info, ServerCog } from 'lucide-svelte';
+	import HowToPlayTabButton from './HowToPlayTabButton.svelte';
+	import HowToPlayAboutGame from './HowToPlayAboutGame.svelte';
+	import HowToPlayCreateGame from './HowToPlayCreateGame.svelte';
+	import HowToPlayJoinGame from './HowToPlayJoinGame.svelte';
+	import HowToPlayGameMechanics from './HowToPlayGameMechanics.svelte';
+	import HowToPlayKeyBindings from './HowToPlayKeyBindings.svelte';
 
 	let currentActive = 0;
 	const tabs = [
@@ -50,7 +50,6 @@
 			<div class="w-full">
 				<ul class="flex w-full flex-grow flex-col py-4">
 					{#each tabs as tab, i}
-						<!-- {i}{currentActive} -->
 						<HowToPlayTabButton
 							icon={tab.icon}
 							active={i === currentActive}
@@ -80,7 +79,7 @@
 		{:else if currentActive === 3}
 			<HowToPlayGameMechanics />
 		{:else if currentActive === 4}
-			<HowToPlayControls />
+			<HowToPlayKeyBindings />
 		{/if}
 	</div>
 </div>

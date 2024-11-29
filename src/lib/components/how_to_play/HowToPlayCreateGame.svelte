@@ -6,11 +6,13 @@
 <div class="flex flex-col gap-4 overflow-hidden">
 	<Title>Creating a Game</Title>
 	<Content>
-		<ul class="list-inside list-decimal space-y-8 opacity-80">
-			<li>Type your name in the input field.</li>
-			<li>Click the "Create Game" button.</li>
-			<li>Wait for other players to join.</li>
-			<li>You can start the game if at least 2 players have joined.</li>
-		</ul>
+		<p class="opacity-80">Type your name in the input field.</p>
+		<img src="" alt="create_game_1" class="mx-auto block" />
+		<p class="opacity-80">Click the "Create Game" button.</p>
+		<img src="" alt="create_game_2" class="mx-auto block" />
+		<p class="opacity-80">Wait for other players to join.</p>
+		<img src="" alt="create_game_3" class="mx-auto block" />
+		<p class="opacity-80">You can start the game if at least 2 players have joined.</p>
+		<img src="" alt="create_game_4" class="mx-auto block" />
 	</Content>
 </div>

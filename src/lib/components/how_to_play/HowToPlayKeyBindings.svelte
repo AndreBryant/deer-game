@@ -117,6 +117,8 @@
 				to move right.
 			</p>
 		</div>
+		<img src="" alt="key_bindings_1" class="mx-auto block" />
+
 		<div class="flex flex-col gap-4">
 			<h3 class="">Player Attack</h3>
 			<p class="opacity-60">
@@ -126,6 +128,8 @@
 				> to charge, then release to attack.
 			</p>
 		</div>
+		<img src="" alt="key_bindings_2" class="mx-auto block" />
+
 		<div class="flex flex-col gap-4">
 			<h3 class="">Game Information</h3>
 			<p class="opacity-60">
@@ -135,5 +139,6 @@
 				> to toggle, game details and participant list/ leaderboards.
 			</p>
 		</div>
+		<img src="" alt="key_bindings_3" class="mx-auto block" />
 	</Content>
 </div>
