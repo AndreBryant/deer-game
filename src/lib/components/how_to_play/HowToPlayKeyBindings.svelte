@@ -1,8 +1,11 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+	import { ChevronDown, ChevronUp, ChevronLeft, ChevronRight } from 'lucide-svelte';
 	import Title from './HowToPlayTitle.svelte';
 	import Content from './HowToPlayContent.svelte';
-	import { ChevronDown, ChevronUp, ChevronLeft, ChevronRight } from 'lucide-svelte';
-	import { onMount } from 'svelte';
+	import key_bindings_1 from '$lib/components/how_to_play/images/key_bindings_1.gif';
+	import key_bindings_2 from '$lib/components/how_to_play/images/key_bindings_2.gif';
+	import key_bindings_3 from '$lib/components/how_to_play/images/key_bindings_3.png';
 	const keyStates = {
 		up: false,
 		down: false,
@@ -117,7 +120,7 @@
 				to move right.
 			</p>
 		</div>
-		<img src="" alt="key_bindings_1" class="mx-auto block" />
+		<img src={key_bindings_1} alt="key_bindings_1" class="mx-auto block" />
 
 		<div class="flex flex-col gap-4">
 			<h3 class="">Player Attack</h3>
@@ -128,7 +131,7 @@
 				> to charge, then release to attack.
 			</p>
 		</div>
-		<img src="" alt="key_bindings_2" class="mx-auto block" />
+		<img src={key_bindings_2} alt="key_bindings_2" class="mx-auto block" />
 
 		<div class="flex flex-col gap-4">
 			<h3 class="">Game Information</h3>
@@ -136,9 +139,10 @@
 				Press <span
 					class="rounded-lg border bg-opacity-70 hover:bg-slate-700"
 					class:bg-slate-700={keyStates.tab}>&nbsp;Tab&nbsp;</span
-				> to toggle, game details and participant list/ leaderboards.
+				> to toggle, game details and participant list/ leaderboards. You can also exit the game through
+				here.
 			</p>
 		</div>
-		<img src="" alt="key_bindings_3" class="mx-auto block" />
+		<img src={key_bindings_3} alt="key_bindings_3" class="mx-auto block w-96" />
 	</Content>
 </div>
