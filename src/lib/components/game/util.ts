@@ -15,11 +15,15 @@ const keyMapping: Record<string, string> = {
 	S: 'down',
 	A: 'left',
 	D: 'right',
+	ArrowUp: 'up',
+	ArrowDown: 'down',
+	ArrowLeft: 'left',
+	ArrowRight: 'right',
 	' ': 'attack'
 };
 
 function updateKeyCodes(key: string, value: boolean) {
-	const stateKey = keyMapping[key.toUpperCase()];
+	const stateKey = keyMapping[key.length === 1 ? key.toUpperCase() : key];
 	if (stateKey && get(keyStates)[stateKey] !== value) {
 		keyStates.set({ ...get(keyStates), [stateKey]: value });
 		return true;
