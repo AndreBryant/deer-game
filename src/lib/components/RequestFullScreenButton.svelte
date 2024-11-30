@@ -26,6 +26,10 @@
 		fullscreen = !!document.fullscreenElement || window.innerHeight === screen.height;
 	}
 
+	$: if (browser) {
+		fullscreen = !!document.fullscreenElement || window.innerHeight === screen.height;
+	}
+
 	onMount(() => {
 		if (browser) {
 			fullscreen = !!document.fullscreenElement || window.innerHeight === screen.height;
