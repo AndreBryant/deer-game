@@ -24,6 +24,7 @@
 			<p class="mb-2">Developers:</p>
 			<ul class="ml-4 list-inside list-decimal space-y-2">
 				<li class="opacity-60">Andre Bryant N. Bagalso</li>
+				<li class="opacity-60">Gideon Daniel T. Orseno</li>
 				<li class="opacity-60">
 					Please add your name here (If you worked on this project) via git commit & push
 				</li>
