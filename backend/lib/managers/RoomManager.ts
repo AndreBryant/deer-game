@@ -121,7 +121,7 @@ export class RoomManager {
 	}
 
 	isGameStarted(gameID: string): boolean {
-		return this.rooms[gameID].isGameStarted;
+		return this.rooms[gameID] ? this.rooms[gameID].isGameStarted : false;
 	}
 
 	joinRoom(gameID: string) {
@@ -133,7 +133,7 @@ export class RoomManager {
 	}
 
 	removeRoom(gameID: string) {
-		delete this.rooms[gameID];
+		if (this.rooms[gameID]) delete this.rooms[gameID];
 	}
 
 	getRoom(gameID: string): Room | undefined {
