@@ -2,6 +2,7 @@
 
 # Deer Game
 Deer game is a semestral project for CMSC 135 (Computer Networking) that applies some networking concepts. This was done with the use of Websockets to implement a Multiplayer game with low latency and real time updates for all connected players.
+
 It follows simple game mechanics. Become a deer and fight others to get the most points before the time runs out. Please see [Installation section](#installation) to deploy the game on your own machines, and go to `How to play` for the full game mechanics.
 
 ## Features
