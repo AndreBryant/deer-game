@@ -1,5 +1,17 @@
 
-go to root of the project, then
+
+# Deer Game
+Deer game is a semestral project for CMSC 135 (Computer Networking) that applies some networking concepts. This was done with the use of Websockets to implement a Multiplayer game with low latency and real time updates for all connected players.
+It follows simple game mechanics. Become a deer and fight others to get the most points before the time runs out. Please see [Installation section](#installation) to deploy the game on your own machines, and go to `How to play` for the full game mechanics.
+
+## Features
+- Server can handle multiple simulatenous multiplayer games running at the same time.
+- Technically, no limit on the number of players who can join a single game.
+- Clean and Intuitive UI
+
+## Installation
+
+Go to root of the project, then
 
 ```
 npm i
@@ -7,7 +19,7 @@ npm i
 
 once finished, follow these
 
-# How to start development
+## How to start development
 
 ```
 npm run dev
@@ -23,13 +35,13 @@ npm run dev -- --host
 
 same for the one above but now, you can access the game if connected to the same network as the machine. you should be able to see `192.168.x.x:5173` <-- this is the link to the game on any devices
 
-# Building the game for production
+## Building the game for production
 
 separate terminals for server and client
 
 Note: you have to do this everytime you are deploying with a specifc wifi connection. You cannot build this with _UP STUDENT_ wifi and still expect the build to run on _UP AP1_
 
-**Server:**
+### Server
 
 ```
 npm run build:backend
@@ -39,53 +51,14 @@ npm run build:backend
 npm run start:backend
 ```
 
-**Client:**
+### Client
 
 ```
 npm run build
 ```
 
-if you want to preview the production state of the gaem.
+if you want to preview the production state of the game.
 
 ```
 npm run preview -- --host
 ```
-
-<!-- # create-svelte
-
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
-
-## Creating a project
-
-If you're seeing this, you've probably already done this step. Congrats!
-
-```bash
-# create a new project in the current directory
-npm create svelte@latest
-
-# create a new project in my-app
-npm create svelte@latest my-app
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment. -->
