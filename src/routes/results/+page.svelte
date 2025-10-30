@@ -6,7 +6,7 @@
 	import { ChevronLeft } from 'lucide-svelte';
 	import { serverData } from '$lib/stores/socketStore';
 	import HomeBackground2 from '$lib/components/home/backgrounds/HomeBackground3.svelte';
-	import GameLeaderboard from '$lib/components/game/GameLeaderboard.svelte';
+	import GameLeaderboard from '$lib/components/game/GameLeaderBoard.svelte';
 	import GameTabInfo from '$lib/components/game/GameTabInfo.svelte';
 
 	const ranking = $serverData.players ?? {};
