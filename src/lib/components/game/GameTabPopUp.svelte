@@ -3,7 +3,7 @@
 	export let participants: Record<any, any> = {};
 	export let gameOngoing: boolean = false;
 	export let roomId: string = '';
-	import GameLeaderboard from './GameLeaderboard.svelte';
+	import GameLeaderboard from './GameLeaderBoard.svelte';
 	import GameParticipants from './GameParticipants.svelte';
 	import GameTabInfo from './GameTabInfo.svelte';
 	import Button from '../ui/Button.svelte';
